@@ -1,0 +1,29 @@
+/* ===============================
+   BASE - RESET & VARIABLES
+================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #D95F0E;
+  --secondary: #3F6EA8;
+  --dark: #222;
+  --light: #f5f5f5;
+  --white: #fff;
+  --max-width: 1200px;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--light);
+  color: var(--dark);
+}
+
+.container {
+  width: 90%;
+  max-width: var(--max-width);
+  margin: auto;
+}
