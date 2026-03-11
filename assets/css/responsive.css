@@ -66,3 +66,27 @@
   }
 
 }
+
+/* =====================================
+   PROGRAMAS RESPONSIVE
+===================================== */
+
+@media (max-width: 1024px) {
+
+  .programas__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .programas__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .program-card {
+    height: 220px;
+  }
+
+}
