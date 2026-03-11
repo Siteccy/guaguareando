@@ -1,0 +1,96 @@
+/* ===============================
+   HERO
+================================ */
+.home-hero {
+  padding: 100px 0;
+  background: linear-gradient(135deg, #3F6EA8 0%, #ffffff 100%);
+}
+
+.hero__grid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.hero__image img {
+  max-width: 400px;
+}
+/* =====================================
+   HOME - SOBRE NOSOTROS
+===================================== */
+
+.home-about {
+  padding: 80px 0;
+  background: var(--light);
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.about-card {
+  background: var(--white);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+  transition: 0.3s;
+}
+
+.about-card:hover {
+  transform: translateY(-5px);
+}
+
+.about-card h3 {
+  margin-bottom: 15px;
+  color: var(--primary);
+}
+/* ===============================
+   PROGRAMAS
+================================ */
+.home-programas {
+  padding: 80px 0;
+  background: var(--white);
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.programas__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+/* =====================================
+   HOME - PODCAST
+===================================== */
+
+.home-podcast {
+  padding: 80px 0;
+  background: var(--light);
+}
+
+.podcast-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+}
+
+.podcast-info h3 {
+  font-size: 28px;
+  margin-bottom: 15px;
+}
+
+.podcast-info p {
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+.podcast-player iframe {
+  width: 100%;
+}

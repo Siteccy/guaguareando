@@ -1,0 +1,35 @@
+/* ===============================
+   BUTTONS
+================================ */
+.btn {
+  padding: 12px 22px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: bold;
+  display: inline-block;
+  transition: 0.3s;
+}
+
+.btn--primary {
+  background: var(--primary);
+  color: var(--white);
+}
+
+.btn--primary:hover {
+  background: #b84f0c;
+}
+
+/* ===============================
+   CARDS
+================================ */
+.program-card {
+  background: var(--white);
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+  transition: 0.3s;
+}
+
+.program-card:hover {
+  transform: translateY(-5px);
+}
