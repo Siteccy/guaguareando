@@ -1,0 +1,54 @@
+/* =====================================
+   REVISTA - HERO
+===================================== */
+.revista-hero {
+  background: linear-gradient(135deg, #D95F0E, #3F6EA8);
+  color: white;
+  text-align: center;
+  padding: 100px 20px;
+}
+
+/* =====================================
+   REVISTA - VIEWER
+===================================== */
+.revista-viewer {
+  padding: 80px 0;
+  background: var(--light);
+}
+
+.revista-iframe {
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+}
+
+.revista-cta {
+  text-align: center;
+  margin-top: 25px;
+}
+
+/* =====================================
+   REVISTA - ARCHIVE
+===================================== */
+.revista-archive {
+  padding: 80px 0;
+  background: var(--white);
+}
+
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+}
+
+.archive-card {
+  background: var(--light);
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.archive-card:hover {
+  transform: translateY(-5px);
+}

@@ -107,3 +107,19 @@
   }
 
 }
+
+/* =====================================
+   REVISTA RESPONSIVE
+===================================== */
+
+@media (max-width: 768px) {
+
+  .archive-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .revista-iframe iframe {
+    height: 400px;
+  }
+
+}
