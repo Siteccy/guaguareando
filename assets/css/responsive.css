@@ -90,3 +90,20 @@
   }
 
 }
+
+
+/* =====================================
+   NOSOTROS RESPONSIVE
+===================================== */
+
+@media (max-width: 768px) {
+
+  .about-hero h1 {
+    font-size: 32px;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
