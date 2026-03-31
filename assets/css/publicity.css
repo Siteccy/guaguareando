@@ -1,0 +1,129 @@
+/* =====================================
+   PAUTAS - HERO
+===================================== */
+.pautas-hero {
+  background: linear-gradient(135deg, #3F6EA8, #D95F0E);
+  color: white;
+  text-align: center;
+  padding: 100px 20px;
+}
+
+/* =====================================
+   PAUTAS - SERVICIOS
+===================================== */
+.pautas-services {
+  padding: 80px 0;
+  background: var(--light);
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.service-card {
+  background: var(--white);
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+}
+
+/* =====================================
+   ALIADOS
+===================================== */
+.pautas-aliados {
+  padding: 80px 0;
+  background: var(--white);
+}
+
+.aliados-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+}
+
+.aliado-card {
+  background: var(--light);
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+}
+/* =====================================
+   SITECYY - FIX DISEÑO PRO
+===================================== */
+
+.pautas-siteccy {
+  padding: 40px 0 100px; /* más espacio abajo */
+  background: var(--white);
+}
+
+.siteccy-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.siteccy-banner {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  height: 240px; /* MÁS PEQUEÑO */
+  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+}
+
+/* Imagen */
+/* LOGO COMPLETO */
+.siteccy-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; 
+  background: #281d5a;
+
+}
+
+/* Overlay limpio */
+.siteccy-overlay {
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    to right,
+    rgba(0,0,0,0.65),
+    rgba(0,0,0,0.2)
+  );
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding: 30px;
+  color: white;
+}
+
+/* Texto más compacto */
+.siteccy-overlay h2 {
+  font-size: 22px;
+  margin: 5px 0;
+}
+
+.siteccy-overlay p {
+  font-size: 14px;
+  max-width: 400px;
+  margin-bottom: 15px;
+}
+
+/* Botones más pequeños */
+.siteccy-actions .btn {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+.siteccy-content span {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #00d4ff; /* tono tecnológico */
+}

@@ -1,0 +1,56 @@
+/* =====================================
+   CONTACTO - HERO
+===================================== */
+.contact-hero {
+  background: linear-gradient(135deg, #3F6EA8, #D95F0E);
+  color: white;
+  text-align: center;
+  padding: 100px 20px;
+}
+
+/* =====================================
+   CONTACTO - MAIN
+===================================== */
+.contact-main {
+  padding: 80px 0;
+  background: var(--light);
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+}
+
+/* FORM */
+.contact-form {
+  background: white;
+  padding: 40px;
+  border-radius: 15px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+/* INFO */
+.contact-info {
+  padding: 20px;
+}
+
+.contact-info ul {
+  margin: 20px 0;
+  list-style: none;
+}
+
+.contact-info li {
+  margin-bottom: 10px;
+}

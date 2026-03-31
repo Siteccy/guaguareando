@@ -1,0 +1,61 @@
+/* =====================================
+   PROGRAMAS - HERO
+===================================== */
+.programas-hero {
+  background: linear-gradient(135deg, #3F6EA8, #D95F0E);
+  color: white;
+  text-align: center;
+  padding: 100px 20px;
+}
+
+/* =====================================
+   PROGRAMAS - GRID
+===================================== */
+.programas-main {
+  padding: 80px 0;
+  background: var(--light);
+}
+
+.programas-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+/* CARD */
+.program-card {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: 0.3s;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.program-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.program-card__content {
+  padding: 20px;
+}
+
+.program-card__content h3 {
+  margin-bottom: 10px;
+}
+
+.program-card__content p {
+  font-size: 14px;
+  color: gray;
+}
+
+/* HOVER */
+.program-card:hover {
+  transform: translateY(-8px);
+}
+
+/* DESTACADOS */
+.program-card.destacado {
+  border: 2px solid var(--secondary);
+}
