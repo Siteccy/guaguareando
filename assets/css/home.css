@@ -131,3 +131,27 @@
 .podcast-player iframe {
   width: 100%;
 }
+
+@media screen and (max-width: 768px) {
+  .hero__grid {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero__image img {
+    max-width: 300px;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer__bottom {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+}
