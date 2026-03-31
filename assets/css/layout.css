@@ -49,22 +49,73 @@
   font-size: 28px;
   cursor: pointer;
 }
-/* ===============================
-   FOOTER
-================================ */
+/* =====================================
+   FOOTER LIMPIO PRO
+===================================== */
+
 .site-footer {
-  background: var(--secondary);
-  color: var(--white);
+  background: #0b0f2a;
+  color: white;
   padding: 60px 0 20px;
 }
 
+/* GRID */
 .footer__grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 40px;
 }
 
+/* COLUMNAS */
+.footer__col h3,
+.footer__col h4 {
+  margin-bottom: 15px;
+}
+
+.footer__col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer__col ul li {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+/* LINKS */
+.site-footer a {
+  color: #ccc;
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  color: white;
+}
+
+/* REDES */
+.footer__social {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+/* WHATSAPP */
+.footer__whatsapp {
+  display: inline-block;
+  margin-top: 10px;
+}
+
+/* BOTTOM */
 .footer__bottom {
-  text-align: center;
   margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+
+.footer__bottom a {
+  color: #00d4ff;
 }
