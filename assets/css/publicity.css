@@ -127,3 +127,10 @@
   letter-spacing: 2px;
   color: #00d4ff; /* tono tecnológico */
 }
+
+@media screen and (max-width: 768px) {
+  .aliados-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
