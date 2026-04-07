@@ -86,7 +86,7 @@
   }
 
   .program-card {
-    height: 220px;
+    min-height: 220px;
   }
 
 }
