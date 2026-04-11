@@ -123,6 +123,11 @@
   }
 
 }
+
+
+/* =====================================
+   PROGRAMAS RESPONSIVE
+===================================== */
 @media (max-width: 1024px) {
   .programas-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -139,4 +144,16 @@
   .programas-grid {
     grid-template-columns: 1fr;
   }
+}
+
+@media (max-width: 768px) {
+
+  .episodes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .program-hero {
+    height: 40vh;
+  }
+
 }
