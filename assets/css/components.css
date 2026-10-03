@@ -1,35 +1,359 @@
-/* ===============================
-   BUTTONS
-================================ */
-.btn {
-  padding: 12px 22px;
-  border-radius: 30px;
-  text-decoration: none;
-  font-weight: bold;
-  display: inline-block;
-  transition: 0.3s;
+/* ==================================================
+   COMPONENTS
+   Guaguareando Ando
+   ================================================== */
+
+
+/* --------------------------------------------------
+   1. BUTTON
+   -------------------------------------------------- */
+
+.button {
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 44px;
+
+    padding: 0.75rem 1.5rem;
+
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+
+    font-size: 1rem;
+    font-weight: 700;
+
+    line-height: 1;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    transition:
+        background-color var(--transition-fast),
+        color var(--transition-fast),
+        border-color var(--transition-fast),
+        transform var(--transition-fast);
+
 }
 
-.btn--primary {
-  background: var(--primary);
-  color: var(--white);
+
+/* --------------------------------------------------
+   2. PRIMARY BUTTON
+   -------------------------------------------------- */
+
+.button--primary {
+
+    background-color: var(--color-primary);
+    color: var(--color-white);
+
 }
 
-.btn--primary:hover {
-  background: #b84f0c;
+
+.button--primary:hover {
+
+    background-color: var(--color-primary-dark);
+
+    transform: translateY(-2px);
+
 }
 
-/* ===============================
-   CARDS
-================================ */
-.program-card {
-  background: var(--white);
-  padding: 25px;
-  border-radius: 15px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-  transition: 0.3s;
+
+/* --------------------------------------------------
+   3. SECONDARY BUTTON
+   -------------------------------------------------- */
+
+.button--secondary {
+
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+
 }
 
-.program-card:hover {
-  transform: translateY(-5px);
+
+.button--secondary:hover {
+
+    opacity: 0.9;
+
+    transform: translateY(-2px);
+
+}
+
+
+/* --------------------------------------------------
+   4. OUTLINE BUTTON
+   -------------------------------------------------- */
+
+.button--outline {
+
+    background-color: transparent;
+
+    border-color: var(--color-primary);
+
+    color: var(--color-primary);
+
+}
+
+
+.button--outline:hover {
+
+    background-color: var(--color-primary);
+
+    color: var(--color-white);
+
+}
+
+
+/* --------------------------------------------------
+   5. BUTTON LIGHT
+   -------------------------------------------------- */
+
+.button--light {
+
+    background-color: var(--color-white);
+
+    color: var(--color-primary);
+
+}
+
+
+.button--light:hover {
+
+    background-color: var(--color-background-soft);
+
+    transform: translateY(-2px);
+
+}
+
+
+/* --------------------------------------------------
+   6. CARD
+   -------------------------------------------------- */
+
+.card {
+
+    overflow: hidden;
+
+    background-color: var(--color-white);
+
+    border: 1px solid var(--color-border);
+
+    border-radius: var(--radius-lg);
+
+    box-shadow: var(--shadow-sm);
+
+}
+
+
+/* --------------------------------------------------
+   7. CARD IMAGE
+   -------------------------------------------------- */
+
+.card__image {
+
+    width: 100%;
+
+    aspect-ratio: 16 / 9;
+
+    object-fit: cover;
+
+}
+
+
+/* --------------------------------------------------
+   8. CARD CONTENT
+   -------------------------------------------------- */
+
+.card__content {
+
+    padding: var(--space-lg);
+
+}
+
+
+.card__title {
+
+    margin-bottom: var(--space-sm);
+
+}
+
+
+.card__text {
+
+    margin-bottom: var(--space-md);
+
+    color: var(--color-text-light);
+
+}
+
+
+/* --------------------------------------------------
+   9. CARD FOOTER
+   -------------------------------------------------- */
+
+.card__footer {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: var(--space-sm);
+
+    padding:
+        0
+        var(--space-lg)
+        var(--space-lg);
+
+}
+
+
+/* --------------------------------------------------
+   10. FEATURED CARD
+   -------------------------------------------------- */
+
+.card--featured {
+
+    box-shadow: var(--shadow-md);
+
+}
+
+
+/* --------------------------------------------------
+   11. BADGE
+   -------------------------------------------------- */
+
+.badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 0.35rem 0.75rem;
+
+    border-radius: 999px;
+
+    background-color: var(--color-primary);
+
+    color: var(--color-white);
+
+    font-size: 0.875rem;
+    font-weight: 700;
+
+    line-height: 1;
+
+}
+
+
+/* --------------------------------------------------
+   12. TEXT LINK
+   -------------------------------------------------- */
+
+.text-link {
+
+    color: var(--color-primary);
+
+    font-weight: 700;
+
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+
+}
+
+
+.text-link:hover {
+
+    color: var(--color-primary-dark);
+
+}
+
+
+/* --------------------------------------------------
+   13. DIVIDER
+   -------------------------------------------------- */
+
+.divider {
+
+    width: 100%;
+
+    height: 1px;
+
+    margin:
+        var(--space-lg)
+        0;
+
+    background-color: var(--color-border);
+
+}
+
+
+/* --------------------------------------------------
+   14. RESPONSIVE MEDIA
+   -------------------------------------------------- */
+
+@media (max-width: 768px) {
+
+    .button {
+
+        width: 100%;
+
+    }
+
+
+    .card__content {
+
+        padding: var(--space-md);
+
+    }
+
+
+    .card__footer {
+
+        padding:
+            0
+            var(--space-md)
+            var(--space-md);
+
+    }
+    /* --------------------------------------------------
+   15. SKIP LINK
+   -------------------------------------------------- */
+
+    .skip-link {
+
+    position: fixed;
+
+    top: 1rem;
+    left: 1rem;
+
+    z-index: 2000;
+
+    padding: 0.75rem 1rem;
+
+    background-color: var(--color-white);
+
+    color: var(--color-primary);
+
+    border: 2px solid var(--color-primary);
+    border-radius: var(--radius-md);
+
+    font-weight: 700;
+
+    transform: translateY(-200%);
+
+    transition:
+        transform var(--transition-fast);
+
+    }
+
+
+    .skip-link:focus {
+
+    transform: translateY(0);
+
+    }
 }
