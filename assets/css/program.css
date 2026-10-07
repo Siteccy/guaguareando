@@ -1,0 +1,215 @@
+/*==================================================
+=            PROGRAM PAGE
+==================================================*/
+
+/*==================================================
+=            PROGRAM HERO
+==================================================*/
+
+.program-hero {
+    padding: 4rem 0;
+}
+
+.program-hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 4rem;
+    align-items: center;
+}
+
+.program-hero__content {
+    max-width: 650px;
+}
+
+.program-hero__label {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.program-hero__title {
+    margin-bottom: 1.25rem;
+}
+
+.program-hero__description {
+    margin-bottom: 2rem;
+    color: var(--color-text-light);
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+
+/*==================================================
+=            PROGRAM HERO IMAGE
+==================================================*/
+
+.program-hero__image-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: var(--color-background);
+    border-radius: var(--radius-lg);
+}
+
+.program-hero__image {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+
+/*==================================================
+=            PROGRAM CONTENT
+==================================================*/
+
+.program-content {
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+.program-content__section {
+    margin-bottom: 3rem;
+}
+
+.program-content__section:last-child {
+    margin-bottom: 0;
+}
+
+.program-content__title {
+    margin-bottom: 1rem;
+}
+
+.program-content__text {
+    color: var(--color-text-light);
+    line-height: 1.8;
+}
+
+
+/*==================================================
+=            PROGRAM HIGHLIGHTS
+==================================================*/
+
+.program-highlights {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+
+.program-highlight {
+    padding: 1.5rem;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+}
+
+.program-highlight__title {
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.program-highlight__text {
+    margin: 0;
+    color: var(--color-text-light);
+    line-height: 1.7;
+}
+
+
+/*==================================================
+=            PROGRAM CTA
+==================================================*/
+
+.program-cta {
+    text-align: center;
+}
+
+.program-cta__content {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.program-cta__title {
+    margin-bottom: 1rem;
+}
+
+.program-cta__text {
+    margin-bottom: 1.5rem;
+    color: var(--color-text-light);
+}
+
+
+/*==================================================
+=            PROGRAM NAVIGATION
+==================================================*/
+
+.program-navigation {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+}
+
+.program-navigation__link {
+    max-width: 45%;
+}
+
+.program-navigation__label {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--color-text-light);
+    font-size: 0.85rem;
+}
+
+.program-navigation__title {
+    font-weight: 700;
+}
+
+
+/*==================================================
+=            RESPONSIVE
+==================================================*/
+
+@media (max-width: 900px) {
+
+    .program-hero__grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+
+    .program-hero__content {
+        max-width: none;
+    }
+
+    .program-highlights {
+        grid-template-columns: 1fr 1fr;
+    }
+
+}
+
+
+@media (max-width: 640px) {
+
+    .program-hero {
+        padding: 3rem 0;
+    }
+
+    .program-highlights {
+        grid-template-columns: 1fr;
+    }
+
+    .program-navigation {
+        flex-direction: column;
+    }
+
+    .program-navigation__link {
+        max-width: 100%;
+    }
+
+}
