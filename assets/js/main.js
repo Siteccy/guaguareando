@@ -9,7 +9,6 @@
    -------------------------------------------------- */
 
 async function loadComponent(selector, filePath) {
-
     const element = document.querySelector(selector);
 
     if (!element) {
@@ -17,13 +16,10 @@ async function loadComponent(selector, filePath) {
     }
 
     try {
-
         const response = await fetch(filePath);
 
         if (!response.ok) {
-            throw new Error(
-                `Failed to load component: ${filePath}`
-            );
+            throw new Error(`Failed to load component: ${filePath}`);
         }
 
         const content = await response.text();
@@ -31,38 +27,27 @@ async function loadComponent(selector, filePath) {
         element.innerHTML = content;
 
     } catch (error) {
-
-        console.error(
-            'Component loading error:',
-            error
-        );
-
+        console.error('Component loading error:', error);
     }
-
 }
 
 
-/* --------------------------------------------------
-   2. INITIALIZE NAVIGATION
-   -------------------------------------------------- */
+/*==================================================
+=            MOBILE NAVIGATION
+==================================================*/
 
 function initializeMenu() {
 
-    const menuToggle =
-        document.querySelector('.site-header__toggle');
-
-    const navigation =
-        document.querySelector('.site-header__navigation');
+    const menuToggle = document.querySelector('.site-header__toggle');
+    const navigation = document.querySelector('.site-header__navigation');
 
     if (!menuToggle || !navigation) {
         return;
     }
 
-
     menuToggle.addEventListener('click', () => {
 
-        const isOpen =
-            navigation.classList.toggle('is-open');
+        const isOpen = navigation.classList.toggle('is-open');
 
         menuToggle.setAttribute(
             'aria-expanded',
@@ -70,26 +55,17 @@ function initializeMenu() {
         );
 
     });
-
 }
 
 
-/* --------------------------------------------------
-   3. CLOSE NAVIGATION
-   -------------------------------------------------- */
-
 function closeNavigation() {
 
-    const menuToggle =
-        document.querySelector('.site-header__toggle');
-
-    const navigation =
-        document.querySelector('.site-header__navigation');
+    const menuToggle = document.querySelector('.site-header__toggle');
+    const navigation = document.querySelector('.site-header__navigation');
 
     if (!menuToggle || !navigation) {
         return;
     }
-
 
     navigation.classList.remove('is-open');
 
@@ -97,20 +73,13 @@ function closeNavigation() {
         'aria-expanded',
         'false'
     );
-
 }
 
-
-/* --------------------------------------------------
-   4. INITIALIZE NAVIGATION LINKS
-   -------------------------------------------------- */
 
 function initializeNavigationLinks() {
 
     const navigationLinks =
-        document.querySelectorAll(
-            '.site-header__link'
-        );
+        document.querySelectorAll('.site-header__link');
 
     navigationLinks.forEach((link) => {
 
@@ -121,13 +90,12 @@ function initializeNavigationLinks() {
         });
 
     });
-
 }
 
 
-/* --------------------------------------------------
-   5. INITIALIZE CURRENT PAGE
-   -------------------------------------------------- */
+/*==================================================
+=            CURRENT PAGE
+==================================================*/
 
 function initializeCurrentPage() {
 
@@ -135,9 +103,7 @@ function initializeCurrentPage() {
         window.location.pathname;
 
     const navigationLinks =
-        document.querySelectorAll(
-            '.site-header__link'
-        );
+        document.querySelectorAll('.site-header__link');
 
     navigationLinks.forEach((link) => {
 
@@ -147,7 +113,34 @@ function initializeCurrentPage() {
                 window.location.origin
             ).pathname;
 
+
+        /*
+         * Exact page match
+         */
+
         if (linkPath === currentPath) {
+
+            link.setAttribute(
+                'aria-current',
+                'page'
+            );
+
+            return;
+        }
+
+
+        /*
+         * All individual program pages
+         * belong to the "Programas" section.
+         */
+
+        const isProgramPage =
+            currentPath.startsWith('/programs/');
+
+        const isProgramsLink =
+            linkPath === '/programs.html';
+
+        if (isProgramPage && isProgramsLink) {
 
             link.setAttribute(
                 'aria-current',
@@ -157,13 +150,12 @@ function initializeCurrentPage() {
         }
 
     });
-
 }
 
 
-/* --------------------------------------------------
-   6. INITIALIZE SITE
-   -------------------------------------------------- */
+/*==================================================
+=            INITIALIZE SITE
+==================================================*/
 
 async function initializeSite() {
 
@@ -177,7 +169,6 @@ async function initializeSite() {
         '/components/footer.html'
     );
 
-
     initializeMenu();
 
     initializeNavigationLinks();
@@ -186,10 +177,6 @@ async function initializeSite() {
 
 }
 
-
-/* --------------------------------------------------
-   7. DOM READY
-   -------------------------------------------------- */
 
 document.addEventListener(
     'DOMContentLoaded',
