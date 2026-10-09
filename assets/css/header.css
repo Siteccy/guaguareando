@@ -1,0 +1,385 @@
+/* ==================================================
+   HEADER
+   Guaguareando Ando
+   ================================================== */
+
+
+/* --------------------------------------------------
+   1. SITE HEADER
+   -------------------------------------------------- */
+
+.site-header {
+
+    position: relative;
+    z-index: 1000;
+
+    width: 100%;
+
+    background-color: var(--color-white);
+
+    border-bottom: 1px solid var(--color-border);
+
+}
+
+
+/* --------------------------------------------------
+   2. HEADER CONTAINER
+   -------------------------------------------------- */
+
+.site-header__container {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    min-height: 80px;
+
+}
+
+
+/* --------------------------------------------------
+   3. LOGO
+   -------------------------------------------------- */
+
+.site-header__logo {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    flex-shrink: 0;
+
+}
+
+
+.site-header__logo img {
+
+    display: block;
+
+    width: auto;
+
+    max-width: 180px;
+
+    max-height: 60px;
+
+}
+
+
+/* --------------------------------------------------
+   4. NAVIGATION
+   -------------------------------------------------- */
+
+.site-header__navigation {
+
+    display: flex;
+
+    align-items: center;
+
+}
+
+
+.site-header__menu {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: var(--space-md);
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+
+}
+
+
+/* --------------------------------------------------
+   5. NAVIGATION LINK
+   -------------------------------------------------- */
+
+.site-header__link {
+
+    position: relative;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    min-height: 44px;
+
+    padding: 0.5rem 0;
+
+    color: var(--color-text);
+
+    font-size: 0.95rem;
+    font-weight: 700;
+
+    transition:
+        color var(--transition-fast);
+
+}
+
+
+.site-header__link::after {
+
+    position: absolute;
+
+    left: 0;
+    bottom: 0;
+
+    width: 0;
+    height: 2px;
+
+    background-color: var(--color-primary);
+
+    content: "";
+
+    transition:
+        width var(--transition-fast);
+
+}
+
+
+.site-header__link:hover {
+
+    color: var(--color-primary);
+
+}
+
+
+.site-header__link:hover::after {
+
+    width: 100%;
+
+}
+
+
+/* --------------------------------------------------
+   6. ACTIVE LINK
+   -------------------------------------------------- */
+
+.site-header__link[aria-current="page"] {
+
+    color: var(--color-primary);
+
+}
+
+
+.site-header__link[aria-current="page"]::after {
+
+    width: 100%;
+
+}
+
+
+/* --------------------------------------------------
+   7. MENU TOGGLE
+   -------------------------------------------------- */
+
+.site-header__toggle {
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 44px;
+    height: 44px;
+
+    padding: 0;
+
+    border: 2px solid var(--color-primary);
+    border-radius: var(--radius-md);
+
+    background-color: transparent;
+
+    color: var(--color-primary);
+
+}
+
+
+/* --------------------------------------------------
+   8. MENU ICON
+   -------------------------------------------------- */
+
+.site-header__toggle-icon,
+.site-header__toggle-icon::before,
+.site-header__toggle-icon::after {
+
+    display: block;
+
+    width: 22px;
+    height: 2px;
+
+    background-color: currentColor;
+
+    border-radius: 2px;
+
+}
+
+
+.site-header__toggle-icon {
+
+    position: relative;
+
+}
+
+
+.site-header__toggle-icon::before,
+.site-header__toggle-icon::after {
+
+    position: absolute;
+
+    left: 0;
+
+    content: "";
+
+}
+
+
+.site-header__toggle-icon::before {
+
+    top: -7px;
+
+}
+
+
+.site-header__toggle-icon::after {
+
+    top: 7px;
+
+}
+
+
+/* --------------------------------------------------
+   9. HEADER CTA
+   -------------------------------------------------- */
+
+.site-header__cta {
+
+    margin-left: var(--space-md);
+
+}
+
+
+/* --------------------------------------------------
+   10. MOBILE
+   -------------------------------------------------- */
+
+@media (max-width: 900px) {
+
+    .site-header__container {
+
+        min-height: 72px;
+
+    }
+
+
+    .site-header__toggle {
+
+        display: inline-flex;
+
+    }
+
+
+    .site-header__navigation {
+
+        position: absolute;
+
+        top: 100%;
+        left: 0;
+
+        display: none;
+
+        width: 100%;
+
+        padding:
+            var(--space-md)
+            var(--container-padding);
+
+        background-color: var(--color-white);
+
+        border-top: 1px solid var(--color-border);
+
+        box-shadow: var(--shadow-md);
+
+    }
+
+
+    .site-header__navigation.is-open {
+
+        display: block;
+
+    }
+
+
+    .site-header__menu {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 0;
+
+    }
+
+
+    .site-header__item {
+
+        width: 100%;
+
+    }
+
+
+    .site-header__link {
+
+        display: flex;
+
+        width: 100%;
+
+        padding:
+            0.75rem
+            0;
+
+    }
+
+
+    .site-header__link::after {
+
+        display: none;
+
+    }
+
+
+    .site-header__cta {
+
+        margin-top: var(--space-sm);
+        margin-left: 0;
+
+    }
+
+}
+
+
+/* --------------------------------------------------
+   11. SMALL MOBILE
+   -------------------------------------------------- */
+
+@media (max-width: 480px) {
+
+    .site-header__logo img {
+
+        max-width: 145px;
+
+    }
+
+
+    .site-header__container {
+
+        min-height: 64px;
+
+    }
+
+}

@@ -1,32 +1,135 @@
 <header class="site-header">
-  <div class="container header__wrapper">
 
-    <div class="header__logo">
-      <a href="/index.html">
-        <img src="/assets/img/Logo_Guagareando_confondo.jpg" alt="Guaguareando Ando">
-      </a>
+    <div class="container site-header__container">
+
+        <!-- Logo -->
+        <a
+            href="/"
+            class="site-header__logo"
+            aria-label="Guaguareando Ando - Inicio"
+        >
+
+            <img
+                src="/assets/img/logo/guaguareando-logo.png"
+                alt="Guaguareando Ando"
+            >
+
+        </a>
+
+
+        <!-- Mobile menu button -->
+        <button
+            type="button"
+            class="site-header__toggle"
+            aria-label="Abrir menú de navegación"
+            aria-expanded="false"
+            aria-controls="main-navigation"
+        >
+
+            <span
+                class="site-header__toggle-icon"
+                aria-hidden="true"
+            ></span>
+
+        </button>
+
+
+        <!-- Navigation -->
+        <nav
+            id="main-navigation"
+            class="site-header__navigation"
+            aria-label="Navegación principal"
+        >
+
+            <ul class="site-header__menu">
+
+                <li class="site-header__item">
+
+                    <a
+                        href="/"
+                        class="site-header__link"
+                    >
+                        Inicio
+                    </a>
+
+                </li>
+
+
+                <li class="site-header__item">
+
+                    <a
+                        href="/about.html"
+                        class="site-header__link"
+                    >
+                        Nosotros
+                    </a>
+
+                </li>
+
+
+                <li class="site-header__item">
+
+                    <a
+                        href="/programs.html"
+                        class="site-header__link"
+                    >
+                        Programas
+                    </a>
+
+                </li>
+
+
+                <li class="site-header__item">
+
+                    <a
+                        href="/podcast.html"
+                        class="site-header__link"
+                    >
+                        Podcast
+                    </a>
+
+                </li>
+
+
+                <li class="site-header__item">
+
+                    <a
+                        href="/magazine.html"
+                        class="site-header__link"
+                    >
+                        Revista digital
+                    </a>
+
+                </li>
+
+
+                <li class="site-header__item">
+
+                    <a
+                        href="/advertising.html"
+                        class="site-header__link"
+                    >
+                        Publicidad
+                    </a>
+
+                </li>
+
+
+                <li class="site-header__item">
+
+                    <a
+                        href="/contact.html"
+                        class="site-header__link"
+                    >
+                        Contacto
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </nav>
+
     </div>
 
-    <nav class="header__nav" id="mainNav">
-      <ul class="nav__list">
-        <li><a href="/index.html">Inicio</a></li>
-        <li><a href="/pages/about-us.html">Nosotros</a></li>
-        <li><a href="/pages/podcast.html">Podcast</a></li>
-        <li><a href="/pages/programs.html">Programas</a></li>
-        <li><a href="/pages/magazine.html">Revista</a></li>
-        <li><a href="/pages/publicity.html">Pautas</a></li>
-        <li><a href="/pages/contact.html">Contacto</a></li>
-
-      </ul>
-    </nav>
-
-    <div class="header__cta">
-      <a href="https://open.spotify.com/show/3pCnAtHoFvGbsbihWov8k0" target="_blank" class="btn btn--primary">🎙 Escuchar</a>  
-    </div>
-
-    <div class="menu-toggle" id="menuToggle">
-      ☰
-    </div>
-
-  </div>
 </header>
