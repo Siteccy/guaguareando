@@ -1,0 +1,256 @@
+
+/*==================================================
+=            ABOUT HERO
+==================================================*/
+
+.about-hero {
+    padding: 4.5rem 0;
+}
+
+.about-hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: 4rem;
+    align-items: center;
+}
+
+.about-hero__content {
+    max-width: 680px;
+}
+
+.about-hero__label,
+.section-label {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.about-hero__title {
+    margin-bottom: 1.25rem;
+}
+
+.about-hero__description {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1.7;
+}
+
+.about-hero__text {
+    margin-bottom: 2rem;
+    color: var(--color-text-light);
+    line-height: 1.8;
+}
+
+.about-hero__image-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    padding: 2rem;
+    background-color: var(--color-background);
+    border-radius: var(--radius-lg);
+}
+
+.about-hero__image {
+    display: block;
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+    object-fit: contain;
+}
+
+
+/*==================================================
+=            STORY
+==================================================*/
+
+.about-story {
+    background-color: var(--color-background);
+}
+
+.about-story__container {
+    max-width: 850px;
+}
+
+.about-story__highlight {
+    margin-bottom: 1.5rem;
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.7;
+}
+
+.about-story__text {
+    margin-bottom: 1rem;
+    color: var(--color-text-light);
+    line-height: 1.9;
+}
+
+.about-story__text:last-child {
+    margin-bottom: 0;
+}
+
+
+/*==================================================
+=            MISSION AND VISION
+==================================================*/
+
+.about-purpose__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.about-purpose__card {
+    padding: 2rem;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+}
+
+.about-purpose__number {
+    margin-bottom: 1.5rem;
+    color: var(--color-primary);
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.about-purpose__title {
+    margin-bottom: 1rem;
+}
+
+.about-purpose__text {
+    margin: 0;
+    color: var(--color-text-light);
+    line-height: 1.9;
+}
+
+
+/*==================================================
+=            OBJECTIVE
+==================================================*/
+
+.about-objective {
+    background-color: var(--color-background);
+}
+
+.about-objective__container {
+    max-width: 850px;
+    text-align: center;
+}
+
+.about-objective__text {
+    margin: 0;
+    color: var(--color-text-light);
+    font-size: 1.1rem;
+    line-height: 1.9;
+}
+
+
+/*==================================================
+=            ACTIVITIES
+==================================================*/
+
+.about-activities__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+
+.about-activity {
+    padding: 1.75rem;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+}
+
+.about-activity__title {
+    margin-bottom: 1rem;
+}
+
+.about-activity__text {
+    margin-bottom: 1.25rem;
+    color: var(--color-text-light);
+    line-height: 1.8;
+}
+
+.text-link {
+    display: inline-block;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+
+/*==================================================
+=            FINAL CTA
+==================================================*/
+
+.about-cta {
+    background-color: var(--color-background);
+}
+
+.about-cta__content {
+    max-width: 760px;
+    text-align: center;
+}
+
+.about-cta__title {
+    margin-bottom: 1rem;
+}
+
+.about-cta__text {
+    margin-bottom: 2rem;
+    color: var(--color-text-light);
+    line-height: 1.8;
+}
+
+
+/*==================================================
+=            RESPONSIVE
+==================================================*/
+
+@media (max-width: 900px) {
+    .about-hero__grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+
+    .about-hero__content {
+        max-width: none;
+    }
+
+    .about-hero__image-wrapper {
+        min-height: 240px;
+    }
+
+    .about-activities__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .about-hero {
+        padding: 3rem 0;
+    }
+
+    .about-purpose__grid,
+    .about-activities__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-purpose__card,
+    .about-activity {
+        padding: 1.5rem;
+    }
+
+    .about-story__highlight {
+        font-size: 1.15rem;
+    }
+}
