@@ -1,159 +1,182 @@
-/* =====================================
-   TABLET
-===================================== */
-@media (max-width: 1024px) {
-
-  .nav__list {
-    gap: 15px;
-  }
-
-  .header__logo img {
-    height: 50px;
-  }
-
-}
+/* ==================================================
+   RESPONSIVE
+   Guaguareando Ando
+   ================================================== */
 
 
-/* =====================================
-   MOBILE
-===================================== */
-@media (max-width: 768px) {
+/* --------------------------------------------------
+   1. TABLET
+   -------------------------------------------------- */
 
-  .menu-toggle {
-    display: block;
-  }
+@media (max-width: 900px) {
 
-  .header__nav {
-    position: absolute;
-    top: 80px;
-    left: 0;
-    width: 100%;
-    background: var(--white);
-    display: none;
-    flex-direction: column;
-    padding: 20px 0;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-  }
+    :root {
 
-  .header__nav.active {
-    display: flex;
-  }
+        --container-padding: 1rem;
 
-  .nav__list {
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-  }
+        --space-xxl: 3.5rem;
 
-  .header__cta {
-    display: none;
-  }
+    }
 
-  .header__logo img {
-    height: 45px;
-  }
 
-}
-/* =====================================
-   PODCAST RESPONSIVE
-===================================== */
+    h1 {
 
-@media (max-width: 768px) {
+        font-size: 2.25rem;
 
-  .podcast-grid {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
+    }
 
-}
 
-/* =====================================
-   PROGRAMAS RESPONSIVE
-===================================== */
+    h2 {
 
-@media (max-width: 1024px) {
+        font-size: 1.85rem;
 
-  .programas__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+    }
 
-}
 
-@media (max-width: 768px) {
+    h3 {
 
-  .programas__grid {
-    grid-template-columns: 1fr;
-  }
+        font-size: 1.4rem;
 
-  .program-card {
-    min-height: 220px;
-  }
+    }
+
+
+    .grid--4 {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+    }
+
+
+    .grid--3 {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+    }
 
 }
 
 
-/* =====================================
-   NOSOTROS RESPONSIVE
-===================================== */
+/* --------------------------------------------------
+   2. MOBILE
+   -------------------------------------------------- */
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
 
-  .about-hero h1 {
-    font-size: 32px;
-  }
+    :root {
 
-  .services-grid {
-    grid-template-columns: 1fr;
-  }
+        --container-padding: 1rem;
+
+        --space-xl: 2.5rem;
+        --space-xxl: 3rem;
+
+    }
+
+
+    h1 {
+
+        font-size: 2rem;
+
+    }
+
+
+    h2 {
+
+        font-size: 1.65rem;
+
+    }
+
+
+    h3 {
+
+        font-size: 1.3rem;
+
+    }
+
+
+    .section {
+
+        padding-top: var(--space-xl);
+        padding-bottom: var(--space-xl);
+
+    }
+
+
+    .section-header {
+
+        margin-bottom: var(--space-lg);
+
+    }
+
+
+    .section-header__text {
+
+        font-size: 0.95rem;
+
+    }
+
+
+    .grid--2,
+    .grid--3,
+    .grid--4 {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .content-medium,
+    .content-narrow {
+
+        max-width: 100%;
+
+    }
 
 }
 
-/* =====================================
-   REVISTA RESPONSIVE
-===================================== */
 
-@media (max-width: 768px) {
+/* --------------------------------------------------
+   3. SMALL MOBILE
+   -------------------------------------------------- */
 
-  .archive-grid {
-    grid-template-columns: 1fr;
-  }
+@media (max-width: 400px) {
 
-  .revista-iframe iframe {
-    height: 400px;
-  }
+    :root {
+
+        --container-padding: 0.875rem;
+
+    }
+
+
+    h1 {
+
+        font-size: 1.8rem;
+
+    }
+
+
+    h2 {
+
+        font-size: 1.5rem;
+
+    }
 
 }
 
 
-/* =====================================
-   PROGRAMAS RESPONSIVE
-===================================== */
-@media (max-width: 1024px) {
-  .programas-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
+/* --------------------------------------------------
+   4. REDUCED MOTION
+   -------------------------------------------------- */
 
-@media (max-width: 768px) {
-  .programas-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
+@media (prefers-reduced-motion: reduce) {
 
-@media (max-width: 480px) {
-  .programas-grid {
-    grid-template-columns: 1fr;
-  }
-}
+    .button:hover,
+    .card--featured:hover,
+    .site-footer__social-link:hover {
 
-@media (max-width: 768px) {
+        transform: none;
 
-  .episodes-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .program-hero {
-    height: 40vh;
-  }
+    }
 
 }

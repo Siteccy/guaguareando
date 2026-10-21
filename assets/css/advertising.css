@@ -1,0 +1,198 @@
+
+/*==================================================
+=            ADVERTISING HERO
+==================================================*/
+
+.advertising-hero {
+    padding: 5rem 0;
+    background-color: var(--color-background);
+}
+
+.advertising-hero__content {
+    max-width: 850px;
+    text-align: center;
+}
+
+.advertising-hero__label {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.advertising-hero__title {
+    margin-bottom: 1.25rem;
+}
+
+.advertising-hero__description {
+    max-width: 720px;
+    margin: 0 auto 2rem;
+    color: var(--color-text-light);
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+
+/*==================================================
+=            ADVERTISING SERVICES
+==================================================*/
+
+.advertising-services__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+
+.advertising-card {
+    padding: 1.75rem;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+}
+
+.advertising-card__title {
+    margin-bottom: 1rem;
+}
+
+.advertising-card__text {
+    margin: 0;
+    color: var(--color-text-light);
+    line-height: 1.8;
+}
+
+.advertising-services__action {
+    margin-top: 2.5rem;
+    text-align: center;
+}
+
+
+/*==================================================
+=            PARTNERS
+==================================================*/
+
+.advertising-partners {
+    background-color: var(--color-background);
+}
+
+.advertising-partners__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.partner-card {
+    display: grid;
+    grid-template-columns: minmax(180px, 0.7fr) minmax(0, 1.3fr);
+    gap: 2rem;
+    align-items: center;
+    padding: 2rem;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+}
+
+.partner-card__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+}
+
+.partner-card__logo a {
+    display: block;
+    max-width: 240px;
+}
+
+.partner-card__logo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.partner-card__label {
+    display: inline-block;
+    margin-bottom: 0.75rem;
+    color: var(--color-primary);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.partner-card__title {
+    margin-bottom: 1rem;
+}
+
+.partner-card__text {
+    margin-bottom: 1.25rem;
+    color: var(--color-text-light);
+    line-height: 1.8;
+}
+
+.text-link {
+    display: inline-block;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+
+/*==================================================
+=            FINAL CTA
+==================================================*/
+
+.advertising-cta__content {
+    max-width: 760px;
+    text-align: center;
+}
+
+.advertising-cta__title {
+    margin-bottom: 1rem;
+}
+
+.advertising-cta__text {
+    margin-bottom: 2rem;
+    color: var(--color-text-light);
+    line-height: 1.8;
+}
+
+
+/*==================================================
+=            RESPONSIVE
+==================================================*/
+
+@media (max-width: 900px) {
+    .advertising-services__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .partner-card {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1.5rem;
+    }
+
+    .partner-card__logo {
+        min-height: 100px;
+    }
+}
+
+@media (max-width: 640px) {
+    .advertising-hero {
+        padding: 3.5rem 0;
+    }
+
+    .advertising-services__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .advertising-card,
+    .partner-card {
+        padding: 1.5rem;
+    }
+}
