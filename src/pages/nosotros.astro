@@ -1,0 +1,265 @@
+---
+// textos: rama design (about.html)
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+import Icon, { type IconName } from '../components/Icon.astro';
+import PageHead from '../components/PageHead.astro';
+import Parada from '../components/Parada.astro';
+import Ruta from '../components/Ruta.astro';
+import StopSign from '../components/StopSign.astro';
+import Ticket from '../components/Ticket.astro';
+// ilustracion animada del encabezado, va como <img> para que su CSS y sus id queden aislados de la pagina
+import ilustracion from '../assets/svg_animados/nosotros-hero.svg?url';
+
+const actividades: { title: string; text: string; href: string; link: string; icon: IconName }[] = [
+  {
+    title: 'Revista digital',
+    text: 'Publicaciones para explorar historias, ideas y temas que merecen ser compartidos.',
+    href: '/revista',
+    link: 'Explorar la revista',
+    icon: 'book',
+  },
+  {
+    title: 'Podcast y programas',
+    text: 'Conversaciones sobre cultura, deporte, literatura, música, inclusión, tecnología y mucho más.',
+    href: '/programas',
+    link: 'Conocer los programas',
+    icon: 'microphone',
+  },
+  {
+    title: 'Comunidad',
+    text: 'Un espacio para compartir experiencias, conocimientos y perspectivas que enriquecen a los demás.',
+    href: '/contacto',
+    link: 'Ponte en contacto',
+    icon: 'users',
+  },
+];
+---
+
+<BaseLayout
+  title="Nosotros"
+  description="Conoce Guaguareando Ando: un medio digital de la Ciudad de México donde las historias conectan, las voces inspiran y las comunidades se encuentran. Misión, visión y objetivo."
+>
+  <PageHead
+    letrero="Conoce nuestra historia"
+    title="Somos historias, encuentros y conversaciones"
+    lead="Historias que conectan, voces que inspiran y comunidades que se encuentran en el camino."
+  >
+    <p class="cabeza__texto">
+      En Guaguareando Ando creemos que cada persona tiene algo que contar y cada conversación puede abrir una nueva
+      perspectiva.
+    </p>
+    <Button href="/contacto" icon="arrow-right">Conversemos</Button>
+    <img
+      slot="aside"
+      src={ilustracion}
+      alt="Combi rumbo al horizonte de la Ciudad de México de la que salen globos de diálogo"
+      width="480"
+      height="520"
+    />
+  </PageHead>
+
+  <Ruta>
+    <!-- esencia -->
+    <Parada id="esencia" labelledby="esencia-titulo">
+      <StopSign text="Nuestra esencia" />
+      <div class="esencia">
+        <h2 id="esencia-titulo" class="titulo">¿Qué significa guaguarear?</h2>
+        <p class="esencia__cita">
+          Guaguarear es charlar, platicar sabroso y compartir historias de una manera cercana y amena.
+        </p>
+        <div class="prosa esencia__texto">
+          <p>
+            Nacimos en la Ciudad de México con la intención de crear un espacio de diálogo auténtico, abierto y plural.
+            Más que un medio digital, somos un punto de encuentro donde las personas pueden descubrir nuevas ideas,
+            compartir experiencias y escuchar distintas voces.
+          </p>
+          <p>
+            A través de contenidos sociales, culturales, deportivos, educativos, gastronómicos y muchos otros temas,
+            buscamos que cada historia tenga un lugar y cada conversación nos permita aprender algo nuevo.
+          </p>
+        </div>
+      </div>
+    </Parada>
+
+    <!-- mision y vision -->
+    <Parada id="mision" tono="crema-hondo" labelledby="mision-titulo">
+      <StopSign text="Lo que nos mueve" />
+      <h2 id="mision-titulo" class="titulo">Nuestra misión y visión</h2>
+      <p class="lead mision__lead">Comunicamos para conectar personas, compartir conocimientos y construir comunidad.</p>
+      <div class="tarjetas">
+        <article class="tarjeta">
+          <h3 class="tarjeta__titulo">Nuestra misión</h3>
+          <p>
+            Comunicar contenidos sociales, culturales, deportivos, gastronómicos y de interés general de manera certera y
+            veraz. Somos un espacio abierto para quienes desean compartir sus conocimientos, experiencias e historias.
+          </p>
+        </article>
+        <article class="tarjeta">
+          <h3 class="tarjeta__titulo">Nuestra visión</h3>
+          <p>
+            Consolidarnos como un medio de difusión en el que las personas encuentren temas de su interés y tengan la
+            oportunidad de expresar sus conocimientos, experiencias y puntos de vista.
+          </p>
+        </article>
+      </div>
+    </Parada>
+
+    <!-- objetivo -->
+    <Parada id="objetivo" tono="noche" labelledby="objetivo-titulo">
+      <StopSign text="Nuestro propósito" />
+      <h2 id="objetivo-titulo" class="titulo">Muchas voces, un espacio para compartir</h2>
+      <p class="objetivo__texto">
+        <span class="objetivo__label">Nuestro objetivo</span>
+        Ser un medio de comunicación digital, visual y audiovisual que difunda contenidos de interés social, cultural,
+        deportivo, político, gastronómico y educativo, promoviendo el diálogo, la participación y el intercambio de
+        experiencias.
+      </p>
+    </Parada>
+
+    <!-- que encontraras -->
+    <Parada id="que-encontraras" labelledby="encontraras-titulo">
+      <StopSign text="Hay mucho por guaguarear" />
+      <h2 id="encontraras-titulo" class="titulo">¿Qué encontrarás con nosotros?</h2>
+      <p class="lead mision__lead">Diferentes formatos y temáticas para descubrir, aprender, compartir y disfrutar.</p>
+      <ul role="list" class="tarjetas tarjetas--tres">
+        {
+          actividades.map((a) => (
+            <li class="tarjeta tarjeta--enlace">
+              <Icon name={a.icon} size={32} class="tarjeta__icono" />
+              <h3 class="tarjeta__titulo">{a.title}</h3>
+              <p>{a.text}</p>
+              <a href={a.href} class="tarjeta__link">
+                {a.link}
+                <Icon name="arrow-right" size={18} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </Parada>
+
+    <!-- cierre -->
+    <Parada id="tu-historia" tono="naranja" tramo="final" labelledby="historia-titulo">
+      <StopSign text="Súbete" />
+      <Ticket stub="¡Súbete!" stubIcon="bus">
+        <h2 id="historia-titulo" class="titulo boleto-titulo">Tu historia también merece ser escuchada</h2>
+        <p class="lead">
+          Si tienes algo que contar, algo que enseñar o simplemente ganas de compartir una buena plática, este es tu
+          lugar.
+        </p>
+        <div class="boleto-acciones">
+          <Button href="/contacto" icon="microphone">¡Vamos a guaguarear!</Button>
+        </div>
+      </Ticket>
+    </Parada>
+  </Ruta>
+</BaseLayout>
+
+<style>
+  .cabeza__texto {
+    max-width: 38rem;
+    margin-bottom: var(--space-xs);
+  }
+
+  /* esencia */
+  .esencia {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .esencia__cita {
+    max-width: 30ch;
+    color: var(--naranja-marca);
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 600;
+    line-height: 1.15;
+  }
+
+  .esencia__texto {
+    font-size: var(--step-1);
+    line-height: 1.55;
+  }
+
+  /* tarjetas */
+  .mision__lead {
+    margin-top: var(--space-s);
+  }
+
+  .tarjetas {
+    display: grid;
+    gap: var(--space-m);
+    margin-top: var(--space-xl);
+  }
+
+  @media (min-width: 48rem) {
+    .tarjetas {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .tarjetas--tres {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .tarjeta {
+    display: grid;
+    align-content: start;
+    gap: var(--space-s);
+    padding: var(--space-l) var(--space-m);
+    border-top: 8px solid var(--azul-combi);
+    border-radius: var(--radius-m);
+    background: var(--papel);
+    box-shadow: var(--sombra);
+  }
+
+  .tarjeta__titulo {
+    color: var(--azul-combi);
+    font-size: var(--step-2);
+    font-weight: 700;
+  }
+
+  .tarjeta :global(.tarjeta__icono) {
+    color: var(--azul-combi);
+  }
+
+  .tarjeta__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    margin-top: auto;
+    color: var(--naranja-accion);
+    font-weight: 700;
+  }
+
+  /* objetivo */
+  .objetivo__texto {
+    max-width: 44rem;
+    margin-top: var(--space-m);
+    font-size: var(--step-2);
+    line-height: 1.4;
+  }
+
+  .objetivo__label {
+    display: block;
+    margin-bottom: var(--space-2xs);
+    color: var(--azul-claro);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* cierre */
+  .boleto-titulo {
+    margin-bottom: var(--space-s);
+    color: var(--naranja-accion);
+  }
+
+  .boleto-acciones {
+    margin-top: var(--space-m);
+  }
+</style>

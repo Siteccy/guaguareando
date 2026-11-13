@@ -1,0 +1,82 @@
+---
+// la ruta: envuelve las secciones (<Parada>) de una pagina, cada parada dibuja su tramo de linea
+// punteada; aqui solo vive la combi, que se queda pegada a media pantalla y "maneja" por la ruta
+// mientras el usuario baja, sin js: position: sticky + animacion ligada al scroll (si hay soporte)
+import Combi from './Combi.astro';
+---
+
+<div class="ruta">
+  <slot />
+  <div class="ruta__pista" aria-hidden="true">
+    <div class="wrap ruta__pista-wrap">
+      <div class="ruta__combi">
+        <Combi size={30} class="ruta__combi-svg" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .ruta {
+    position: relative;
+  }
+
+  .ruta__pista {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .ruta__pista-wrap {
+    height: 100%;
+    /* deja espacio arriba y abajo para que la combi arranque y se detenga sobre la linea */
+    padding-block: var(--space-xl) calc(var(--space-2xl) + 22px);
+  }
+
+  .ruta__combi {
+    position: sticky;
+    top: calc(55vh - 25px);
+    width: 30px;
+    /* centra la combi sobre la linea de la ruta */
+    margin-left: calc(var(--ruta-gutter) / 2 - 15px);
+    filter: drop-shadow(0 6px 6px rgb(11 15 42 / 0.35));
+  }
+
+  @media (min-width: 48rem) {
+    .ruta__combi {
+      transform: scale(1.25);
+      transform-origin: top center;
+    }
+  }
+
+  /* traqueteo: un leve vaiven ligado al scroll, como combi en bache */
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .ruta__combi :global(.ruta__combi-svg) {
+        animation: traqueteo linear both;
+        animation-timeline: scroll(root);
+      }
+    }
+  }
+
+  @keyframes traqueteo {
+    0%,
+    100% {
+      rotate: 0deg;
+    }
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+      rotate: -3deg;
+    }
+    20%,
+    40%,
+    60%,
+    80% {
+      rotate: 3deg;
+    }
+  }
+</style>

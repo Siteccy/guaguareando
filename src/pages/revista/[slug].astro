@@ -1,0 +1,157 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Button from '../../components/Button.astro';
+import Icon from '../../components/Icon.astro';
+import PageHead from '../../components/PageHead.astro';
+import RevistaVisor from '../../components/RevistaVisor.astro';
+import { revistas, revistaActual, numeroRevista, type Revista } from '../../data/revistas';
+
+export function getStaticPaths() {
+  const ordenadas = [...revistas].sort((a, b) => a.numero - b.numero);
+  return ordenadas.map((revista, i) => ({
+    params: { slug: revista.slug },
+    props: { revista, anterior: ordenadas[i - 1], siguiente: ordenadas[i + 1] },
+  }));
+}
+
+interface Props {
+  revista: Revista;
+  anterior?: Revista;
+  siguiente?: Revista;
+}
+
+const { revista, anterior, siguiente } = Astro.props;
+const esActual = revista.slug === revistaActual.slug;
+---
+
+<BaseLayout
+  title={`Revista ${numeroRevista(revista)}: ${revista.titulo}`}
+  description={`Revista Guaguareando Ando ${numeroRevista(revista)}: ${revista.titulo}. ${revista.bajada}`}
+  ogType="article"
+>
+  <PageHead
+    letrero={esActual ? `Revista · ${numeroRevista(revista)} · Nueva edición` : `Revista · ${numeroRevista(revista)}`}
+    title={revista.titulo}
+    lead={revista.bajada}
+  />
+
+  <section class="lectura" aria-label={`Leer la revista ${numeroRevista(revista)}`}>
+    <div class="wrap">
+      <RevistaVisor revista={revista} />
+    </div>
+  </section>
+
+  <nav class="vecinos" aria-label="Otras ediciones">
+    <div class="wrap vecinos__wrap">
+      {
+        anterior ? (
+          <a href={`/revista/${anterior.slug}`} class="vecino">
+            <span class="vecino__label">
+              <Icon name="arrow-left" size={18} />
+              Edición anterior · {numeroRevista(anterior)}
+            </span>
+            <span class="vecino__nombre">{anterior.titulo}</span>
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      {
+        siguiente && (
+          <a href={`/revista/${siguiente.slug}`} class="vecino vecino--siguiente">
+            <span class="vecino__label">
+              Edición siguiente · {numeroRevista(siguiente)}
+              <Icon name="arrow-right" size={18} />
+            </span>
+            <span class="vecino__nombre">{siguiente.titulo}</span>
+          </a>
+        )
+      }
+    </div>
+    <div class="wrap vecinos__todas">
+      <Button href="/revista" variant="contorno" icon="book">Ver todas las ediciones</Button>
+    </div>
+  </nav>
+</BaseLayout>
+
+<style>
+  .lectura {
+    padding-block: var(--space-2xl) var(--space-xl);
+  }
+
+  .vecinos {
+    padding-bottom: var(--space-2xl);
+  }
+
+  .vecinos__wrap {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .vecinos__wrap > span:empty {
+    display: none;
+  }
+
+  .vecino {
+    display: grid;
+    gap: var(--space-3xs);
+    padding: var(--space-m);
+    border: 2px dashed var(--linea);
+    border-radius: var(--radius-m);
+    color: var(--tinta);
+    text-decoration: none;
+    transition:
+      border-color var(--dur) var(--ease-out),
+      background-color var(--dur) var(--ease-out);
+  }
+
+  .vecino:hover {
+    border-color: var(--naranja-accion);
+    background: var(--papel);
+  }
+
+  .vecino--siguiente {
+    text-align: right;
+  }
+
+  .vecino__label {
+    display: flex;
+    align-items: center;
+    gap: 0.35em;
+    color: var(--naranja-accion);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .vecino--siguiente .vecino__label {
+    justify-content: flex-end;
+  }
+
+  .vecino__nombre {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 600;
+  }
+
+  .vecinos__todas {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-l);
+  }
+
+  @media (min-width: 48rem) {
+    .vecinos__wrap {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .vecinos__wrap > span:empty {
+      display: block;
+    }
+
+    .vecino--siguiente {
+      grid-column: 2;
+    }
+  }
+</style>

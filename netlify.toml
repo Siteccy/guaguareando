@@ -1,0 +1,132 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# --- redirecciones 301 desde las URLs del sitio anterior (rama main) ---
+# netlify aplica la primera regla que coincide: las especificas van antes que los comodines
+
+[[redirects]]
+  from = "/pages/about-us"
+  to = "/nosotros"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/about-us.html"
+  to = "/nosotros"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/podcast"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/podcast.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/programs"
+  to = "/programas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/programs.html"
+  to = "/programas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/magazine"
+  to = "/revista"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/magazine.html"
+  to = "/revista"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/publicity"
+  to = "/anunciate"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/publicity.html"
+  to = "/anunciate"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/contact"
+  to = "/contacto"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/contact.html"
+  to = "/contacto"
+  status = 301
+  force = true
+
+# paginas de programa del sitio anterior
+[[redirects]]
+  from = "/pages/Programs/deporteando.html"
+  to = "/programas/deporteando-ando"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/Programs/lord-cinturitas.html"
+  to = "/programas/lord-cinturitas"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/Programs/tecnologeando.html"
+  to = "/programas/tecnologeando-ando"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/Programs/*"
+  to = "/programas"
+  status = 301
+  force = true
+
+# --- reescrituras (200) ---
+# /programas y /revista tienen a la vez un archivo (programas.html) y una carpeta (programas/)
+# estas reglas fijan que la ruta sin barra sirva el archivo, sin depender de como resuelve Netlify el empate
+[[redirects]]
+  from = "/programas"
+  to = "/programas.html"
+  status = 200
+
+[[redirects]]
+  from = "/revista"
+  to = "/revista.html"
+  status = 200
+
+# --- cabeceras ---
+# los archivos de /_astro/ llevan hash en el nombre: se pueden cachear para siempre
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

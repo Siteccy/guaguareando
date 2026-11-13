@@ -1,0 +1,289 @@
+---
+// reproductor de la rola de la marca, vive en BaseLayout y persiste entre paginas
+// (transition:persist + <ClientRouter />), asi la cancion sigue sonando mientras se navega
+//
+// hay un solo <audio> (aqui, nunca se mueve) y dos vistas de controles (RolaControles):
+// - "linea": debajo de la tarjeta de la cancion en el inicio (RolaTarjeta, atributo data-rola-linea)
+// - "flotante": en la esquina inferior, se muestra cuando la rola ya arranco y la vista "linea"
+//   no esta en pantalla (al bajar con scroll o en cualquier otra pagina)
+//
+// - nunca suena solo: arranca unicamente con un boton `data-rola-control` (tarjeta, aviso del hero
+//   o los controles)
+// - "cerrar" la detiene y oculta ambas vistas
+// - se pausa sola si el usuario abre un episodio, video o revista (evento `rola:pausar` de EmbedFacade)
+import RolaControles from './RolaControles.astro';
+import { rola, site } from '../data/site';
+---
+
+<div id="rola" class="rola" data-visible="no" data-flotante="no" transition:persist="rola">
+  <audio class="rola__audio" preload="none" src={rola.src}></audio>
+  <RolaControles variante="flotante" />
+</div>
+
+<script define:vars={{ titulo: rola.titulo, artista: site.name }}>
+  // se ejecuta una vez por visita: el reproductor persiste entre paginas
+  (() => {
+    const raiz = document.getElementById('rola');
+    if (!raiz || raiz.dataset.listo) return;
+    raiz.dataset.listo = 'si';
+
+    const audio = raiz.querySelector('.rola__audio');
+    const todos = (selector) => document.querySelectorAll(selector);
+    const lineaActual = () => document.querySelector('[data-rola-linea]');
+    const iniciada = () => raiz.dataset.visible === 'si';
+
+    const mmss = (s) => {
+      const t = Math.max(0, Math.floor(s || 0));
+      return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
+    };
+
+    // ---------- volumen ----------
+    // arranca al 50 % para no asustar a nadie; se recuerda el nivel que elija la persona en este navegador
+    // el "silenciado" no se recuerda entre visitas: quien vuelve y le da play debe oir algo
+    const CLAVE_VOLUMEN = 'guaguareando-rola-volumen';
+    const VOLUMEN_INICIAL = 0.5;
+    let volumen = VOLUMEN_INICIAL;
+    let silenciada = false;
+    try {
+      const guardado = JSON.parse(localStorage.getItem(CLAVE_VOLUMEN) || 'null');
+      // un 0 guardado tambien vuelve al 50 %, por la misma razon
+      if (guardado && typeof guardado.volumen === 'number' && guardado.volumen > 0) {
+        volumen = Math.min(1, guardado.volumen);
+      }
+    } catch {
+      /* sin almacenamiento (modo privado, bloqueado): se usa el 50 % */
+    }
+
+    // iphone/ipad no dejan cambiar el volumen desde la pagina (solo con los botones del equipo):
+    // ahi audio.volume se queda en 1, en ese caso se oculta la barra y queda el boton de silencio
+    audio.volume = 0.5;
+    const volumenAjustable = Math.abs(audio.volume - 0.5) < 0.01;
+
+    const guardarVolumen = () => {
+      try {
+        localStorage.setItem(CLAVE_VOLUMEN, JSON.stringify({ volumen }));
+      } catch {
+        /* no pasa nada si no se puede guardar */
+      }
+    };
+
+    const aplicarVolumen = () => {
+      if (volumenAjustable) audio.volume = volumen;
+      audio.muted = silenciada;
+    };
+
+    // refleja el volumen en los controles de todas las vistas
+    const actualizarVolumen = () => {
+      const efectivo = silenciada ? 0 : volumen;
+      const porcentaje = Math.round(efectivo * 100);
+      const nivel = efectivo === 0 ? 'off' : efectivo < 0.6 ? 'bajo' : 'alto';
+      todos('.rola__silencio').forEach((boton) => {
+        boton.dataset.nivel = nivel;
+        boton.setAttribute('aria-pressed', String(silenciada || efectivo === 0));
+      });
+      todos('.rola__volumen').forEach((barra) => {
+        barra.hidden = !volumenAjustable;
+        barra.value = String(porcentaje);
+        barra.style.setProperty('--nivel', `${porcentaje}%`);
+        barra.setAttribute('aria-valuetext', silenciada ? 'Silenciada' : `${porcentaje} %`);
+      });
+    };
+
+    aplicarVolumen();
+
+    // ¿se ve al menos el 60 % de la vista "linea"? (si esta oculta, no cuenta)
+    const enPantalla = (el) => {
+      const r = el.getBoundingClientRect();
+      if (!r.height) return false;
+      const visible = Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0);
+      return visible >= r.height * 0.6;
+    };
+
+    // decide que vista se muestra: la de la tarjeta si esta en pantalla; si no, la flotante
+    const actualizarVistas = () => {
+      const linea = lineaActual();
+      if (linea) linea.hidden = !iniciada();
+      const lineaVisible = !!linea && iniciada() && enPantalla(linea);
+      raiz.dataset.flotante = iniciada() && !lineaVisible ? 'si' : 'no';
+    };
+
+    const actualizarTiempo = () => {
+      const actual = audio.currentTime || 0;
+      const duracion = audio.duration || 0;
+      const porcentaje = duracion ? `${(actual / duracion) * 100}%` : '0%';
+      todos('.rola__avance').forEach((barra) => {
+        if (duracion) barra.max = String(Math.floor(duracion));
+        barra.value = String(Math.floor(actual));
+        barra.style.setProperty('--avance', porcentaje);
+        barra.setAttribute('aria-valuetext', `${mmss(actual)} de ${mmss(Math.round(duracion)) || ''}`);
+      });
+      todos('.rola__actual').forEach((el) => (el.textContent = mmss(actual)));
+      // redondeado, igual que la duracion que muestra la tarjeta (172.0 s → 2:52)
+      if (duracion) todos('.rola__total').forEach((el) => (el.textContent = mmss(Math.round(duracion))));
+    };
+
+    // refleja el estado en todas las vistas y botones de la pagina actual
+    const sincronizar = () => {
+      const sonando = !audio.paused && !audio.ended;
+      todos('.rola-panel').forEach((panel) => (panel.dataset.sonando = sonando ? 'si' : 'no'));
+      todos('[data-rola-control]').forEach((boton) => {
+        boton.dataset.sonando = sonando ? 'si' : 'no';
+        const texto = boton.querySelector('[data-rola-texto]');
+        if (texto) {
+          // boton con texto visible: el texto es su nombre accesible
+          texto.textContent = sonando ? texto.dataset.pausar : texto.dataset.reproducir;
+        } else {
+          // boton de solo icono: el nombre va en aria-label
+          boton.setAttribute('aria-label', `${sonando ? 'Pausar' : 'Reproducir'} ${titulo}`);
+        }
+      });
+      actualizarTiempo();
+      actualizarVolumen();
+      actualizarVistas();
+    };
+
+    const mostrarError = (mensaje) => todos('.rola__error').forEach((el) => (el.textContent = mensaje));
+
+    const alternar = () => {
+      if (audio.paused) {
+        mostrarError('');
+        raiz.dataset.visible = 'si';
+        actualizarVistas();
+        audio.play().catch(() => {
+          mostrarError(' · No se pudo reproducir. Intenta de nuevo.');
+          sincronizar();
+        });
+      } else {
+        audio.pause();
+      }
+    };
+
+    const cerrar = () => {
+      audio.pause();
+      audio.currentTime = 0;
+      raiz.dataset.visible = 'no';
+      sincronizar();
+      // el foco no debe quedarse en un control que acaba de ocultarse
+      const destino =
+        document.querySelector('#rola-tarjeta [data-rola-control]') ||
+        document.querySelector('.hero__rola') ||
+        document.getElementById('contenido');
+      destino?.focus();
+    };
+
+    document.addEventListener('click', (evento) => {
+      const objetivo = evento.target;
+      if (!(objetivo instanceof Element)) return;
+      if (objetivo.closest('[data-rola-control]')) {
+        evento.preventDefault();
+        alternar();
+      } else if (objetivo.closest('.rola__cerrar')) {
+        cerrar();
+      } else if (objetivo.closest('.rola__silencio')) {
+        // silenciar / quitar silencio, si el volumen estaba en 0, vuelve al 50 %
+        if (silenciada || volumen === 0) {
+          silenciada = false;
+          if (volumen === 0) volumen = VOLUMEN_INICIAL;
+        } else {
+          silenciada = true;
+        }
+        aplicarVolumen();
+        guardarVolumen();
+        actualizarVolumen();
+      }
+    });
+
+    document.addEventListener('input', (evento) => {
+      const barra = evento.target;
+      if (!(barra instanceof HTMLInputElement)) return;
+      if (barra.classList.contains('rola__avance')) {
+        audio.currentTime = Number(barra.value);
+      } else if (barra.classList.contains('rola__volumen')) {
+        volumen = Number(barra.value) / 100;
+        silenciada = volumen === 0;
+        aplicarVolumen();
+        guardarVolumen();
+        actualizarVolumen();
+      }
+    });
+
+    audio.addEventListener('loadedmetadata', actualizarTiempo);
+    audio.addEventListener('timeupdate', actualizarTiempo);
+    audio.addEventListener('play', sincronizar);
+    audio.addEventListener('pause', sincronizar);
+    audio.addEventListener('ended', sincronizar);
+    audio.addEventListener('error', () => {
+      mostrarError(' · No se pudo cargar la rola.');
+      sincronizar();
+    });
+
+    // al hacer scroll o cambiar el tamaño de la ventana, revisa que vista toca (una vez por cuadro)
+    let pendiente = false;
+    const programar = () => {
+      if (pendiente || !iniciada()) return;
+      pendiente = true;
+      requestAnimationFrame(() => {
+        pendiente = false;
+        actualizarVistas();
+      });
+    };
+    window.addEventListener('scroll', programar, { passive: true });
+    window.addEventListener('resize', programar);
+
+    // al abrir un episodio, video o revista, la rola se pausa para no encimarse
+    document.addEventListener('rola:pausar', () => audio.pause());
+
+    // cada pagina nueva trae sus propios botones y, en el inicio, la vista "linea"
+    document.addEventListener('astro:page-load', sincronizar);
+
+    // controles del sistema (pantalla de bloqueo, teclas multimedia)
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: titulo,
+        artist: artista,
+        artwork: [{ src: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+      });
+      navigator.mediaSession.setActionHandler('play', () => audio.play());
+      navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+    }
+
+    sincronizar();
+  })();
+</script>
+
+<style>
+  .rola {
+    position: fixed;
+    right: var(--space-s);
+    bottom: var(--space-s);
+    z-index: 45;
+    width: min(calc(100% - var(--space-s) * 2), 24rem);
+  }
+
+  /* solo se ve cuando la rola ya arranco y la vista de la tarjeta no esta en pantalla */
+  .rola:not([data-flotante='si']) {
+    display: none;
+  }
+
+  .rola[data-flotante='si'] {
+    animation: rola-entra 280ms var(--ease-out);
+  }
+
+  @keyframes rola-entra {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+  }
+
+  /* deja espacio al final de la pagina para que el reproductor no tape el pie */
+  :global(body:has(.rola[data-flotante='si'])) {
+    padding-bottom: 6.5rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rola[data-flotante='si'] {
+      animation: none;
+    }
+  }
+</style>

@@ -1,0 +1,429 @@
+---
+/**
+ * ilustracion animada del hero: la combi de "Guaguareando... ando!"
+ *
+ * - SVG inline, viewBox 512×512, fondo transparente, ocupa el 100% del contenedor
+ * - solo CSS @keyframes (sin JS), bucle global de 4.8 s: todas las duraciones
+ *   son divisores de 4.8 s (0.2 / 0.8 / 0.96 / 1.2 / 1.6 / 2.4 / 4.8)
+ * - prefers-reduced-motion: todo queda quieto (y el polvo desaparece)
+ * - la linea punteada naranja sale por el borde inferior en x = 102.4 del viewBox
+ *   (20% del ancho) y baja en vertical: ahi se engancha la linea del hero,
+ *   el trazo sigue de largo hacia abajo (V2000) pero queda oculto por el recorte normal
+ *   del SVG; quien lo use puede mostrar ese tramo con `overflow: visible` + `clip-path`
+ *   para alargar la raya sin cortes (ver .hero__combi-svg en pages/index.astro)
+ * - los ids (hc-*) son unicos por pagina: usalo una sola vez por vista
+ *
+ * uso:  <HeroCombi class="hero__combi" />
+ */
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<svg
+  class:list={['hc', className]}
+  viewBox="0 0 512 512"
+  xmlns="http://www.w3.org/2000/svg"
+  role="img"
+  aria-labelledby="hc-title"
+>
+  <title id="hc-title">Combi azul de Guaguareando Ando cargada de maletas y gente saludando</title>
+
+  <style is:inline>
+    /* ───────── base ───────── */
+    .hc { display: block; width: 100%; height: auto; }
+    .hc-tinta { stroke: #0b0f2a; stroke-width: 2.4; stroke-linejoin: round; stroke-linecap: round; }
+    .hc-fina { stroke-width: 1.7; }
+    .hc-linea { fill: none; }
+    .hc-halo { fill: #fff4e8; stroke: #fff4e8; stroke-width: 9; stroke-linejoin: round; stroke-linecap: round; }
+    .hc-letras {
+      font-family: var(--font-display, 'Fredoka'), 'Fredoka', sans-serif;
+      font-weight: 700; font-size: 60px; letter-spacing: .5px;
+      fill: #d95f0e; stroke: #b9b9b9; stroke-width: 13; stroke-linejoin: round;
+      paint-order: stroke fill;
+    }
+
+    /* ───────── animacion (ciclo global 4.8 s) ───────── */
+    .hc-llanta, .hc-brazo, .hc-polvo, .hc-texto { transform-box: fill-box; }
+
+    /* llantas: giran sobre su centro + mini bache */
+    .hc-llanta { transform-origin: 50% 50%; animation: hc-girar 1.2s linear infinite; }
+    .hc-bache { animation: hc-bache 1.6s ease-in-out infinite; }
+
+    /* carroceria: rebote de suspension, 0.08 s despues de las llantas */
+    .hc-carroceria { animation: hc-rebote 1.6s ease-in-out -1.52s infinite; }
+
+    /* equipaje: mismo golpe, 0.12 s despues de la carroceria (tiene peso) */
+    .hc-equipaje { animation: hc-carga 1.6s ease-in-out -1.4s infinite; }
+
+    /* brazos: rotan desde el hombro (centro del borde inferior de su caja) */
+    .hc-brazo { transform-origin: 50% 100%; }
+    .hc-brazo-1 { animation: hc-saludo-1 .96s ease-in-out infinite; }
+    .hc-brazo-2 { animation: hc-saludo-2 1.2s ease-in-out -.4s infinite; }
+    .hc-brazo-3 { animation: hc-saludo-3 .8s ease-in-out -.25s infinite; }
+    .hc-brazo-paz { animation: hc-paz 2.4s ease-in-out infinite; }
+
+    /* carretera: la linea punteada corre hacia atras (1 periodo = 30 px) */
+    .hc-raya { stroke-dasharray: 10 20; animation: hc-avance .2s linear infinite; }
+
+    /* polvo: 3 nubecitas escalonadas */
+    .hc-polvo { transform-origin: 50% 50%; opacity: 0; animation: hc-polvo 1.6s ease-out infinite; }
+    .hc-polvo-2 { animation-delay: -.53s; }
+    .hc-polvo-3 { animation-delay: -1.07s; }
+
+    /* texto: respira apenas */
+    .hc-texto { transform-origin: 50% 50%; animation: hc-respira 4.8s ease-in-out infinite; }
+
+    @keyframes hc-girar { to { transform: rotate(360deg); } }
+    @keyframes hc-bache {
+      0%, 14%, 50%, 62%, 100% { transform: translateY(0); }
+      6% { transform: translateY(-1.2px); }
+      55% { transform: translateY(-.8px); }
+    }
+    @keyframes hc-rebote {
+      0%, 46%, 100% { transform: translateY(0); }
+      10% { transform: translateY(-3px); }
+      22% { transform: translateY(.8px); }
+      34% { transform: translateY(-1.2px); }
+      60% { transform: translateY(-2.2px); }
+      72% { transform: translateY(.6px); }
+      84% { transform: translateY(-.6px); }
+    }
+    @keyframes hc-carga {
+      0%, 48%, 100% { transform: translateY(0); }
+      11% { transform: translateY(-2.4px); }
+      25% { transform: translateY(1.1px); }
+      38% { transform: translateY(-.8px); }
+      61% { transform: translateY(-1.7px); }
+      75% { transform: translateY(.8px); }
+      88% { transform: translateY(-.4px); }
+    }
+    @keyframes hc-saludo-1 { 0%, 100% { transform: rotate(-13deg); } 50% { transform: rotate(15deg); } }
+    @keyframes hc-saludo-2 { 0%, 100% { transform: rotate(-16deg); } 50% { transform: rotate(10deg); } }
+    @keyframes hc-saludo-3 { 0%, 100% { transform: rotate(-10deg); } 50% { transform: rotate(14deg); } }
+    @keyframes hc-paz { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(8deg); } }
+    @keyframes hc-avance { from { stroke-dashoffset: 30; } to { stroke-dashoffset: 0; } }
+    @keyframes hc-polvo {
+      0% { transform: translate(0, 0) scale(.35); opacity: 0; }
+      12% { opacity: 1; }
+      55% { opacity: .7; }
+      100% { transform: translate(-50px, -15px) scale(1.25); opacity: 0; }
+    }
+    @keyframes hc-respira { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.012); } }
+
+    /* sin movimiento: se ve como el logo estatico */
+    @media (prefers-reduced-motion: reduce) {
+      .hc * { animation: none !important; }
+    }
+  </style>
+
+  <defs>
+    {/* arcos del texto */}
+    <path id="hc-arco" d="M74.9 345.1A232 232 0 0 1 466.9 127.8" />
+    <path id="hc-arco2" d="M216 473.6A400 400 0 0 0 456 473.6" />
+
+    {/* siluetas reutilizadas (relleno, tinta y halo crema) */}
+    <path id="hc-sil" d="M134 181 322 176 430 182Q454 184 455 208L457 326Q458 352 446 357L324 373 128 369Q110 369 110 351V205Q110 182 134 181Z" />
+    <path id="hc-def" d="M306 365 325 368 452 351Q464 350 465 360 465 370 455 372L327 389 306 386Q297 385 297 375.5 297 366 306 365Z" />
+    <path id="hc-pb" d="M340 197 438 203Q447 204 447 212L448 244Q448 252 440 252L340 257Q332 257 332 249V205Q332 197 340 197Z" />
+    <path id="hc-parrilla" d="M138 162 322 157 428 164M138 162V181M184 161V180M230 159.5V179M276 158V178M322 157V176M375 160.5V180M428 164V183" />
+    <clipPath id="hc-c-sil"><use href="#hc-sil" /></clipPath>
+    <clipPath id="hc-c-pb"><use href="#hc-pb" /></clipPath>
+
+    {/* bultos del equipaje */}
+    <circle id="hc-b7" cx="149" cy="169" r="12" />
+    <path id="hc-b1" d="M158 184C150 156 166 122 204 118 238 115 262 134 264 184Z" />
+    <path id="hc-b2" d="M287 184C280 140 300 104 346 100 392 97 424 126 425 184Z" />
+    <path id="hc-b3" d="M229 184V141Q229 125 245 125H270Q286 125 286 141V184Z" />
+    <path id="hc-b4" d="M178 184 180 151Q182 139 196 139 210 139 212 151L214 184Z" />
+    <path id="hc-b5" d="M279 184 280 153Q281 141 298 141 315 141 316 153L317 184Z" />
+    <path id="hc-b6" d="M250 184Q250 158 268 158 286 158 287 184Z" />
+
+    {/* piezas de pasajero: torso, cabeza y caritas (caricaturas genericas, como las del logo) */}
+    <path id="hc-torso" d="M-16 30Q-16 14-6 12H6Q16 14 16 30Z" />
+    <circle id="hc-cab" r="13" />
+    <g id="hc-rubor" stroke="none" fill="#eba996">
+      <circle cx="-7.6" cy="3.6" r="2.3" /><circle cx="7.6" cy="3.6" r="2.3" />
+    </g>
+    <path id="hc-boca" d="M-4.6 3.6Q0 10.6 4.6 3.6Z" fill="#9a3412" stroke="#0b0f2a" stroke-width="1.4" stroke-linejoin="round" />
+    {/* a: ojos abiertos y risa · b: ojos cerrados de risa · c: sonrisa tranquila */}
+    <g id="hc-cara-a" stroke="none">
+      <use href="#hc-rubor" />
+      <circle cx="-4.8" cy="-1" r="1.6" fill="#0b0f2a" /><circle cx="4.8" cy="-1" r="1.6" fill="#0b0f2a" />
+      <use href="#hc-boca" />
+    </g>
+    <g id="hc-cara-b" stroke="none">
+      <use href="#hc-rubor" />
+      <path d="M-7.2-.4q2.3-2.8 4.6 0M2.6-.4q2.3-2.8 4.6 0" fill="none" stroke="#0b0f2a" stroke-width="1.6" stroke-linecap="round" />
+      <use href="#hc-boca" />
+    </g>
+    <g id="hc-cara-c" stroke="none">
+      <use href="#hc-rubor" />
+      <circle cx="-4.8" cy="-1" r="1.6" fill="#0b0f2a" /><circle cx="4.8" cy="-1" r="1.6" fill="#0b0f2a" />
+      <path d="M-4.6 4Q0 8.8 4.6 4" fill="none" stroke="#0b0f2a" stroke-width="1.7" stroke-linecap="round" />
+    </g>
+    <clipPath id="hc-c-vent">
+      <rect x="124" y="196" width="42" height="58" rx="9" /><rect x="172" y="196" width="42" height="58" rx="9" />
+      <rect x="220" y="196" width="42" height="58" rx="9" /><rect x="268" y="196" width="42" height="58" rx="9" />
+    </clipPath>
+    <path id="hc-nube" d="M-15 4a6.5 6.5 0 0 1 7-9 9 9 0 0 1 17-1 7 7 0 0 1 8 10 6 6 0 0 1-6 7h-20a6.5 6.5 0 0 1-6-7z" />
+  </defs>
+
+  {/* ═════════ carretera ═════════ */}
+  <g fill="none" stroke-linecap="round">
+    {/* asfalto: solo el tramo corto bajo la combi */}
+    <path d="M468 402H164C122 402 102.4 430 102.4 518" stroke="#632e62" stroke-width="42" stroke-dasharray="346 999" />
+    {/* linea punteada naranja: mismo trazado (derecha → izquierda → abajo), sale por el borde inferior
+        y sigue de largo (V2000) para que el hero pueda alargarla hasta su carril sin perder el ritmo de las rayas */}
+    <path class="hc-raya" d="M468 402H164C122 402 102.4 430 102.4 518V2000" stroke="#d95f0e" stroke-width="5" />
+  </g>
+
+  {/* escena de la combi: escalada y colocada dentro del arco del texto */}
+  <g transform="translate(12 10) scale(.96)">
+
+    {/* sombra plana */}
+    <ellipse cx="287" cy="399" rx="176" ry="8" fill="#0b0f2a" opacity=".35" />
+
+    {/* ═════════ polvo ═════════ */}
+    <g fill="#fff4e8">
+      <g transform="translate(100 386)"><use href="#hc-nube" class="hc-polvo" /></g>
+      <g transform="translate(96 392)"><use href="#hc-nube" class="hc-polvo hc-polvo-2" /></g>
+      <g transform="translate(102 380)"><use href="#hc-nube" class="hc-polvo hc-polvo-3" /></g>
+    </g>
+
+    {/* ═════════ combi (todo lo que rebota con la suspension) ═════════ */}
+    <g class="hc-carroceria">
+
+      {/* halo crema: silueta exterior tipo sticker */}
+      <g class="hc-halo">
+        <use href="#hc-sil" />
+        <use href="#hc-def" />
+      </g>
+
+      {/* ── brazo de amor y paz (sale por la ventana del otro lado) ── */}
+      <g transform="translate(454 238) rotate(22)">
+        <g class="hc-brazo hc-brazo-paz">
+          <g class="hc-halo">
+            <rect x="-5.5" y="-44" width="11" height="44" rx="5.5" />
+            <circle cy="-50" r="6.5" />
+            <path d="M-2.5-54-6.5-67M2.5-54 6.5-67" stroke-width="12" />
+          </g>
+          <g class="hc-tinta">
+            <rect x="-5.5" y="-44" width="11" height="44" rx="5.5" fill="#7f9c6e" />
+            <path class="hc-linea" d="M-2.5-54-6.5-67M2.5-54 6.5-67" stroke-width="7.4" />
+            <path class="hc-linea" d="M-2.5-54-6.5-67M2.5-54 6.5-67" stroke="#efc7a6" stroke-width="3.4" />
+            <circle cy="-50" r="6.5" fill="#efc7a6" />
+          </g>
+        </g>
+      </g>
+
+      {/* ── equipaje (rebota con retraso) ── */}
+      <g class="hc-equipaje">
+        <g class="hc-halo">
+          <use href="#hc-b7" /><use href="#hc-b1" /><use href="#hc-b2" /><use href="#hc-b3" />
+        </g>
+        <g class="hc-tinta">
+          <use href="#hc-b7" fill="#a9c4e8" />
+          <path class="hc-linea hc-fina" d="M144 169a5 5 0 1 0 5-5" />
+          <use href="#hc-b1" fill="#d95f0e" />
+          <path d="M264 184C262 154 250 130 230 120 242 140 245 162 241 184Z" fill="#c2410c" stroke="none" />
+          <path class="hc-linea" d="M183 126Q192 152 188 183" />
+          <use href="#hc-b1" class="hc-linea" />
+          <use href="#hc-b2" fill="#d95f0e" />
+          <path d="M425 184C424 146 408 118 384 106 400 132 404 160 400 184Z" fill="#c2410c" stroke="none" />
+          <path class="hc-linea" d="M318 106Q327 140 323 183M371 103Q384 140 382 183" />
+          <use href="#hc-b2" class="hc-linea" />
+          <use href="#hc-b3" fill="#3f6ea8" />
+          <rect x="239" y="151" width="37" height="26" rx="6" fill="#a9c4e8" />
+          <path class="hc-linea" d="M249 125q8.5-10 17 0M229 142h57" />
+          <use href="#hc-b4" fill="#dcae45" />
+          <path class="hc-linea hc-fina" d="M186 153h20" />
+          <use href="#hc-b6" fill="#8fa878" />
+          <use href="#hc-b5" fill="#f1dcef" />
+          <path class="hc-linea hc-fina" d="M281 158q17 10 34 0" />
+        </g>
+      </g>
+
+      {/* ── carroceria: colores planos recortados a la silueta ── */}
+      <g clip-path="url(#hc-c-sil)">
+        <rect x="104" y="170" width="362" height="210" fill="#fff4e8" />
+        <path d="M104 191 322 187 464 195V170H104Z" fill="#f6e3cc" />
+        <path d="M104 266 322 264 464 257V380H104Z" fill="#3f6ea8" />
+        <path d="M121 279 311 277" fill="none" stroke="#a9c4e8" stroke-width="5" stroke-linecap="round" />
+        <path d="M338 269 444 263Q440 300 412 333 395 349 380 336 350 306 338 269Z" fill="#a9c4e8" />
+      </g>
+      <g class="hc-tinta hc-linea">
+        <path d="M111 191 322 187 453 195.5M110 266 322 264 456 257" />
+        <path d="M265 189V368" />
+        <path class="hc-fina" d="M381 316h24M384 323h18M387 330h12" />
+      </g>
+
+      {/* ── ventanas laterales + pasajeros ── */}
+      <g fill="#a9c4e8">
+        <rect x="124" y="196" width="42" height="58" rx="9" />
+        <rect x="172" y="196" width="42" height="58" rx="9" />
+        <rect x="220" y="196" width="42" height="58" rx="9" />
+        <rect x="268" y="196" width="42" height="58" rx="9" />
+      </g>
+      <g class="hc-tinta hc-fina" clip-path="url(#hc-c-vent)">
+        {/* 1 · señor de pelo cano peinado hacia arriba, camisa azul */}
+        <g transform="translate(145 224)">
+          <use href="#hc-torso" fill="#3f6ea8" />
+          <path d="M-5 12 0 19 5 12Z" fill="#fffbf6" />
+          <use href="#hc-cab" fill="#f1cdb0" />
+          <path d="M-13.5-1Q-16.5-15-4-18 10-20.5 13.5-4 8-10.5 0-10-8-9.5-13.5-1Z" fill="#b8b0a4" />
+          <path class="hc-linea" d="M-7.4-5.4q2.5-1.6 5 0M2.4-5.4q2.5-1.6 5 0" stroke="#8a8178" />
+          <use href="#hc-cara-c" />
+        </g>
+        {/* 2 · chica de melena rubia, chaleco oscuro sobre blusa blanca (saluda: brazo 1) */}
+        <g transform="translate(193 224)">
+          <path d="M-17 31Q-23-18 0-19 23-18 17 31Z" fill="#d6b06a" />
+          <use href="#hc-torso" fill="#9a3412" />
+          <path d="M-4.5 12h9L3 30h-6Z" fill="#fffbf6" />
+          <use href="#hc-cab" fill="#f6d6ba" />
+          <path d="M-13.5 1Q-15.5-17 0-17 15.5-17 13.5 1 11-9 3-11.5-5-7-13.5 1Z" fill="#d6b06a" />
+          <use href="#hc-cara-b" />
+        </g>
+        {/* 3 · pelo castaño corto con fleco, camisa blanca de cuello */}
+        <g transform="translate(241 224)">
+          <use href="#hc-torso" fill="#fffbf6" />
+          <path class="hc-linea" d="M-5.5 12.5 0 19 5.5 12.5" />
+          <use href="#hc-cab" fill="#f3d0b3" />
+          <path d="M-13.5 0Q-15.5-17 0-17 15.5-17 13.5 0L11-6.5Q0-10-11-6.5Z" fill="#6b4a36" />
+          <use href="#hc-cara-a" />
+        </g>
+        {/* 4 · chica rubia de cola de caballo, sueter amarillo (saluda: brazo 2) */}
+        <g transform="translate(289 224)">
+          <path d="M8-11Q25-13 22 5 20 13 15 9 18 0 8-3Z" fill="#dcb664" />
+          <use href="#hc-torso" fill="#dcae45" />
+          <path d="M-4.5 12h9L3 30h-6Z" fill="#fffbf6" />
+          <use href="#hc-cab" fill="#f6d6ba" />
+          <path d="M-13.5-2Q-14-17 0-17 14-17 13.5-2 9-11.5 0-11.5-9-11.5-13.5-2Z" fill="#dcb664" />
+          <use href="#hc-cara-b" />
+        </g>
+      </g>
+      <g class="hc-tinta hc-linea">
+        <rect x="124" y="196" width="42" height="58" rx="9" />
+        <rect x="172" y="196" width="42" height="58" rx="9" />
+        <rect x="220" y="196" width="42" height="58" rx="9" />
+        <rect x="268" y="196" width="42" height="58" rx="9" />
+      </g>
+
+      {/* ── parabrisas + pasajeros de adelante ── */}
+      <use href="#hc-pb" fill="#a9c4e8" />
+      <g clip-path="url(#hc-c-pb)" class="hc-tinta hc-fina">
+        {/* 5 · chica de melena castaña, sueter rosa con cuello blanco (saluda: brazo 3) */}
+        <g transform="translate(361 228)">
+          <path d="M-17 27Q-23-18 0-19 23-18 17 27Z" fill="#7a4632" />
+          <use href="#hc-torso" fill="#f1dcef" />
+          <path d="M-5 12 0 19 5 12Z" fill="#fffbf6" />
+          <use href="#hc-cab" fill="#f4d2b6" />
+          <path d="M-13.5 2Q-15.5-17 0-17 15.5-17 13.5 2 11-8 0-12-11-8-13.5 2Z" fill="#7a4632" />
+          <use href="#hc-cara-a" />
+        </g>
+        {/* 6 · chico de pelo oscuro despeinado, sudadera verde, guiña el ojo (brazo de amor y paz) */}
+        <g transform="translate(420 229)">
+          <path d="M-18 30Q-18 9 0 8 18 9 18 30Z" fill="#7f9c6e" />
+          <path class="hc-linea" d="M-3 13v7M3 13v7" />
+          <use href="#hc-cab" fill="#efc7a6" />
+          <path d="M-13.5 0Q-15.5-17.5 1-17.5 15.5-17 13.5 0 11-6 8-9.5 6-5 2-10-2-5-6-9.5-10-5-13.5 0Z" fill="#3b2a22" />
+          <use href="#hc-rubor" />
+          <circle cx="-4.8" cy="-1" r="1.6" fill="#0b0f2a" stroke="none" />
+          <path class="hc-linea" d="M2.6-.4q2.3-2.8 4.6 0" />
+          <use href="#hc-boca" />
+        </g>
+        {/* brazo 3 (dentro del parabrisas) */}
+        <g transform="translate(379 254) rotate(12)">
+          <g class="hc-brazo hc-brazo-3">
+            <rect x="-4.5" y="-27" width="9" height="27" rx="4.5" fill="#f4d2b6" />
+            <rect x="-5.5" y="-13" width="11" height="13" rx="3" fill="#f1dcef" />
+            <circle cy="-30" r="6" fill="#f4d2b6" />
+          </g>
+        </g>
+      </g>
+      <g class="hc-tinta hc-linea">
+        <use href="#hc-pb" />
+        <path d="M390 200 391 255" />
+      </g>
+
+      {/* ── detalles: faros, intermitentes, manija, espejo ── */}
+      <g class="hc-tinta">
+        <circle cx="347" cy="318" r="12.5" fill="#b9b9b9" />
+        <circle cx="347" cy="318" r="8" fill="#fff4e8" stroke="none" />
+        <circle cx="441" cy="310" r="10" fill="#b9b9b9" />
+        <circle cx="441" cy="310" r="6" fill="#fff4e8" stroke="none" />
+        <circle class="hc-fina" cx="339" cy="287" r="4.2" fill="#d95f0e" />
+        <circle class="hc-fina" cx="448" cy="281" r="3.4" fill="#d95f0e" />
+        <rect class="hc-fina" x="272" y="281" width="13" height="5" rx="2.5" fill="#b9b9b9" />
+        <path class="hc-linea" d="M318 263 329 271" />
+        <circle cx="332" cy="275" r="7" fill="#b9b9b9" />
+      </g>
+
+      {/* contorno de tinta de la silueta + defensa */}
+      <use href="#hc-sil" class="hc-tinta hc-linea" />
+      <use href="#hc-def" class="hc-tinta" fill="#b9b9b9" />
+      <path d="M309 371 326 374 454 357" fill="none" stroke="#fffbf6" stroke-width="3" stroke-linecap="round" />
+
+      {/* ── parrilla del techo (por delante del equipaje) ── */}
+      <use href="#hc-parrilla" class="hc-tinta hc-linea" stroke-width="5.6" />
+      <use href="#hc-parrilla" fill="none" stroke="#b9b9b9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+
+      {/* ── brazos 1 y 2 (salen por las ventanas laterales) ── */}
+      <g class="hc-tinta hc-fina">
+        <g transform="translate(205 248) rotate(18)">
+          <g class="hc-brazo hc-brazo-1">
+            <rect x="-4.5" y="-28" width="9" height="28" rx="4.5" fill="#f6d6ba" />
+            <rect x="-5.5" y="-13" width="11" height="13" rx="3" fill="#fffbf6" />
+            <circle cy="-31" r="6" fill="#f6d6ba" />
+          </g>
+        </g>
+        <g transform="translate(301 248) rotate(14)">
+          <g class="hc-brazo hc-brazo-2">
+            <rect x="-4.5" y="-28" width="9" height="28" rx="4.5" fill="#f6d6ba" />
+            <rect x="-5.5" y="-13" width="11" height="13" rx="3" fill="#dcae45" />
+            <circle cy="-31" r="6" fill="#f6d6ba" />
+          </g>
+        </g>
+      </g>
+    </g>
+
+    {/* ═════════ llantas (no rebotan con la carroceria) ═════════ */}
+    <g class="hc-tinta hc-fina">
+      <g transform="translate(160 368)">
+        <g class="hc-bache">
+          <circle r="30" fill="#0b0f2a" stroke="#fff4e8" stroke-width="3.5" />
+          <g class="hc-llanta">
+            <circle r="18" fill="#f6e3cc" />
+            <path class="hc-linea" d="M0-18V18M-18 0H18" />
+            <circle r="7.5" fill="#b9b9b9" />
+            <circle cx="9.5" cy="-9.5" r="2.6" fill="#d95f0e" stroke="none" />
+            <circle cx="-9.5" cy="9.5" r="2.6" fill="#0b0f2a" stroke="none" />
+            <circle cx="9.5" cy="9.5" r="2.6" fill="#0b0f2a" stroke="none" />
+            <circle cx="-9.5" cy="-9.5" r="2.6" fill="#0b0f2a" stroke="none" />
+          </g>
+        </g>
+      </g>
+      <g transform="translate(266 368)">
+        <g class="hc-bache">
+          <circle r="30" fill="#0b0f2a" stroke="#fff4e8" stroke-width="3.5" />
+          <g class="hc-llanta">
+            <circle r="18" fill="#f6e3cc" />
+            <path class="hc-linea" d="M0-18V18M-18 0H18" />
+            <circle r="7.5" fill="#b9b9b9" />
+            <circle cx="9.5" cy="-9.5" r="2.6" fill="#d95f0e" stroke="none" />
+            <circle cx="-9.5" cy="9.5" r="2.6" fill="#0b0f2a" stroke="none" />
+            <circle cx="9.5" cy="9.5" r="2.6" fill="#0b0f2a" stroke="none" />
+            <circle cx="-9.5" cy="-9.5" r="2.6" fill="#0b0f2a" stroke="none" />
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  {/* ═════════ texto en arco ═════════ */}
+  <g class="hc-texto hc-letras" text-anchor="middle" aria-hidden="true">
+    <text><textPath href="#hc-arco" startOffset="50%">GUAGUAREANDO...</textPath></text>
+    <text><textPath href="#hc-arco2" startOffset="50%">ANDO!</textPath></text>
+  </g>
+</svg>

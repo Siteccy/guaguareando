@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://guaguareandoando.com/sitemap-index.xml

@@ -1,0 +1,221 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 560" role="img" aria-labelledby="contacto-hero-titulo">
+  <title id="contacto-hero-titulo">Combi estacionada con la puerta abierta recibiendo un mensaje</title>
+
+  <style>
+    /* velocidad: cambia solo --ciclo, todas las duraciones se derivan de este
+       valor, asi el bucle sigue cerrando perfecto con cualquier numero */
+    svg { --ciclo: 7s; }
+
+    /* avion: gira alrededor del centro del arco de la ruta (ver #avion-pivote),
+       asi recorre la curva y se orienta solo */
+    #avion-vuelo { animation: volar var(--ciclo) infinite; }
+    #avion {
+      transform-box: fill-box; transform-origin: 50% 50%;
+      animation: aparecer var(--ciclo) linear infinite;
+    }
+    /* combi: rebote de "llego" desde el piso, las ruedas no se mueven */
+    #carroceria {
+      transform-box: fill-box; transform-origin: 50% 100%;
+      animation: rebote var(--ciclo) ease-in-out infinite;
+    }
+    /* globo: respira, puntos: "escribiendo..." en secuencia */
+    #globo {
+      transform-box: fill-box; transform-origin: 50% 60%;
+      animation: respirar calc(var(--ciclo) / 4) ease-in-out infinite alternate;
+    }
+    #puntos circle {
+      transform-box: fill-box; transform-origin: 50% 50%;
+      animation: teclear calc(var(--ciclo) / 5) ease-in-out infinite;
+    }
+    #puntos circle:nth-child(1) { animation-delay: calc(var(--ciclo) * -0.05); }
+    #puntos circle:nth-child(2) { animation-delay: calc(var(--ciclo) * -0.025); }
+    /* ruta: los guiones avanzan hacia la puerta */
+    #ruta { animation: fluir calc(var(--ciclo) / 5) linear infinite; }
+    /* parada: se mece desde la base del poste */
+    #parada {
+      transform-box: fill-box; transform-origin: 50% 100%;
+      animation: mecer calc(var(--ciclo) / 2) ease-in-out infinite alternate;
+    }
+
+    @keyframes volar {
+      0%        { transform: rotate(0deg); animation-timing-function: cubic-bezier(.35, .1, .55, 1); }
+      58%, 100% { transform: rotate(64deg); }
+    }
+    @keyframes aparecer {
+      0%        { opacity: 0; transform: scale(.6); }
+      7%, 49%   { opacity: 1; transform: scale(1); }
+      58%, 100% { opacity: 0; transform: scale(.3); }
+    }
+    @keyframes rebote {
+      0%, 56%, 74%, 100% { transform: none; }
+      60% { transform: translateY(3px) scale(1.012, .982); }
+      65% { transform: translateY(-6px) scale(.994, 1.012); }
+      70% { transform: translateY(1.5px) scale(1.005, .993); }
+    }
+    @keyframes respirar { to { transform: scale(1.03); } }
+    @keyframes teclear {
+      0%, 55%, 100% { transform: translateY(0); }
+      28%           { transform: translateY(-8px); }
+    }
+    @keyframes fluir { to { stroke-dashoffset: -23; } }
+    @keyframes mecer {
+      from { transform: rotate(-1.4deg); }
+      to   { transform: rotate(1.4deg); }
+    }
+
+    /* sin movimiento: ilustracion fija, con el avion a mitad de la ruta
+       (posicion que ya trae el atributo transform de #avion-vuelo) */
+    @media (prefers-reduced-motion: reduce) {
+      #avion-vuelo, #avion, #carroceria, #globo, #puntos circle, #ruta, #parada {
+        animation: none;
+      }
+    }
+  </style>
+
+  <defs>
+    <path id="silueta-carroceria" d="M96 414Q88 414 88 406V312C88 286 98 264 124 264Q221 258 322 264C360 266 384 282 394 312C398 323 402 332.5 405 342C408 351.5 410 361 410 372V404Q410 414 400 414Z"/>
+  </defs>
+
+  <!-- halo: separa la ilustracion del fondo azul noche -->
+  <g id="halo">
+    <circle cx="280" cy="296" r="232" fill="#632e62"/>
+  </g>
+
+  <!-- suelo: tramo de carretera con linea punteada -->
+  <g id="suelo">
+    <rect x="28" y="458" width="504" height="48" rx="24" fill="#0b0f2a" stroke="#fff4e8" stroke-width="5"/>
+    <path d="M61 482H499" fill="none" stroke="#d95f0e" stroke-width="5" stroke-linecap="round" stroke-dasharray="20 18"/>
+  </g>
+
+  <!-- parada: poste + senal con globo de dialogo + pin -->
+  <g id="parada">
+    <g id="parada-borde" fill="#fff4e8" stroke="#fff4e8" stroke-width="14" stroke-linejoin="round">
+      <rect x="461" y="290" width="10" height="150"/>
+      <rect x="450" y="439" width="32" height="12" rx="4"/>
+      <circle cx="466" cy="262" r="34"/>
+      <path d="M466 346C457 334 455 330 455 322A11 11 0 1 1 477 322C477 330 475 334 466 346Z"/>
+    </g>
+    <g stroke="#0b0f2a" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round">
+      <rect x="461" y="290" width="10" height="150" fill="#a9c4e8"/>
+      <rect x="450" y="439" width="32" height="12" rx="4" fill="#3f6ea8"/>
+      <g id="senal">
+        <circle cx="466" cy="262" r="34" fill="#fff4e8"/>
+        <circle cx="466" cy="262" r="27.5" fill="none" stroke="#d95f0e"/>
+        <path d="M458 247H474A8 8 0 0 1 482 255V260A8 8 0 0 1 474 268H465L456 276L457.5 268A8 8 0 0 1 450 260V255A8 8 0 0 1 458 247Z" fill="#3f6ea8" stroke="none"/>
+        <path d="M458 255H474M458 261H468" fill="none" stroke="#fff4e8" stroke-width="3"/>
+      </g>
+      <g id="pin">
+        <path d="M466 346C457 334 455 330 455 322A11 11 0 1 1 477 322C477 330 475 334 466 346Z" fill="#d95f0e"/>
+        <circle cx="466" cy="322" r="4" fill="#fff4e8" stroke="none"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- combi -->
+  <g id="combi">
+    <g id="ruedas-borde" fill="#fff4e8" stroke="#fff4e8" stroke-width="14">
+      <circle cx="152" cy="421" r="30"/>
+      <circle cx="352" cy="421" r="30"/>
+    </g>
+
+    <!-- todo lo que rebota: carroceria, parrilla, equipaje y puerta -->
+    <g id="carroceria">
+      <g id="carroceria-borde" fill="#fff4e8" stroke="#fff4e8" stroke-width="14" stroke-linejoin="round">
+        <use href="#silueta-carroceria"/>
+        <rect x="78" y="392" width="22" height="11" rx="5.5"/>
+        <rect x="398" y="392" width="22" height="11" rx="5.5"/>
+        <ellipse cx="407" cy="363" rx="6" ry="9"/>
+        <rect x="176" y="246" width="172" height="7" rx="3.5"/>
+        <rect x="262" y="216" width="50" height="30" rx="6"/>
+        <path d="M278 216V211Q278 207 282 207H292Q296 207 296 211V216" fill="none"/>
+        <rect x="316" y="226" width="30" height="20" rx="7"/>
+      </g>
+
+      <g stroke="#0b0f2a" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round">
+        <!-- parrilla y equipaje -->
+        <g id="equipaje">
+          <path d="M186 253V262M262 253V261M338 253V266" fill="none"/>
+          <rect x="176" y="246" width="172" height="7" rx="3.5" fill="#a9c4e8"/>
+          <path d="M278 216V211Q278 207 282 207H292Q296 207 296 211V216" fill="none"/>
+          <rect x="262" y="216" width="50" height="30" rx="6" fill="#d95f0e"/>
+          <path d="M275 216V246M299 216V246" fill="none" stroke-width="3"/>
+          <rect x="316" y="226" width="30" height="20" rx="7" fill="#f1dcef"/>
+          <path d="M316 236H346" fill="none" stroke="#632e62" stroke-width="3"/>
+        </g>
+
+        <!-- carroceria en dos tonos -->
+        <use href="#silueta-carroceria" fill="#3f6ea8" stroke="none"/>
+        <path d="M88 312C88 286 98 264 124 264Q221 258 322 264C360 266 384 282 394 312C398 323 402 332.5 405 342Q386 314 338 312Z" fill="#fff4e8" stroke="none"/>
+        <path d="M114.6 414A38 38 0 0 1 189.4 414ZM314.6 414A38 38 0 0 1 389.4 414Z" fill="#0b0f2a" stroke="none"/>
+        <use href="#silueta-carroceria" fill="none"/>
+        <path d="M88 312H338Q386 314 405 342" fill="none" stroke-width="3"/>
+
+        <!-- cabina: ventana, puerta del conductor, faro, defensas -->
+        <path d="M332 280H350C362 281 372 291 380 306H332Q326 306 326 300V286Q326 280 332 280Z" fill="#a9c4e8"/>
+        <path d="M316 270V378M325 326H335" fill="none" stroke-width="3"/>
+        <ellipse cx="407" cy="363" rx="6" ry="9" fill="#f6e3cc"/>
+        <rect x="86" y="334" width="8" height="18" rx="4" fill="#d95f0e" stroke-width="3"/>
+        <rect x="78" y="392" width="22" height="11" rx="5.5" fill="#fff4e8"/>
+        <rect x="398" y="392" width="22" height="11" rx="5.5" fill="#fff4e8"/>
+
+        <!-- puerta corrediza abierta: hueco con interior + hoja deslizada atras -->
+        <g id="puerta">
+          <g id="interior">
+            <rect x="224" y="274" width="84" height="132" rx="10" fill="#f6e3cc"/>
+            <rect x="244" y="384" width="34" height="21" fill="#c2410c" stroke="none"/>
+            <rect x="236" y="314" width="18" height="70" rx="9" fill="#d95f0e"/>
+            <rect x="236" y="366" width="54" height="20" rx="9" fill="#d95f0e"/>
+            <rect x="224" y="274" width="84" height="132" rx="10" fill="none"/>
+          </g>
+          <g id="puerta-hoja">
+            <rect x="128" y="274" width="88" height="132" rx="10" fill="#3f6ea8" stroke="none"/>
+            <path d="M128 312V284Q128 274 138 274H206Q216 274 216 284V312Z" fill="#fff4e8" stroke="none"/>
+            <rect x="138" y="284" width="68" height="20" rx="6" fill="#a9c4e8" stroke-width="3"/>
+            <path d="M128 312H216M196 328H206" fill="none" stroke-width="3"/>
+            <rect x="128" y="274" width="88" height="132" rx="10" fill="none"/>
+          </g>
+        </g>
+      </g>
+    </g>
+
+    <g id="ruedas">
+      <circle cx="152" cy="421" r="30" fill="#0b0f2a"/>
+      <circle cx="352" cy="421" r="30" fill="#0b0f2a"/>
+      <g fill="#fff4e8" stroke="#a9c4e8" stroke-width="3">
+        <circle cx="152" cy="421" r="14"/>
+        <circle cx="352" cy="421" r="14"/>
+      </g>
+      <circle cx="152" cy="421" r="4.5" fill="#3f6ea8"/>
+      <circle cx="352" cy="421" r="4.5" fill="#3f6ea8"/>
+    </g>
+  </g>
+
+  <!-- ruta: arco de radio 296 con centro en (-25, 412), se corta al cruzar el marco de la puerta -->
+  <path id="ruta" d="M44.1 124.2A296 296 0 0 1 254.9 315.6" fill="none" stroke="#d95f0e" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 13"/>
+
+  <!-- avion: #avion-pivote esta en el centro del arco, #avion-vuelo gira de 0 a 64 grados
+       (inicio a puerta), su atributo transform lo deja a mitad de ruta cuando no hay animacion -->
+  <g id="avion-pivote" transform="translate(-25 412)">
+    <g id="avion-vuelo" transform="rotate(32)">
+      <g transform="rotate(-76.5) translate(296 0) rotate(90)">
+        <g id="avion">
+          <path d="M30 0L-26 -19L-14 0Z" fill="#fff4e8"/>
+          <path d="M30 0L-14 0L-26 19Z" fill="#f6e3cc"/>
+          <path d="M30 0L-26 -19L-14 0L-26 19ZM30 0H-14" fill="none" stroke="#d95f0e" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+          <circle cx="-14" cy="0" r="4.5" fill="#d95f0e"/>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <!-- globo: "escribiendo..." -->
+  <g id="globo">
+    <path id="globo-borde" d="M322 72H418A40 40 0 0 1 458 112V132A40 40 0 0 1 418 172H388L350 200L362 172H322A40 40 0 0 1 282 132V112A40 40 0 0 1 322 72Z" fill="#fff4e8" stroke="#fff4e8" stroke-width="14" stroke-linejoin="round"/>
+    <path d="M322 72H418A40 40 0 0 1 458 112V132A40 40 0 0 1 418 172H388L350 200L362 172H322A40 40 0 0 1 282 132V112A40 40 0 0 1 322 72Z" fill="#fff4e8" stroke="#0b0f2a" stroke-width="3.5" stroke-linejoin="round"/>
+    <g id="puntos" fill="#3f6ea8">
+      <circle cx="332" cy="122" r="8.5"/>
+      <circle cx="370" cy="122" r="8.5"/>
+      <circle cx="408" cy="122" r="8.5"/>
+    </g>
+  </g>
+</svg>

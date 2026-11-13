@@ -1,0 +1,175 @@
+---
+// etiqueta de maleta para un programa: ojal, "destino" (tema), portada en un marco liso
+// (todas del mismo tamaño: ver `coverAjuste` en data/programs.ts) y nombre, toda la etiqueta enlaza al programa
+import { Picture } from 'astro:assets';
+import { coverStyle, type Program } from '../data/programs';
+
+interface Props {
+  program: Program;
+  /** nivel del titulo segun la pagina donde se use */
+  as?: 'h2' | 'h3';
+  loading?: 'lazy' | 'eager';
+}
+
+const { program, as: Heading = 'h3', loading = 'lazy' } = Astro.props;
+---
+
+<article class:list={['etiqueta', `etiqueta--${program.kind}`]}>
+  <span class="etiqueta__ojal" aria-hidden="true"></span>
+  <p class="etiqueta__destino">
+    <span class="etiqueta__destino-label">Destino</span>
+    <span class="etiqueta__destino-tema">{program.tema}</span>
+  </p>
+  <div class="etiqueta__marco">
+    <Picture
+      src={program.cover}
+      alt={program.coverAlt}
+      formats={['avif', 'webp']}
+      widths={[280, 420, 640]}
+      sizes="(min-width: 64rem) 20rem, (min-width: 40rem) 40vw, 72vw"
+      loading={loading}
+      class="etiqueta__img"
+      style={coverStyle(program)}
+    />
+  </div>
+  <Heading class="etiqueta__nombre">
+    <a href={`/programas/${program.slug}`} class="etiqueta__link">{program.name}</a>
+  </Heading>
+  <p class="etiqueta__texto">{program.short}</p>
+</article>
+
+<style>
+  .etiqueta {
+    --acento: var(--azul-combi);
+    --bisel: 30px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    height: 100%;
+    padding: calc(var(--bisel) + 0.75rem) var(--space-m) var(--space-m);
+    background: var(--papel);
+    clip-path: polygon(
+      var(--bisel) 0,
+      calc(100% - var(--bisel)) 0,
+      100% var(--bisel),
+      100% 100%,
+      0 100%,
+      0 var(--bisel)
+    );
+    transform-origin: 50% 14px;
+    transition: transform 400ms var(--ease-out);
+  }
+
+  .etiqueta--musica {
+    --acento: var(--morado);
+  }
+
+  /* borde de la etiqueta: una franja superior del color del programa */
+  .etiqueta::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 8px;
+    background: var(--acento);
+  }
+
+  .etiqueta:hover {
+    transform: rotate(-1.5deg);
+  }
+
+  .etiqueta:focus-within {
+    outline: 3px solid var(--naranja-accion);
+    outline-offset: -3px;
+  }
+
+  .etiqueta__ojal {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    width: 18px;
+    height: 18px;
+    margin-left: -9px;
+    border-radius: 50%;
+    background: var(--crema);
+    box-shadow:
+      0 0 0 4px #c8b79f,
+      inset 0 2px 2px rgb(0 0 0 / 0.2);
+  }
+
+  .etiqueta__destino {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-xs);
+    padding-bottom: var(--space-2xs);
+    border-bottom: 2px dashed var(--linea);
+    font-size: var(--step--1);
+  }
+
+  .etiqueta__destino-label {
+    color: var(--tinta-suave);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .etiqueta__destino-tema {
+    color: var(--acento);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-0);
+  }
+
+  .etiqueta__marco {
+    padding: var(--space-s);
+    border-radius: var(--radius-m);
+    background: var(--crema-hondo);
+  }
+
+  /* todas las portadas ocupan el mismo cuadro: la proporcion 1:1 va en la imagen misma
+     (asi no depende de su tamaño natural), el ajuste por portada viene de `coverStyle()` */
+  .etiqueta__marco :global(.etiqueta__img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: var(--radius-s);
+  }
+
+  .etiqueta__nombre {
+    margin-top: var(--space-2xs);
+    font-size: var(--step-2);
+    font-weight: 600;
+  }
+
+  .etiqueta__link {
+    color: var(--tinta);
+    text-decoration: none;
+  }
+
+  /* enlace estirado: toda la etiqueta es clicable */
+  .etiqueta__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .etiqueta__link:focus-visible {
+    outline: none;
+  }
+
+  .etiqueta__texto {
+    color: var(--tinta-suave);
+    font-size: var(--step--1);
+    line-height: 1.5;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .etiqueta:hover {
+      transform: none;
+    }
+  }
+</style>

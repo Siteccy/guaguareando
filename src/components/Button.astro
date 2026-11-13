@@ -1,0 +1,121 @@
+---
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+  href: string;
+  /** accion: naranja (CTA principal) · azul: podcast · morado: musica · claro: sobre fondos oscuros · contorno: secundario */
+  variant?: 'accion' | 'azul' | 'morado' | 'claro' | 'contorno' | 'contorno-claro';
+  icon?: IconName;
+  /** abre en pestaña nueva y avisa a lectores de pantalla */
+  external?: boolean;
+  class?: string;
+}
+
+const { href, variant = 'accion', icon, external = false, class: className } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={['btn', `btn--${variant}`, className]}
+  {...external ? { target: '_blank', rel: 'noopener noreferrer' } : {}}
+>
+  {icon && <Icon name={icon} size={22} />}
+  <span><slot /></span>
+  {external && (
+    <>
+      <Icon name="arrow-up-right" size={18} class="btn__ext" />
+      <span class="sr-only">(se abre en una pestaña nueva)</span>
+    </>
+  )}
+</a>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55em;
+    min-height: 3rem;
+    padding: 0.7em 1.35em;
+    border: 2px solid transparent;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    font-weight: 600;
+    line-height: 1.1;
+    text-decoration: none;
+    text-align: center;
+    transition:
+      background-color var(--dur) var(--ease-out),
+      color var(--dur) var(--ease-out),
+      transform var(--dur) var(--ease-out);
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .btn:active {
+    transform: translateY(0);
+  }
+
+  .btn--accion {
+    background: var(--naranja-accion);
+    color: var(--blanco);
+  }
+
+  .btn--accion:hover {
+    background: var(--naranja-hondo);
+  }
+
+  .btn--azul {
+    background: var(--azul-combi);
+    color: var(--blanco);
+  }
+
+  .btn--azul:hover {
+    background: var(--azul-noche);
+  }
+
+  .btn--morado {
+    background: var(--morado);
+    color: var(--blanco);
+  }
+
+  .btn--morado:hover {
+    background: var(--azul-noche);
+  }
+
+  .btn--claro {
+    background: var(--crema);
+    color: var(--azul-noche);
+  }
+
+  .btn--claro:hover {
+    background: var(--blanco);
+  }
+
+  .btn--contorno {
+    border-color: currentColor;
+    color: var(--tinta);
+  }
+
+  .btn--contorno:hover {
+    background: var(--tinta);
+    color: var(--crema);
+  }
+
+  .btn--contorno-claro {
+    border-color: var(--crema);
+    color: var(--crema);
+  }
+
+  .btn--contorno-claro:hover {
+    background: var(--crema);
+    color: var(--azul-noche);
+  }
+
+  .btn__ext {
+    opacity: 0.8;
+  }
+</style>

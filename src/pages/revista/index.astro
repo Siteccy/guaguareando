@@ -1,0 +1,263 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Button from '../../components/Button.astro';
+import PageHead from '../../components/PageHead.astro';
+import RevistaCard from '../../components/RevistaCard.astro';
+import RevistaVisor from '../../components/RevistaVisor.astro';
+import StopSign from '../../components/StopSign.astro';
+import { revistas, revistasRecientes, revistaActual, numeroRevista } from '../../data/revistas';
+// ilustracion animada del encabezado, va como <img> para que su CSS y sus id queden aislados de la pagina
+import ilustracion from '../../assets/svg_animados/revista-hero.svg?url';
+
+// textos: rama design (magazine.html) y "Proximamente" de la rama main (pages/magazine.html)
+const temas = [
+  { title: 'Cultura y sociedad', text: 'Historias, tradiciones y experiencias que nos ayudan a comprender nuestro entorno.' },
+  { title: 'Arte y literatura', text: 'Ideas, expresiones creativas y voces que enriquecen nuestra mirada.' },
+  {
+    title: 'Deporte y bienestar',
+    text: 'Experiencias, aprendizajes y temas relacionados con el movimiento y la vida cotidiana.',
+  },
+  { title: 'Historias de comunidad', text: 'Personas y vivencias que merecen ser conocidas, escuchadas y compartidas.' },
+];
+---
+
+<BaseLayout
+  title="Revista digital"
+  description={`Lee la Revista Guaguareando Ando: ${revistas.length} ediciones digitales con historias, cultura y experiencias. La más reciente: ${numeroRevista(revistaActual)}, ${revistaActual.titulo}.`}
+>
+  <PageHead
+    letrero="Revista"
+    title="Historias que merecen ser leídas"
+    lead="Un espacio para descubrir ideas, experiencias, cultura y temas que nos invitan a conversar y mirar el mundo desde otras perspectivas."
+  >
+    <img
+      slot="aside"
+      src={ilustracion}
+      alt="Revista abierta de la que sale una combi por una carretera"
+      width="560"
+      height="560"
+    />
+  </PageHead>
+
+  <!-- edicion actual -->
+  <section class="bloque" aria-labelledby="actual-titulo">
+    <div class="wrap bloque__wrap">
+      <StopSign text="Edición actual" sinMarcador />
+      <div class="actual__cabeza">
+        <h2 id="actual-titulo" class="bloque__titulo">
+          <span class="actual__numero">{numeroRevista(revistaActual)}</span>
+          {revistaActual.titulo}
+        </h2>
+        <p class="bloque__lead">{revistaActual.bajada}</p>
+      </div>
+      <RevistaVisor revista={revistaActual} />
+    </div>
+  </section>
+
+  <!-- todas las ediciones -->
+  <section class="bloque bloque--hondo" aria-labelledby="ediciones-titulo">
+    <div class="wrap bloque__wrap">
+      <StopSign text="Pasa las páginas" sinMarcador />
+      <h2 id="ediciones-titulo" class="bloque__titulo">Todas las ediciones</h2>
+      <p class="bloque__lead">
+        En la revista digital de Guaguareando Ando, las palabras conectan personas y cada publicación abre la puerta a
+        una nueva historia. Explora nuestras ediciones desde tu computadora, tableta o teléfono.
+      </p>
+      <ul role="list" class="ediciones">
+        {
+          revistasRecientes.map((revista, i) => (
+            <li>
+              <RevistaCard revista={revista} nueva={i === 0} />
+            </li>
+          ))
+        }
+        <li class="proxima">
+          <p class="proxima__label">Próximamente</p>
+          <p class="proxima__texto">Nuevas historias y contenidos en camino.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- temas -->
+  <section class="bloque" aria-labelledby="temas-titulo">
+    <div class="wrap bloque__wrap">
+      <StopSign text="Mucho por descubrir" sinMarcador />
+      <h2 id="temas-titulo" class="bloque__titulo">Temas que nos conectan</h2>
+      <p class="bloque__lead">
+        En Guaguareando Ando creemos que las historias tienen muchas formas y que cada tema puede despertar una
+        conversación.
+      </p>
+      <ul role="list" class="temas">
+        {
+          temas.map((tema) => (
+            <li class="tema">
+              <h3 class="tema__titulo">{tema.title}</h3>
+              <p>{tema.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- participa -->
+  <section class="participa oscuro" aria-labelledby="participa-titulo">
+    <div class="wrap participa__wrap">
+      <div>
+        <p class="participa__label">Queremos escucharte</p>
+        <h2 id="participa-titulo" class="bloque__titulo">¿Tienes algo que compartir?</h2>
+        <p class="bloque__lead">
+          Tus ideas, conocimientos y experiencias también pueden formar parte de nuestra comunidad. Escríbenos para
+          conversar sobre tu propuesta de colaboración.
+        </p>
+      </div>
+      <Button href="/contacto" icon="mail">Enviar mi propuesta</Button>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .bloque {
+    padding-block: var(--space-2xl);
+  }
+
+  .bloque--hondo {
+    background: var(--crema-hondo);
+  }
+
+  .bloque__wrap {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .bloque__titulo {
+    font-size: var(--step-4);
+    font-weight: 700;
+  }
+
+  .bloque__lead {
+    max-width: 40rem;
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+
+  /* edicion actual */
+  .actual__cabeza {
+    display: grid;
+    gap: var(--space-s);
+    margin-bottom: var(--space-m);
+  }
+
+  .actual__numero {
+    display: block;
+    margin-bottom: var(--space-2xs);
+    color: var(--naranja-accion);
+    font-size: var(--step-2);
+  }
+
+  /* ediciones */
+  .ediciones {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-xl) var(--space-m);
+    margin-top: var(--space-l);
+  }
+
+  @media (min-width: 56rem) {
+    .ediciones {
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-xl) var(--space-l);
+    }
+  }
+
+  /* franja a todo lo ancho bajo las portadas: la siguiente edicion viene en camino */
+  .proxima {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: center;
+    gap: var(--space-2xs) var(--space-s);
+    padding: var(--space-m);
+    border: 3px dashed var(--linea);
+    border-radius: var(--radius-m);
+    text-align: center;
+  }
+
+  .proxima__label {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 700;
+  }
+
+  .proxima__texto {
+    color: var(--tinta-suave);
+  }
+
+  /* temas */
+  .temas {
+    display: grid;
+    gap: var(--space-m);
+    margin-top: var(--space-m);
+  }
+
+  .tema {
+    display: grid;
+    gap: var(--space-2xs);
+    padding: var(--space-m);
+    border-radius: var(--radius-m);
+    background: var(--papel);
+    box-shadow: var(--sombra);
+  }
+
+  .tema__titulo {
+    color: var(--azul-combi);
+    font-size: var(--step-1);
+    font-weight: 700;
+  }
+
+  @media (min-width: 48rem) {
+    .temas {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .temas {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* participa */
+  .participa {
+    padding-block: var(--space-2xl);
+    background: var(--azul-noche);
+  }
+
+  .participa__wrap {
+    display: grid;
+    gap: var(--space-l);
+    align-items: center;
+    justify-items: start;
+  }
+
+  .participa__label {
+    margin-bottom: var(--space-2xs);
+    color: var(--azul-claro);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .participa .bloque__lead {
+    margin-top: var(--space-s);
+  }
+
+  @media (min-width: 64rem) {
+    .participa__wrap {
+      grid-template-columns: 1fr auto;
+    }
+  }
+</style>

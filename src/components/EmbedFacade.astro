@@ -1,0 +1,191 @@
+---
+// fachada para iframes de terceros (spotify, youtube, fliphtml5)
+// muestra una portada propia con boton; el iframe se crea solo al hacer clic
+// sin js, el boton es un enlace normal a la plataforma (pestaña nueva)
+import Icon from './Icon.astro';
+
+interface Props {
+  /** url del iframe */
+  src: string;
+  /** titulo accesible del iframe */
+  title: string;
+  /** destino del enlace cuando no hay js */
+  href: string;
+  /** texto del boton */
+  label: string;
+  formato: 'spotify' | 'video' | 'revista';
+  /** parametros extra al cargar por clic (p. ej. autoplay en youtube) */
+  srcOnClickParams?: string;
+  class?: string;
+}
+
+const { src, title, href, label, formato, srcOnClickParams, class: className } = Astro.props;
+
+const allow = {
+  spotify: 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture',
+  video: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
+  revista: 'fullscreen',
+}[formato];
+
+const finalSrc = srcOnClickParams ? `${src}${src.includes('?') ? '&' : '?'}${srcOnClickParams}` : src;
+---
+
+<embed-facade
+  class:list={['fachada', `fachada--${formato}`, className]}
+  data-src={finalSrc}
+  data-title={title}
+  data-allow={allow}
+>
+  <div class="fachada__portada">
+    <slot />
+  </div>
+  <a class="fachada__boton" href={href} target="_blank" rel="noopener noreferrer">
+    <span class="fachada__play" aria-hidden="true"><Icon name="player-play-filled" size={26} /></span>
+    <span>{label}</span>
+  </a>
+</embed-facade>
+
+<script>
+  class EmbedFacade extends HTMLElement {
+    connectedCallback() {
+      const boton = this.querySelector<HTMLAnchorElement>('.fachada__boton');
+      boton?.addEventListener('click', (event) => {
+        // ctrl/cmd + clic o clic medio: deja que abra la plataforma en otra pestaña
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+        event.preventDefault();
+        this.cargar();
+      });
+    }
+
+    cargar() {
+      const iframe = document.createElement('iframe');
+      iframe.src = this.dataset.src ?? '';
+      iframe.title = this.dataset.title ?? '';
+      iframe.allow = this.dataset.allow ?? '';
+      iframe.allowFullscreen = true;
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      iframe.className = 'fachada__iframe';
+      this.classList.add('fachada--cargada');
+      this.replaceChildren(iframe);
+      iframe.focus();
+      // si la rola esta sonando (RolaPlayer), se pausa para no encimarse con el episodio o video
+      document.dispatchEvent(new CustomEvent('rola:pausar'));
+    }
+  }
+
+  if (!customElements.get('embed-facade')) {
+    customElements.define('embed-facade', EmbedFacade);
+  }
+</script>
+
+<style>
+  .fachada {
+    position: relative;
+    display: grid;
+    overflow: hidden;
+    border-radius: var(--radius-l);
+    background: var(--azul-noche);
+    color: var(--crema);
+    box-shadow: var(--sombra-alta);
+    isolation: isolate;
+  }
+
+  /* sobre secciones oscuras el marco se distingue con un aro claro */
+  :global(.oscuro) .fachada {
+    background: rgb(255 244 232 / 0.06);
+    box-shadow: inset 0 0 0 2px var(--linea-oscura);
+  }
+
+  .fachada--spotify {
+    min-height: 352px;
+  }
+
+  /* portada: minimo 16:9 pero crece si el contenido no cabe (en movil no cabe); con el iframe, 16:9 fijo */
+  .fachada--video:not(.fachada--cargada)::before {
+    content: '';
+    grid-area: 1 / 1;
+    padding-top: 56.25%;
+  }
+
+  .fachada--video.fachada--cargada {
+    aspect-ratio: 16 / 9;
+  }
+
+  .fachada--revista {
+    min-height: min(80vh, 46rem);
+  }
+
+  .fachada__portada {
+    grid-area: 1 / 1;
+    display: grid;
+    min-height: 100%;
+  }
+
+  .fachada__boton {
+    grid-area: 1 / 1;
+    align-self: end;
+    justify-self: start;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: var(--space-m);
+    padding: 0.5rem 1.4rem 0.5rem 0.5rem;
+    border-radius: var(--radius-pill);
+    background: var(--naranja-accion);
+    color: var(--blanco);
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 10px 24px -10px rgb(0 0 0 / 0.6);
+    transition:
+      transform var(--dur) var(--ease-out),
+      background-color var(--dur) var(--ease-out);
+  }
+
+  /* toda la portada es clicable a traves del boton */
+  .fachada__boton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .fachada__boton:hover {
+    background: var(--naranja-hondo);
+    transform: scale(1.03);
+  }
+
+  .fachada__boton:focus-visible {
+    outline-color: var(--crema);
+  }
+
+  .fachada__play {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--blanco);
+    color: var(--naranja-accion);
+  }
+
+  .fachada__play :global(svg) {
+    margin-left: 3px;
+  }
+
+  .fachada :global(.fachada__iframe) {
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    border: 0;
+  }
+
+  .fachada--spotify :global(.fachada__iframe) {
+    height: 352px;
+  }
+
+  .fachada--revista :global(.fachada__iframe) {
+    height: min(80vh, 46rem);
+  }
+</style>

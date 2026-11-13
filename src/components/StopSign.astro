@@ -1,0 +1,84 @@
+---
+// letrero de parada: rotulo de destino como los que llevan combis y micros en el parabrisas
+// marca ademas la parada sobre la linea de la ruta (el circulo en la columna izquierda)
+import Icon from './Icon.astro';
+
+interface Props {
+  /** texto del letrero (va en mayusculas por css) */
+  text: string;
+  /** oculta el marcador sobre la ruta (para letreros fuera de una <Parada>) */
+  sinMarcador?: boolean;
+  class?: string;
+}
+
+const { text, sinMarcador = false, class: className } = Astro.props;
+---
+
+<p class:list={['letrero', className]}>
+  {!sinMarcador && <span class="letrero__marca" aria-hidden="true" />}
+  <span class="letrero__placa">
+    <Icon name="arrow-right" size={18} />
+    {text}
+  </span>
+</p>
+
+<style>
+  .letrero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 0 0 var(--space-m);
+  }
+
+  .letrero__placa {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.4em 0.85em 0.35em 0.65em;
+    border-radius: var(--radius-s);
+    background: var(--azul-noche);
+    color: var(--crema);
+    font-family: var(--font-display);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    rotate: -1.5deg;
+    box-shadow: 0 2px 0 rgb(11 15 42 / 0.25);
+  }
+
+  :global(.oscuro) .letrero__placa {
+    background: var(--crema);
+    color: var(--azul-noche);
+  }
+
+  /* parada sobre la linea: circulo con aro, centrado en la columna de la ruta */
+  .letrero__marca {
+    position: absolute;
+    top: 50%;
+    left: calc(var(--ruta-gutter) / -2 - 11px);
+    width: 22px;
+    height: 22px;
+    margin-top: -11px;
+    border-radius: 50%;
+    background: var(--crema);
+    border: 5px solid var(--ruta-color, var(--naranja-marca));
+    box-shadow: 0 0 0 3px var(--crema);
+  }
+
+  :global(.oscuro) .letrero__marca {
+    background: var(--azul-noche);
+    box-shadow: 0 0 0 3px var(--azul-noche);
+  }
+
+  :global(.parada--morado) .letrero__marca {
+    background: var(--morado);
+    box-shadow: 0 0 0 3px var(--morado);
+  }
+
+  :global(.parada--naranja) .letrero__marca {
+    background: var(--naranja-marca);
+    box-shadow: 0 0 0 3px var(--naranja-marca);
+  }
+</style>

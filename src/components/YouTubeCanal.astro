@@ -1,0 +1,85 @@
+---
+// lista de subidas del canal de youtube con fachada: portada propia; el reproductor se carga al hacer clic
+import { Image } from 'astro:assets';
+import EmbedFacade from './EmbedFacade.astro';
+import Icon from './Icon.astro';
+import logo from '../assets/brand/logo-guaguareando.png';
+import { youtube } from '../data/site';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<EmbedFacade
+  src={youtube.uploadsEmbedUrl}
+  srcOnClickParams="autoplay=1"
+  title="Lista de videos recientes del canal de YouTube de Guaguareando Ando"
+  href={youtube.channelUrl}
+  label="Ver videos"
+  formato="video"
+  class={className}
+>
+  <div class="yt">
+    <Image src={logo} alt="" width={220} height={220} densities={[1, 2]} class="yt__logo" />
+    <div>
+      <p class="yt__eyebrow"><Icon name="brand-youtube" size={20} /> YouTube</p>
+      <p class="yt__titulo">Míranos en YouTube</p>
+      <p class="yt__nota">El video se carga cuando le das play.</p>
+    </div>
+  </div>
+</EmbedFacade>
+
+<style>
+  .yt {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-m);
+    padding: var(--space-l) var(--space-m) 6rem;
+  }
+
+  .yt :global(.yt__logo) {
+    width: 96px;
+    height: auto;
+  }
+
+  .yt__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    color: var(--azul-claro);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .yt__titulo {
+    margin-top: var(--space-3xs);
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .yt__nota {
+    margin-top: var(--space-2xs);
+    color: var(--azul-claro);
+    font-size: var(--step--1);
+  }
+
+  @media (min-width: 40rem) {
+    .yt {
+      flex-direction: row;
+      align-items: center;
+      padding: var(--space-xl) var(--space-l) 6.5rem;
+    }
+
+    .yt :global(.yt__logo) {
+      width: 200px;
+    }
+  }
+</style>

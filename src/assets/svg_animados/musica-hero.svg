@@ -1,0 +1,169 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 560" role="img" aria-labelledby="titulo">
+  <title id="titulo">Combi musical recorriendo un vinilo</title>
+  <style>
+    /* ciclo maestro: 8s, para cambiar la velocidad escala todas las duraciones (8s, 4s, 1s, .5s) y sus delays por el mismo factor */
+    #vinilo-giro{transform-box:fill-box;transform-origin:50% 50%;animation:girar 8s linear infinite}
+    @keyframes girar{to{transform:rotate(-360deg)}}
+    .barra{transform-box:fill-box;transform-origin:50% 100%;animation:eq .5s ease-in-out infinite}
+    .b2{animation-delay:-.25s}
+    .b3{animation-duration:1s;animation-delay:-.33s}
+    .b4{animation-duration:1s;animation-delay:-.7s}
+    @keyframes eq{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.4)}}
+    #carroceria{transform-box:fill-box;transform-origin:50% 100%;animation:rebote 1s ease-in-out infinite}
+    @keyframes rebote{0%,50%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-5px) rotate(-1.2deg)}75%{transform:translateY(-3px) rotate(.8deg)}}
+    .rin{transform-box:fill-box;transform-origin:50% 50%;animation:rodar .5s linear infinite}
+    @keyframes rodar{to{transform:rotate(360deg)}}
+    #guitarra{transform-box:fill-box;transform-origin:30% 100%;animation:mecer 1s ease-in-out -.25s infinite}
+    @keyframes mecer{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(2deg)}}
+    .nota{transform-box:fill-box;transform-origin:50% 50%;animation:4s linear infinite}
+    .izq{animation-name:sube-izq}
+    .der{animation-name:sube-der}
+    .n2{animation-delay:-1s}.n3{animation-delay:-2s}.n4{animation-delay:-3s}
+    @keyframes sube-izq{0%{opacity:0;transform:translate(0,0) scale(.3) rotate(0)}15%{opacity:1;transform:translate(-14px,-8px) scale(.8) rotate(-4deg)}50%{transform:translate(-50px,-24px) scale(1) rotate(-8deg)}80%{opacity:1}100%{opacity:0;transform:translate(-92px,-46px) scale(1.05) rotate(-6deg)}}
+    @keyframes sube-der{0%{opacity:0;transform:translate(0,0) scale(.3) rotate(0)}15%{opacity:1;transform:translate(14px,-8px) scale(.8) rotate(4deg)}50%{transform:translate(50px,-24px) scale(1) rotate(8deg)}80%{opacity:1}100%{opacity:0;transform:translate(92px,-46px) scale(1.05) rotate(-6deg)}}
+    .n-borde{fill:#0b0f2a;stroke:#0b0f2a;stroke-width:6;stroke-linejoin:round}
+    .n-crema{fill:#fff4e8}
+    .n-naranja{fill:#d95f0e}
+    @media (prefers-reduced-motion:reduce){
+      *{animation:none!important}
+      .n1{transform:translate(-66px,-8px) rotate(-8deg)}
+      .n2{transform:translate(90px,-40px) rotate(8deg)}
+      .n3{transform:translate(-74px,-46px) rotate(6deg)}
+      .n4{transform:translate(70px,0) rotate(-6deg)}
+    }
+  </style>
+  <defs>
+    <path id="carro" d="M-61 -86H50Q75 -86 75 -60V-30Q75 -18 63 -18H-63Q-75 -18 -75 -30V-74Q-75 -86 -61 -86Z"/>
+    <clipPath id="clip-carro"><use href="#carro"/></clipPath>
+    <g id="corchea">
+      <ellipse rx="7" ry="5.2" transform="rotate(-22)"/>
+      <rect x="4.2" y="-26" width="3.2" height="26" rx="1"/>
+      <path d="M7.4 -26C9 -20 17 -17 15 -8C14 -12 11 -15 7.4 -16Z"/>
+    </g>
+    <g id="doble">
+      <ellipse rx="7" ry="5.2" transform="rotate(-22)"/>
+      <ellipse cx="17" cy="-4" rx="7" ry="5.2" transform="rotate(-22 17 -4)"/>
+      <rect x="4.2" y="-26" width="3.2" height="26" rx="1"/>
+      <rect x="21.2" y="-30" width="3.2" height="26" rx="1"/>
+      <path d="M4.2 -26L24.4 -30.5V-24L4.2 -19.5Z"/>
+    </g>
+  </defs>
+
+  <!-- halo para despegar del fondo morado -->
+  <g id="halo">
+    <circle cx="280" cy="318" r="232" fill="#f6e3cc"/>
+    <circle cx="286" cy="326" r="193" fill="#9a3412" opacity=".18"/>
+  </g>
+
+  <!-- barras de ecualizador -->
+  <g id="ecualizador">
+      <g transform="rotate(230 280 318)"><rect class="barra b1" x="277" y="103" width="6" height="16" rx="3" fill="#c2410c"/></g>
+      <g transform="rotate(238 280 318)"><rect class="barra b3" x="277" y="106" width="6" height="13" rx="3" fill="#d95f0e"/></g>
+      <g transform="rotate(246 280 318)"><rect class="barra b2" x="277" y="100" width="6" height="19" rx="3" fill="#d95f0e"/></g>
+      <g transform="rotate(254 280 318)"><rect class="barra b4" x="277" y="95" width="6" height="24" rx="3" fill="#c2410c"/></g>
+      <g transform="rotate(262 280 318)"><rect class="barra b1" x="277" y="109" width="6" height="10" rx="3" fill="#d95f0e"/></g>
+      <g transform="rotate(270 280 318)"><rect class="barra b3" x="277" y="109" width="6" height="10" rx="3" fill="#d95f0e"/></g>
+      <g transform="rotate(278 280 318)"><rect class="barra b2" x="277" y="97" width="6" height="22" rx="3" fill="#c2410c"/></g>
+      <g transform="rotate(286 280 318)"><rect class="barra b4" x="277" y="109" width="6" height="10" rx="3" fill="#d95f0e"/></g>
+      <g transform="rotate(294 280 318)"><rect class="barra b1" x="277" y="103" width="6" height="16" rx="3" fill="#d95f0e"/></g>
+      <g transform="rotate(302 280 318)"><rect class="barra b3" x="277" y="97" width="6" height="22" rx="3" fill="#c2410c"/></g>
+      <g transform="rotate(310 280 318)"><rect class="barra b2" x="277" y="109" width="6" height="10" rx="3" fill="#d95f0e"/></g>
+      <g transform="rotate(50 280 318)"><rect class="barra b4" x="277" y="97" width="6" height="22" rx="3" fill="#d95f0e"/></g>
+      <g transform="rotate(58 280 318)"><rect class="barra b1" x="277" y="106" width="6" height="13" rx="3" fill="#c2410c"/></g>
+      <g transform="rotate(66 280 318)"><rect class="barra b3" x="277" y="109" width="6" height="10" rx="3" fill="#d95f0e"/></g>
+      <g transform="rotate(74 280 318)"><rect class="barra b2" x="277" y="109" width="6" height="10" rx="3" fill="#d95f0e"/></g>
+      <g transform="rotate(82 280 318)"><rect class="barra b4" x="277" y="100" width="6" height="19" rx="3" fill="#c2410c"/></g>
+      <g transform="rotate(90 280 318)"><rect class="barra b1" x="277" y="100" width="6" height="19" rx="3" fill="#d95f0e"/></g>
+      <g transform="rotate(98 280 318)"><rect class="barra b3" x="277" y="109" width="6" height="10" rx="3" fill="#d95f0e"/></g>
+      <g transform="rotate(106 280 318)"><rect class="barra b2" x="277" y="106" width="6" height="13" rx="3" fill="#c2410c"/></g>
+      <g transform="rotate(114 280 318)"><rect class="barra b4" x="277" y="109" width="6" height="10" rx="3" fill="#d95f0e"/></g>
+      <g transform="rotate(122 280 318)"><rect class="barra b1" x="277" y="97" width="6" height="22" rx="3" fill="#d95f0e"/></g>
+      <g transform="rotate(130 280 318)"><rect class="barra b3" x="277" y="100" width="6" height="19" rx="3" fill="#c2410c"/></g>
+  </g>
+
+  <!-- vinilo (gira) -->
+  <g id="vinilo">
+    <g id="vinilo-giro">
+      <circle cx="280" cy="318" r="192" fill="#0b0f2a" stroke="#3f6ea8" stroke-width="3"/>
+      <g id="surcos" fill="none" stroke="#3f6ea8" stroke-width="1.5" opacity=".55"><circle cx="280" cy="318" r="184"/><circle cx="280" cy="318" r="176"/><circle cx="280" cy="318" r="127"/><circle cx="280" cy="318" r="117"/><circle cx="280" cy="318" r="107"/><circle cx="280" cy="318" r="97"/><circle cx="280" cy="318" r="87"/><circle cx="280" cy="318" r="78"/></g>
+      <g id="carretera" fill="none">
+        <circle cx="280" cy="318" r="137" stroke="#f6e3cc" stroke-width="3"/>
+        <circle cx="280" cy="318" r="167" stroke="#f6e3cc" stroke-width="3"/>
+        <circle cx="280" cy="318" r="152" stroke="#d95f0e" stroke-width="5" stroke-linecap="round" stroke-dasharray="19.897 19.897"/>
+      </g>
+      <g id="etiqueta">
+        <circle cx="280" cy="318" r="66" fill="#d95f0e" stroke="#0b0f2a" stroke-width="4"/>
+        <circle cx="280" cy="318" r="56" fill="none" stroke="#c2410c" stroke-width="3"/>
+        <path d="M241.9 340.0A44 44 0 0 1 261.4 278.1" fill="none" stroke="#fff4e8" stroke-width="5" stroke-linecap="round"/>
+        <path d="M295.0 276.7A44 44 0 0 1 319.9 299.4" fill="none" stroke="#f6e3cc" stroke-width="5" stroke-linecap="round"/>
+        <path d="M321.3 333.0A44 44 0 0 1 265.0 359.3" fill="none" stroke="#9a3412" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="280" cy="318" r="25" fill="#fff4e8" stroke="#0b0f2a" stroke-width="3.5"/>
+        <circle cx="280" cy="318" r="6" fill="#0b0f2a"/>
+      </g>
+    </g>
+    <!-- brillos fijos: no giran, como el reflejo de la luz -->
+    <g id="brillos" fill="none" stroke="#f1dcef" stroke-linecap="round" opacity=".6">
+      <path d="M109.9 256.1A181 181 0 0 1 163.7 179.3" stroke-width="4"/>
+      <path d="M388.1 357.3A115 115 0 0 1 340.9 415.5" stroke-width="3.5"/>
+    </g>
+  </g>
+
+  <!-- combi -->
+  <g id="combi" transform="translate(280 172) scale(1.15)" stroke-linejoin="round">
+    <g id="carroceria">
+      <use href="#carro" fill="none" stroke="#fff4e8" stroke-width="10"/>
+      <use href="#carro" fill="#3f6ea8"/>
+      <g clip-path="url(#clip-carro)">
+        <rect x="-80" y="-92" width="160" height="22" fill="#fff4e8"/>
+        <path d="M-80 -70H80" stroke="#0b0f2a" stroke-width="2.5"/>
+      </g>
+      <g id="ventanas" fill="#a9c4e8" stroke="#0b0f2a" stroke-width="2.5">
+        <rect x="-66" y="-62" width="25" height="18" rx="4"/>
+        <rect x="-37" y="-62" width="25" height="18" rx="4"/>
+        <rect x="-8" y="-62" width="25" height="18" rx="4"/>
+        <rect x="21" y="-62" width="25" height="18" rx="4"/>
+        <path d="M51 -62H62Q69 -62 70.5 -54L71 -44H51Z"/>
+      </g>
+      <g stroke="#fff4e8" stroke-width="2.5" stroke-linecap="round">
+        <path d="M-60 -48L-54 -58M-31 -48L-25 -58M-2 -48L4 -58M27 -48L33 -58M56 -48L61 -57"/>
+      </g>
+      <path d="M-10 -42V-21M-4 -34H2" stroke="#0b0f2a" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <circle cx="69" cy="-33" r="5.5" fill="#fff4e8" stroke="#0b0f2a" stroke-width="2.5"/>
+      <rect x="-76" y="-38" width="5" height="9" rx="2" fill="#d95f0e" stroke="#0b0f2a" stroke-width="2"/>
+      <rect x="64" y="-25" width="17" height="7" rx="3.5" fill="#f6e3cc" stroke="#0b0f2a" stroke-width="2.5"/>
+      <rect x="-81" y="-25" width="15" height="7" rx="3.5" fill="#f6e3cc" stroke="#0b0f2a" stroke-width="2.5"/>
+      <use href="#carro" fill="none" stroke="#0b0f2a" stroke-width="3.5"/>
+      <path d="M-65 -18A19 19 0 0 1 -27 -18ZM27 -18A19 19 0 0 1 65 -18Z" fill="#0b0f2a"/>
+      <!-- parrilla del techo -->
+      <path id="parrilla" d="M-60 -95H46M-52 -95V-86M-12 -95V-86M30 -95V-86" stroke="#0b0f2a" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <!-- guitarra amarrada -->
+      <g id="guitarra">
+        <g transform="translate(-36 -114) scale(1.2)" stroke="#0b0f2a" stroke-linejoin="round">
+          <g fill="#fff4e8" stroke-width="1.5"><circle cx="78" cy="-9.5" r="2.2"/><circle cx="85" cy="-10.5" r="2.2"/><circle cx="78" cy="9.5" r="2.2"/><circle cx="85" cy="10.5" r="2.2"/></g>
+          <rect x="12" y="-3.5" width="60" height="7" rx="2" fill="#f6e3cc" stroke-width="3"/>
+          <path d="M26 -3.5V3.5M36 -3.5V3.5M46 -3.5V3.5M56 -3.5V3.5M64 -3.5V3.5" stroke="#c2410c" stroke-width="1.5"/>
+          <path d="M70 -5L87 -8Q92 -8.5 92 -4V4Q92 8.5 87 8L70 5Z" fill="#c2410c" stroke-width="3"/>
+          <path d="M-20 0C-20 -17 -6 -17 0 -10C6 -17 19 -13 16 -5C21 -2 21 2 16 5C19 13 6 17 0 10C-6 17 -20 17 -20 0Z" fill="#d95f0e" stroke-width="3"/>
+          <g fill="#fff4e8" stroke-width="1.5"><rect x="-6" y="-6.5" width="4" height="13" rx="1.5"/><rect x="1" y="-6.5" width="4" height="13" rx="1.5"/></g>
+          <rect x="-14" y="-5" width="3.5" height="10" rx="1" fill="#9a3412" stroke-width="1.2"/>
+          <g fill="#fff4e8" stroke-width="1.5"><circle cx="-14" cy="10" r="2.2"/><circle cx="-8" cy="12" r="2.2"/></g>
+          <path d="M-11 0H72" stroke="#9a3412" stroke-width="1"/>
+          <g fill="#9a3412" stroke-width="2"><rect x="-18" y="-17" width="5" height="31" rx="2"/><rect x="44" y="-7" width="5" height="21" rx="2"/></g>
+        </g>
+      </g>
+    </g>
+    <g id="ruedas">
+      <circle cx="-46" cy="-15" r="15" fill="#0b0f2a" stroke="#fff4e8" stroke-width="4"/>
+      <circle cx="46" cy="-15" r="15" fill="#0b0f2a" stroke="#fff4e8" stroke-width="4"/>
+      <g class="rin"><circle cx="-46" cy="-15" r="6.5" fill="#f6e3cc" stroke="#0b0f2a" stroke-width="2.5"/><path d="M-52.5 -15H-39.5" stroke="#0b0f2a" stroke-width="2"/></g>
+      <g class="rin"><circle cx="46" cy="-15" r="6.5" fill="#f6e3cc" stroke="#0b0f2a" stroke-width="2.5"/><path d="M39.5 -15H52.5" stroke="#0b0f2a" stroke-width="2"/></g>
+    </g>
+  </g>
+  <!-- notas musicales que salen de las ventanas -->
+  <g id="notas">
+    <g transform="translate(218 118) scale(1.15)"><g class="nota izq n1"><use href="#corchea" class="n-borde"/><use href="#corchea" class="n-crema"/></g></g>
+    <g transform="translate(250 118) scale(1.15)"><g class="nota izq n3"><use href="#doble" class="n-borde"/><use href="#doble" class="n-naranja"/></g></g>
+    <g transform="translate(285 118) scale(1.15)"><g class="nota der n2"><use href="#corchea" class="n-borde"/><use href="#corchea" class="n-naranja"/></g></g>
+    <g transform="translate(319 118) scale(1.15)"><g class="nota der n4"><use href="#corchea" class="n-borde"/><use href="#corchea" class="n-crema"/></g></g>
+  </g>
+</svg>

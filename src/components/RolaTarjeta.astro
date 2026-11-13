@@ -1,0 +1,173 @@
+---
+// tarjeta de la rola en el inicio: invita a darle play y avisa que la musica sigue sonando
+// mientras se recorre el sitio, el boton lo controla RolaPlayer (atributo data-rola-control)
+// al darle play aparecen los controles justo debajo de la tarjeta (data-rola-linea); si el usuario
+// baja o cambia de pagina, RolaPlayer los muestra en la esquina inferior
+// sin js, se muestra el reproductor nativo del navegador
+import Icon from './Icon.astro';
+import RolaControles from './RolaControles.astro';
+import { rola } from '../data/site';
+---
+
+<div class="bloque-rola">
+<div id="rola-tarjeta" class="tarjeta-rola oscuro">
+  <button type="button" class="tarjeta-rola__play" data-rola-control aria-label={`Reproducir ${rola.titulo}`}>
+    <Icon name="player-play-filled" size={34} class="tarjeta-rola__icono-play" />
+    <Icon name="player-pause-filled" size={34} class="tarjeta-rola__icono-pausa" />
+  </button>
+
+  <div class="tarjeta-rola__texto">
+    <p class="tarjeta-rola__eyebrow">
+      <Icon name="headphones" size={18} />
+      La rola de la casa · {rola.duracion}
+    </p>
+    <h3 class="tarjeta-rola__titulo">{rola.titulo}</h3>
+    <p class="tarjeta-rola__invita">
+      Dale play y sigue paseando por el sitio: la rola te acompaña en todas las páginas. Empieza a volumen medio; la
+      subes, la bajas, la pausas o la cierras desde el reproductor que aparece aquí abajo, y si sigues bajando o cambias
+      de página, te espera en la esquina.
+    </p>
+    <noscript>
+      <audio class="tarjeta-rola__nativo" controls preload="none" src={rola.src}></audio>
+    </noscript>
+  </div>
+</div>
+
+<!-- controles en linea: ocultos hasta el primer play (los muestra RolaPlayer) -->
+<div class="bloque-rola__controles" data-rola-linea hidden>
+  <RolaControles variante="linea" />
+</div>
+</div>
+
+<style>
+  .bloque-rola {
+    display: grid;
+    gap: var(--space-s);
+    margin-top: var(--space-xl);
+  }
+
+  .bloque-rola__controles[hidden] {
+    display: none;
+  }
+
+  /* al aparecer, los controles se despliegan suavemente bajo la tarjeta */
+  .bloque-rola__controles:not([hidden]) {
+    animation: bloque-rola-aparece 280ms var(--ease-out);
+  }
+
+  @keyframes bloque-rola-aparece {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+
+  .tarjeta-rola {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: var(--space-m);
+    padding: var(--space-m);
+    border-radius: var(--radius-l);
+    background: var(--azul-noche);
+    box-shadow: var(--sombra-alta);
+  }
+
+  .tarjeta-rola__play {
+    display: grid;
+    place-items: center;
+    width: 4.5rem;
+    height: 4.5rem;
+    border: 0;
+    border-radius: 50%;
+    background: var(--naranja-accion);
+    color: var(--blanco);
+    cursor: pointer;
+    box-shadow: 0 0 0 6px rgb(255 244 232 / 0.12);
+    transition:
+      transform var(--dur) var(--ease-out),
+      background-color var(--dur) var(--ease-out);
+  }
+
+  .tarjeta-rola__play:hover {
+    background: var(--naranja-hondo);
+    transform: scale(1.05);
+  }
+
+  /* mientras no suena, el boton "llama": un aro que late */
+  .tarjeta-rola__play:not([data-sonando='si']) {
+    animation: tarjeta-rola-llama 2.4s ease-out infinite;
+  }
+
+  @keyframes tarjeta-rola-llama {
+    0% {
+      box-shadow:
+        0 0 0 6px rgb(255 244 232 / 0.12),
+        0 0 0 0 rgb(194 65 12 / 0.55);
+    }
+    70%,
+    100% {
+      box-shadow:
+        0 0 0 6px rgb(255 244 232 / 0.12),
+        0 0 0 18px rgb(194 65 12 / 0);
+    }
+  }
+
+  .tarjeta-rola :global(.tarjeta-rola__icono-pausa),
+  .tarjeta-rola__play[data-sonando='si'] :global(.tarjeta-rola__icono-play) {
+    display: none;
+  }
+
+  .tarjeta-rola__play[data-sonando='si'] :global(.tarjeta-rola__icono-pausa) {
+    display: block;
+  }
+
+  .tarjeta-rola :global(.tarjeta-rola__icono-play) {
+    margin-left: 4px;
+  }
+
+  .tarjeta-rola__texto {
+    display: grid;
+    gap: var(--space-3xs);
+  }
+
+  .tarjeta-rola__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    color: var(--azul-claro);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .tarjeta-rola__titulo {
+    font-size: var(--step-3);
+    font-weight: 700;
+  }
+
+  .tarjeta-rola__invita {
+    max-width: 40rem;
+    margin-top: var(--space-2xs);
+  }
+
+  .tarjeta-rola__nativo {
+    width: 100%;
+    margin-top: var(--space-s);
+  }
+
+  @media (max-width: 30rem) {
+    .tarjeta-rola {
+      grid-template-columns: 1fr;
+      justify-items: start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tarjeta-rola__play:not([data-sonando='si']),
+    .bloque-rola__controles:not([hidden]) {
+      animation: none;
+    }
+  }
+</style>

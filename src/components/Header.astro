@@ -1,0 +1,276 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/logo-guaguareando.png';
+import Icon from './Icon.astro';
+import { nav, spotify } from '../data/site';
+
+const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+const isActive = (href: string) => (href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`));
+---
+
+<header class="cabecera oscuro" data-menu="cerrado">
+  <div class="wrap cabecera__wrap">
+    <a href="/" class="cabecera__marca" aria-label="Guaguareando Ando, ir al inicio">
+      <Image
+        src={logo}
+        alt=""
+        width={64}
+        height={64}
+        densities={[1, 2]}
+        loading="eager"
+        class="cabecera__logo"
+      />
+      <span class="cabecera__nombre" aria-hidden="true">
+        Guaguareando…<span>ando!</span>
+      </span>
+    </a>
+
+    <button
+      type="button"
+      class="cabecera__toggle"
+      aria-expanded="false"
+      aria-controls="menu-principal"
+    >
+      <Icon name="menu-2" size={26} class="cabecera__icono-abrir" />
+      <Icon name="x" size={26} class="cabecera__icono-cerrar" />
+      <span>Menú</span>
+    </button>
+
+    <nav id="menu-principal" class="cabecera__nav" aria-label="Principal">
+      <ul role="list" class="cabecera__lista">
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="cabecera__link"
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a
+        href={spotify.showUrl}
+        class="cabecera__cta"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Icon name="brand-spotify" size={20} />
+        Escúchanos
+        <span class="sr-only">en Spotify (se abre en una pestaña nueva)</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<noscript>
+  <style>
+    .cabecera__toggle { display: none !important; }
+    .cabecera__nav { display: flex !important; }
+  </style>
+</noscript>
+
+<script>
+  // con <ClientRouter /> la cabecera se reemplaza en cada navegacion y este script corre una sola vez:
+  // por eso los eventos se escuchan en `document` y los elementos se buscan en el momento
+  const partes = () => {
+    const cabecera = document.querySelector<HTMLElement>('.cabecera');
+    const boton = cabecera?.querySelector<HTMLButtonElement>('.cabecera__toggle');
+    return { cabecera, boton };
+  };
+
+  const fijar = (abierto: boolean) => {
+    const { cabecera, boton } = partes();
+    if (!cabecera || !boton) return;
+    cabecera.dataset.menu = abierto ? 'abierto' : 'cerrado';
+    boton.setAttribute('aria-expanded', String(abierto));
+  };
+
+  document.addEventListener('click', (event) => {
+    const boton = (event.target as Element | null)?.closest('.cabecera__toggle');
+    if (!boton) return;
+    fijar(boton.getAttribute('aria-expanded') !== 'true');
+  });
+
+  document.addEventListener('keydown', (event) => {
+    const { boton } = partes();
+    if (event.key === 'Escape' && boton?.getAttribute('aria-expanded') === 'true') {
+      fijar(false);
+      boton.focus();
+    }
+  });
+</script>
+
+<style>
+  .cabecera {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--azul-noche);
+    border-bottom: 1px solid var(--linea-oscura);
+  }
+
+  .cabecera__wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+    min-height: 4.5rem;
+  }
+
+  .cabecera__marca {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    color: var(--crema);
+    text-decoration: none;
+  }
+
+  .cabecera__marca :global(.cabecera__logo) {
+    width: 56px;
+    height: 56px;
+    view-transition-name: logo;
+  }
+
+  .cabecera__nombre {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 0.95;
+    color: var(--crema);
+  }
+
+  .cabecera__nombre span {
+    color: var(--naranja-marca);
+  }
+
+  .cabecera__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    min-height: 2.75rem;
+    padding: 0.4rem 0.9rem 0.4rem 0.7rem;
+    border: 2px solid var(--linea-oscura);
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--crema);
+    font-family: var(--font-display);
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .cabecera :global(.cabecera__icono-cerrar) {
+    display: none;
+  }
+
+  .cabecera[data-menu='abierto'] :global(.cabecera__icono-cerrar) {
+    display: block;
+  }
+
+  .cabecera[data-menu='abierto'] :global(.cabecera__icono-abrir) {
+    display: none;
+  }
+
+  /* menu movil: panel bajo la cabecera */
+  .cabecera__nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: var(--space-m);
+    padding: var(--space-m) var(--gutter) var(--space-l);
+    background: var(--azul-noche);
+    border-bottom: 1px solid var(--linea-oscura);
+    max-height: calc(100dvh - 4.5rem);
+    overflow-y: auto;
+  }
+
+  .cabecera[data-menu='abierto'] .cabecera__nav {
+    display: flex;
+  }
+
+  .cabecera__lista {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cabecera__link {
+    display: block;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--linea-oscura);
+    color: var(--crema);
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .cabecera__link[aria-current='page'] {
+    color: var(--naranja-marca);
+  }
+
+  .cabecera__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius-pill);
+    background: var(--naranja-accion);
+    color: var(--blanco);
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .cabecera__cta:hover {
+    background: var(--naranja-hondo);
+  }
+
+  @media (min-width: 64rem) {
+    .cabecera__toggle {
+      display: none;
+    }
+
+    .cabecera__nav {
+      position: static;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-m);
+      padding: 0;
+      border: 0;
+      background: none;
+      max-height: none;
+      overflow: visible;
+    }
+
+    .cabecera__lista {
+      flex-direction: row;
+      gap: var(--space-3xs);
+    }
+
+    .cabecera__link {
+      padding: 0.45rem 0.7rem;
+      border: 0;
+      border-radius: var(--radius-pill);
+      font-size: var(--step-0);
+    }
+
+    .cabecera__link:hover {
+      background: rgb(255 244 232 / 0.1);
+    }
+
+    .cabecera__link[aria-current='page'] {
+      background: rgb(255 244 232 / 0.1);
+    }
+  }
+</style>

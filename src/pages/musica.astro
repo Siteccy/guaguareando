@@ -1,0 +1,271 @@
+---
+// musica: Rock sobre Ruedas, Entre Guitarras y Guitarristas y el canal de YouTube
+// textos: los de cada programa en src/data/programs.ts (rama design), sin artistas ni lanzamientos inventados
+// pendiente: falta la info de la disquera (nombre, descripcion, artistas, links), cuando llegue va como seccion entre entre guitarras y el cierre
+import { Picture } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
+import PageHead from '../components/PageHead.astro';
+import Stamp from '../components/Stamp.astro';
+import StopSign from '../components/StopSign.astro';
+import YouTubeCanal from '../components/YouTubeCanal.astro';
+import { getProgram } from '../data/programs';
+import { rockSobreRuedas, spotify, youtube } from '../data/site';
+// ilustracion animada del encabezado, va como <img> para que su CSS y sus id queden aislados de la pagina
+import ilustracion from '../assets/svg_animados/musica-hero.svg?url';
+
+const rock = getProgram('rock-sobre-ruedas')!;
+const guitarras = getProgram('entre-guitarras-y-guitarristas')!;
+const dia = rockSobreRuedas.day.charAt(0).toUpperCase() + rockSobreRuedas.day.slice(1);
+---
+
+<BaseLayout
+  title="Música"
+  description={`Rock sobre Ruedas con ${rockSobreRuedas.host}, en vivo los ${rockSobreRuedas.day} a las ${rockSobreRuedas.time} por YouTube, y Entre Guitarras y Guitarristas: la música de Guaguareando Ando.`}
+>
+  <PageHead
+    tono="morado"
+    letrero="Música"
+    title="Música para guaguarear"
+    lead={`${rockSobreRuedas.name} en vivo los ${rockSobreRuedas.day} y ${guitarras.name}: dos programas para hablar de música, de sus historias y de quienes la hacen.`}
+  >
+    <Button href={youtube.channelUrl} variant="claro" icon="brand-youtube" external>Míranos en YouTube</Button>
+    <img slot="aside" src={ilustracion} alt="Combi musical recorriendo un vinilo" width="560" height="560" />
+  </PageHead>
+
+  <!-- rock sobre ruedas -->
+  <section class="bloque" aria-labelledby="rock-titulo">
+    <div class="wrap dos-col">
+      <div class="dos-col__texto">
+        <StopSign text="En vivo" sinMarcador />
+        <h2 id="rock-titulo" class="bloque__titulo">{rock.name}</h2>
+        <p class="host">con {rockSobreRuedas.host}</p>
+        <p class="horario">
+          <Icon name="broadcast" size={22} />
+          En vivo los {rockSobreRuedas.day} a las {rockSobreRuedas.time} por YouTube
+        </p>
+        <p class="bloque__lead">{rock.lead}</p>
+        <p class="texto">{rock.about[0].paragraphs[0]}</p>
+        <div class="acciones">
+          <Button href={youtube.channelUrl} variant="morado" icon="brand-youtube" external>Míranos en YouTube</Button>
+          <Button href={`/programas/${rock.slug}`} variant="contorno">Conoce el programa</Button>
+        </div>
+      </div>
+      <div class="marco">
+        <Picture
+          src={rock.cover}
+          alt={rock.coverAlt}
+          formats={['avif', 'webp']}
+          widths={[320, 480, 720]}
+          sizes="(min-width: 64rem) 26rem, 80vw"
+          loading="eager"
+          class="marco__img"
+        />
+        <Stamp ring="En vivo por YouTube · En vivo por YouTube ·" big={dia} small={rockSobreRuedas.time.toUpperCase()} class="marco__sello" />
+      </div>
+    </div>
+  </section>
+
+  <!-- video -->
+  <section class="bloque bloque--noche oscuro" aria-labelledby="video-titulo">
+    <div class="wrap">
+      <StopSign text="En video" sinMarcador />
+      <h2 id="video-titulo" class="bloque__titulo">Las transmisiones, en video</h2>
+      <p class="bloque__lead">
+        Los videos más recientes del canal de Guaguareando Ando, incluidas las transmisiones en vivo de Rock sobre Ruedas.
+      </p>
+      <YouTubeCanal class="musica-video" />
+    </div>
+  </section>
+
+  <!-- entre guitarras y guitarristas -->
+  <section class="bloque bloque--hondo" aria-labelledby="guitarras-titulo">
+    <div class="wrap dos-col dos-col--invertida">
+      <div class="dos-col__texto">
+        <StopSign text={`Destino: ${guitarras.tema}`} sinMarcador />
+        <h2 id="guitarras-titulo" class="bloque__titulo">{guitarras.name}</h2>
+        <p class="bloque__lead">{guitarras.lead}</p>
+        <ul role="list" class="destacados">
+          {
+            guitarras.highlights.map((h) => (
+              <li class="destacado">
+                <h3 class="destacado__titulo">{h.title}</h3>
+                <p>{h.text}</p>
+              </li>
+            ))
+          }
+        </ul>
+        <div class="acciones">
+          <Button href={spotify.showUrl} variant="morado" icon="brand-spotify" external>Escúchanos en Spotify</Button>
+          <Button href={`/programas/${guitarras.slug}`} variant="contorno">Conoce el programa</Button>
+        </div>
+      </div>
+      <div class="marco marco--recto">
+        <Picture
+          src={guitarras.cover}
+          alt={guitarras.coverAlt}
+          formats={['avif', 'webp']}
+          widths={[320, 480, 720]}
+          sizes="(min-width: 64rem) 26rem, 80vw"
+          class="marco__img"
+        />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .bloque {
+    padding-block: var(--space-2xl);
+  }
+
+  .bloque--noche {
+    background: var(--azul-noche);
+  }
+
+  .bloque--hondo {
+    background: var(--crema-hondo);
+  }
+
+  .bloque__titulo {
+    font-size: var(--step-4);
+    font-weight: 700;
+  }
+
+  .bloque__lead {
+    max-width: 40rem;
+    margin-top: var(--space-s);
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+
+  .dos-col {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  .dos-col__texto {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-s);
+  }
+
+  @media (min-width: 64rem) {
+    .dos-col {
+      grid-template-columns: 1.15fr 0.85fr;
+    }
+  }
+
+  .host {
+    color: var(--morado);
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 600;
+  }
+
+  .horario {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.45em 0.9em;
+    border: 2px solid var(--morado);
+    border-radius: var(--radius-pill);
+    color: var(--morado);
+    font-weight: 700;
+  }
+
+  .texto {
+    max-width: 40rem;
+  }
+
+  .acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    margin-top: var(--space-s);
+  }
+
+  /* marco liso para la portada */
+  .marco {
+    position: relative;
+    justify-self: center;
+    width: min(100%, 26rem);
+    padding: var(--space-m);
+    border-radius: var(--radius-l);
+    background: var(--morado);
+    rotate: 2deg;
+  }
+
+  .marco--recto {
+    rotate: -2deg;
+  }
+
+  .marco :global(.marco__img) {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-m);
+  }
+
+  .marco :global(.marco__sello) {
+    position: absolute;
+    right: 0.25rem;
+    bottom: -2rem;
+    width: 7.5rem;
+    padding: 0.35rem;
+    border-radius: 50%;
+    background: var(--morado);
+    color: var(--crema);
+    box-shadow: 0 8px 18px -6px rgb(0 0 0 / 0.5);
+  }
+
+  @media (min-width: 64rem) {
+    .marco :global(.marco__sello) {
+      right: -1.5rem;
+      width: 8.5rem;
+    }
+  }
+
+  :global(.musica-video) {
+    margin-top: var(--space-xl);
+  }
+
+  /* destacados de entre guitarras */
+  .destacados {
+    display: grid;
+    gap: var(--space-s);
+    width: 100%;
+    max-width: 40rem;
+    margin-top: var(--space-s);
+  }
+
+  .destacado {
+    display: grid;
+    gap: var(--space-3xs);
+    padding: var(--space-m);
+    border-left: 6px solid var(--morado);
+    border-radius: 0 var(--radius-m) var(--radius-m) 0;
+    background: var(--papel);
+  }
+
+  .destacado__titulo {
+    color: var(--morado);
+    font-size: var(--step-1);
+    font-weight: 700;
+  }
+
+  .destacado p {
+    color: var(--tinta-suave);
+  }
+
+  @media (min-width: 64rem) {
+    .dos-col--invertida .marco {
+      order: -1;
+    }
+
+    .dos-col--invertida {
+      grid-template-columns: 0.85fr 1.15fr;
+    }
+  }
+</style>
