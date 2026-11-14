@@ -1,0 +1,344 @@
+---
+// textos: rama design (advertising.html) + formatos y "Tu marca aqui" de la rama main (pages/publicity.html)
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
+import PageHead from '../components/PageHead.astro';
+import StopSign from '../components/StopSign.astro';
+import Ticket from '../components/Ticket.astro';
+import logoSiteccy from '../assets/aliados/siteccy-isotipo.png';
+import { formatos, oportunidades } from '../data/pautas';
+import { site, siteccy, mailtoLink, whatsappLink } from '../data/site';
+// ilustracion animada del encabezado, va como <img> para que su CSS y sus id queden aislados de la pagina
+import ilustracion from '../assets/svg_animados/anunciate-hero.svg?url';
+
+const asunto = 'Pauta publicitaria en Guaguareando Ando';
+const mensajeWhatsapp = 'Hola, Guaguareando Ando. Me interesa anunciar mi marca o proyecto con ustedes.';
+---
+
+<BaseLayout
+  title="Anúnciate"
+  description="Pauta publicitaria en Guaguareando Ando: menciones en el podcast, presencia en la revista digital y difusión en redes sociales. Conecta tu marca con nuestra comunidad."
+>
+  <PageHead
+    tono="noche"
+    letrero="Pauta publicitaria y alianzas"
+    title="Hagamos que tu marca llegue más lejos"
+    lead="Conectamos marcas, proyectos y organizaciones con una comunidad interesada en descubrir, aprender y compartir nuevas experiencias."
+  >
+    <Button href="#hablemos" icon="arrow-right">Hablemos de tu proyecto</Button>
+    <img
+      slot="aside"
+      src={ilustracion}
+      alt="Combi con un letrero publicitario y un megáfono"
+      width="560"
+      height="560"
+    />
+  </PageHead>
+
+  <!-- formatos (main) -->
+  <section class="bloque" aria-labelledby="formatos-titulo">
+    <div class="wrap">
+      <StopSign text="Formatos" sinMarcador />
+      <h2 id="formatos-titulo" class="bloque__titulo">¿Qué ofrecemos?</h2>
+      <p class="bloque__lead">Opciones de visibilidad para tu marca.</p>
+      <ul role="list" class="tarjetas">
+        {
+          formatos.map((f) => (
+            <li class="tarjeta">
+              <span class="tarjeta__icono">
+                <Icon name={f.icon} size={30} />
+              </span>
+              <h3 class="tarjeta__titulo">{f.title}</h3>
+              <p>{f.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- oportunidades (design) -->
+  <section class="bloque bloque--hondo" aria-labelledby="oportunidades-titulo">
+    <div class="wrap">
+      <StopSign text="Pauta publicitaria" sinMarcador />
+      <h2 id="oportunidades-titulo" class="bloque__titulo">Un espacio para dar a conocer tu marca</h2>
+      <p class="bloque__lead">
+        Acércate a nuestra comunidad y conversemos sobre oportunidades de colaboración y difusión para tu proyecto.
+      </p>
+      <ul role="list" class="tarjetas">
+        {
+          oportunidades.map((o) => (
+            <li class="tarjeta tarjeta--linea">
+              <span class="tarjeta__icono">
+                <Icon name={o.icon} size={30} />
+              </span>
+              <h3 class="tarjeta__titulo">{o.title}</h3>
+              <p>{o.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- aliados -->
+  <section class="bloque" aria-labelledby="aliados-titulo">
+    <div class="wrap">
+      <StopSign text="Nuestra red de aliados" sinMarcador />
+      <h2 id="aliados-titulo" class="bloque__titulo">Crecemos conectando talentos</h2>
+      <p class="bloque__lead">
+        Reconocemos a las organizaciones y personas que contribuyen al crecimiento de este proyecto y de nuestra
+        comunidad.
+      </p>
+      <div class="aliados">
+        <article class="aliado">
+          <div class="aliado__logo">
+            <Image src={logoSiteccy} alt="Isotipo de Siteccy" width={112} densities={[1, 2]} />
+          </div>
+          <div class="aliado__texto">
+            <p class="aliado__label">{siteccy.role}</p>
+            <h3 class="aliado__nombre">{siteccy.name}</h3>
+            <p>
+              Compañía de servicios tecnológicos y creativos responsable del desarrollo y acompañamiento digital de
+              Guaguareando Ando.
+            </p>
+            <a href={siteccy.url} target="_blank" rel="noopener noreferrer" class="aliado__link">
+              Conocer Siteccy
+              <Icon name="arrow-up-right" size={18} />
+              <span class="sr-only">(se abre en una pestaña nueva)</span>
+            </a>
+          </div>
+        </article>
+        <a href="#hablemos" class="aliado aliado--vacio">
+          <span class="aliado__label">Tu marca aquí</span>
+          <span class="aliado__nombre">Conviértete en uno de nuestros aliados.</span>
+          <span class="aliado__link">
+            Hablemos
+            <Icon name="arrow-right" size={18} />
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- contacto para pautas -->
+  <section id="hablemos" class="bloque bloque--naranja" aria-labelledby="hablemos-titulo">
+    <div class="wrap">
+      <Ticket stub="Anúnciate">
+        <h2 id="hablemos-titulo" class="bloque__titulo boleto__titulo">¿Quieres ser parte de nuestra comunidad?</h2>
+        <p class="bloque__lead">
+          Cuéntanos sobre tu marca, iniciativa o propuesta de colaboración. Estamos listos para escucharte.
+        </p>
+        <div class="hablemos__acciones">
+          <Button href={mailtoLink(asunto)} icon="mail">Escríbenos un correo</Button>
+          <Button href={whatsappLink(mensajeWhatsapp)} variant="contorno" icon="brand-whatsapp" external>
+            Escríbenos por WhatsApp
+          </Button>
+        </div>
+        <p class="hablemos__datos">
+          <span>{site.email}</span>
+          <span aria-hidden="true">·</span>
+          <span>WhatsApp {site.whatsapp.display}</span>
+        </p>
+      </Ticket>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .bloque {
+    padding-block: var(--space-2xl);
+  }
+
+  .bloque--hondo {
+    background: var(--crema-hondo);
+  }
+
+  .bloque--naranja {
+    background: var(--naranja-marca);
+  }
+
+  .bloque__titulo {
+    font-size: var(--step-4);
+    font-weight: 700;
+  }
+
+  .bloque__lead {
+    max-width: 40rem;
+    margin-top: var(--space-s);
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+
+  /* tarjetas de formatos */
+  .tarjetas {
+    display: grid;
+    gap: var(--space-m);
+    margin-top: var(--space-xl);
+  }
+
+  @media (min-width: 56rem) {
+    .tarjetas {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .tarjeta {
+    display: grid;
+    align-content: start;
+    gap: var(--space-xs);
+    padding: var(--space-l) var(--space-m);
+    border-radius: var(--radius-m);
+    background: var(--papel);
+    box-shadow: var(--sombra);
+  }
+
+  .tarjeta--linea {
+    border-top: 8px solid var(--naranja-accion);
+  }
+
+  .tarjeta__icono {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    margin-bottom: var(--space-2xs);
+    border-radius: 50%;
+    background: var(--naranja-accion);
+    color: var(--blanco);
+  }
+
+  .tarjeta__titulo {
+    font-size: var(--step-2);
+    font-weight: 700;
+  }
+
+  .tarjeta p {
+    color: var(--tinta-suave);
+  }
+
+  /* aliados */
+  .aliados {
+    display: grid;
+    gap: var(--space-m);
+    margin-top: var(--space-xl);
+  }
+
+  @media (min-width: 56rem) {
+    .aliados {
+      grid-template-columns: 2fr 1fr;
+    }
+  }
+
+  .aliado {
+    display: grid;
+    gap: var(--space-m);
+    align-items: center;
+    padding: var(--space-l) var(--space-m);
+    border-radius: var(--radius-m);
+    background: var(--papel);
+    box-shadow: var(--sombra);
+  }
+
+  /* en movil la tarjeta va centrada (logo arriba, texto debajo); desde 40rem, logo a la izquierda */
+  .aliado,
+  .aliado__texto {
+    justify-items: center;
+    text-align: center;
+  }
+
+  @media (min-width: 40rem) {
+    .aliado,
+    .aliado__texto {
+      justify-items: normal;
+      text-align: start;
+    }
+
+    .aliado:not(.aliado--vacio) {
+      grid-template-columns: auto 1fr;
+    }
+
+    .aliado__logo {
+      justify-self: start;
+    }
+  }
+
+  .aliado__logo {
+    justify-self: center;
+    padding: var(--space-2xs);
+    border-radius: var(--radius-m);
+    background: var(--blanco);
+  }
+
+  .aliado__logo :global(img) {
+    width: 112px;
+    height: auto;
+  }
+
+  .aliado__texto {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  .aliado__label {
+    color: var(--azul-combi);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .aliado__nombre {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 700;
+    line-height: 1.15;
+  }
+
+  .aliado__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    color: var(--naranja-accion);
+    font-weight: 700;
+  }
+
+  .aliado--vacio {
+    align-content: center;
+    gap: var(--space-2xs);
+    border: 3px dashed var(--linea);
+    background: transparent;
+    box-shadow: none;
+    color: var(--tinta);
+    text-decoration: none;
+    transition: border-color var(--dur) var(--ease-out);
+  }
+
+  .aliado--vacio:hover {
+    border-color: var(--naranja-accion);
+  }
+
+  /* hablemos */
+  .boleto__titulo {
+    color: var(--naranja-accion);
+  }
+
+  .hablemos__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    margin-top: var(--space-l);
+  }
+
+  .hablemos__datos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3xs) var(--space-2xs);
+    margin-top: var(--space-m);
+    color: var(--tinta-suave);
+    font-size: var(--step--1);
+    overflow-wrap: anywhere;
+  }
+</style>

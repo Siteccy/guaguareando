@@ -1,0 +1,26 @@
+# build
+dist/
+.astro/
+
+# dependencias
+node_modules/
+
+# logs
+npm-debug.log*
+
+# entorno
+.env
+.env.*
+
+# sistema
+.DS_Store
+Thumbs.db
+
+# markdown: solo se suben el readme y la guia de marca
+*.md
+!/README.md
+!/MARCA.md
+
+# archivos y carpetas ocultos de la raiz (configuracion local de editores y herramientas)
+/.*
+!/.gitignore

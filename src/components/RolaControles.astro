@@ -1,0 +1,384 @@
+---
+// panel de controles de la rola: play/pausa, nombre, avance, tiempo, volumen y cerrar
+// no tiene <audio> propio: es una "vista" del <audio> unico de RolaPlayer, que lo maneja
+// por delegacion de eventos (clases rola__*), se usa en dos lugares:
+// - variante "linea": debajo de la tarjeta de la cancion, en el inicio
+// - variante "flotante": en la esquina inferior, al bajar o en las demas paginas
+import Icon from './Icon.astro';
+import { rola } from '../data/site';
+
+interface Props {
+  variante: 'linea' | 'flotante';
+}
+
+const { variante } = Astro.props;
+// maximo inicial de la barra de avance (segundos), a partir de la duracion declarada en site.ts
+const [min, seg] = rola.duracion.split(':').map(Number);
+const segundos = min * 60 + seg;
+// nombres distintos: con la pagina desplazada pueden existir las dos vistas a la vez
+const nombre = variante === 'flotante' ? `Reproductor en la esquina: ${rola.titulo}` : `Reproductor: ${rola.titulo}`;
+---
+
+<section
+  class:list={['rola-panel', `rola-panel--${variante}`, 'oscuro']}
+  data-sonando="no"
+  aria-label={nombre}
+>
+  <button type="button" class="rola-panel__play" data-rola-control aria-label={`Reproducir ${rola.titulo}`}>
+    <Icon name="player-play-filled" size={22} class="rola-panel__icono-play" />
+    <Icon name="player-pause-filled" size={22} class="rola-panel__icono-pausa" />
+  </button>
+
+  <div class="rola-panel__info">
+    <p class="rola-panel__titulo">
+      <span class="rola-panel__nombre">{rola.titulo}</span>
+    </p>
+    <input
+      class="rola__avance"
+      type="range"
+      min="0"
+      max={segundos}
+      step="1"
+      value="0"
+      aria-label={`Avance de ${rola.titulo}`}
+      aria-valuetext={`0:00 de ${rola.duracion}`}
+    />
+    <div class="rola-panel__pie">
+      <p class="rola-panel__tiempo">
+        <span class="rola-panel__eq" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="rola__actual">0:00</span> / <span class="rola__total">{rola.duracion}</span>
+        <span class="rola__error" role="status"></span>
+      </p>
+      <!-- volumen: arranca al 50 % para no asustar a nadie; RolaPlayer recuerda lo que elija la persona
+           en iphone/ipad (sin control de volumen por pagina) la barra se oculta y queda el silencio -->
+      <div class="rola-panel__volumen" role="group" aria-label="Volumen">
+        <button type="button" class="rola__silencio" aria-pressed="false" aria-label="Silenciar la rola" data-nivel="bajo">
+          <Icon name="volume" size={18} class="rola-panel__vol-alto" />
+          <Icon name="volume-2" size={18} class="rola-panel__vol-bajo" />
+          <Icon name="volume-3" size={18} class="rola-panel__vol-off" />
+        </button>
+        <input
+          class="rola__volumen"
+          type="range"
+          min="0"
+          max="100"
+          step="5"
+          value="50"
+          aria-label="Volumen de la rola"
+          aria-valuetext="50 %"
+        />
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="rola__cerrar" aria-label="Detener la rola y cerrar el reproductor">
+    <Icon name="x" size={20} />
+  </button>
+</section>
+
+<style>
+  .rola-panel {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs);
+    border: 2px solid var(--linea-oscura);
+    border-radius: var(--radius-l);
+    background: var(--azul-noche);
+  }
+
+  .rola-panel--flotante {
+    box-shadow: 0 18px 40px -16px rgb(0 0 0 / 0.65);
+  }
+
+  .rola-panel--linea {
+    box-shadow: var(--sombra);
+  }
+
+  /* en pantallas anchas la vista bajo la tarjeta respira mas; en movil queda compacta
+     para que quepa el nombre de la cancion */
+  @media (min-width: 40rem) {
+    .rola-panel--linea {
+      padding: var(--space-s) var(--space-m);
+    }
+  }
+
+  .rola-panel__play {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border: 0;
+    border-radius: 50%;
+    background: var(--naranja-accion);
+    color: var(--blanco);
+    cursor: pointer;
+  }
+
+  .rola-panel__play:hover {
+    background: var(--naranja-hondo);
+  }
+
+  .rola-panel :global(.rola-panel__icono-pausa),
+  .rola-panel[data-sonando='si'] :global(.rola-panel__icono-play) {
+    display: none;
+  }
+
+  .rola-panel[data-sonando='si'] :global(.rola-panel__icono-pausa) {
+    display: block;
+  }
+
+  .rola-panel :global(.rola-panel__icono-play) {
+    margin-left: 2px;
+  }
+
+  .rola-panel__info {
+    display: grid;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+
+  .rola-panel__titulo {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-width: 0;
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    font-weight: 700;
+  }
+
+  /* el nombre usa hasta dos renglones (en movil no cabe en uno); si aun asi no cabe, termina en "…" */
+  .rola-panel__nombre {
+    display: -webkit-box;
+    min-width: 0;
+    overflow: hidden;
+    line-height: 1.15;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  /* renglon inferior: tiempo a la izquierda, volumen a la derecha (en movil se acomodan en dos renglones) */
+  .rola-panel__pie {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.15rem var(--space-xs);
+  }
+
+  .rola-panel__volumen {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .rola__silencio {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--crema);
+    cursor: pointer;
+  }
+
+  .rola__silencio:hover {
+    background: rgb(255 244 232 / 0.12);
+  }
+
+  /* un solo icono a la vez, segun el nivel: alto, bajo o silenciado */
+  .rola__silencio :global(svg) {
+    display: none;
+  }
+
+  .rola__silencio[data-nivel='alto'] :global(.rola-panel__vol-alto),
+  .rola__silencio[data-nivel='bajo'] :global(.rola-panel__vol-bajo),
+  .rola__silencio[data-nivel='off'] :global(.rola-panel__vol-off) {
+    display: block;
+  }
+
+  .rola__volumen {
+    --nivel: 50%;
+    width: 5.5rem;
+    height: 1.25rem;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    appearance: none;
+  }
+
+  .rola__volumen[hidden] {
+    display: none;
+  }
+
+  .rola__volumen::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 4px;
+    background: linear-gradient(to right, var(--crema) var(--nivel), rgb(255 244 232 / 0.25) var(--nivel));
+  }
+
+  .rola__volumen::-moz-range-track {
+    height: 4px;
+    border-radius: 4px;
+    background: rgb(255 244 232 / 0.25);
+  }
+
+  .rola__volumen::-moz-range-progress {
+    height: 4px;
+    border-radius: 4px;
+    background: var(--crema);
+  }
+
+  .rola__volumen::-webkit-slider-thumb {
+    width: 12px;
+    height: 12px;
+    margin-top: -4px;
+    border: 2px solid var(--azul-noche);
+    border-radius: 50%;
+    background: var(--crema);
+    appearance: none;
+  }
+
+  .rola__volumen::-moz-range-thumb {
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--azul-noche);
+    border-radius: 50%;
+    background: var(--crema);
+  }
+
+  .rola-panel__tiempo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 0.3rem;
+    color: var(--azul-claro);
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rola-panel__tiempo .rola-panel__eq {
+    margin-right: 0.2rem;
+  }
+
+  /* pantallas muy angostas: nombre un poco mas chico para que quepa completo */
+  @media (max-width: 30rem) {
+    .rola-panel__titulo {
+      font-size: var(--step--1);
+    }
+  }
+
+  /* barra de avance: carril crema con el tramo recorrido en naranja */
+  .rola__avance {
+    --avance: 0%;
+    width: 100%;
+    height: 1.25rem;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    appearance: none;
+  }
+
+  .rola__avance::-webkit-slider-runnable-track {
+    height: 5px;
+    border-radius: 5px;
+    background: linear-gradient(to right, var(--naranja-marca) var(--avance), rgb(255 244 232 / 0.25) var(--avance));
+  }
+
+  .rola__avance::-moz-range-track {
+    height: 5px;
+    border-radius: 5px;
+    background: rgb(255 244 232 / 0.25);
+  }
+
+  .rola__avance::-moz-range-progress {
+    height: 5px;
+    border-radius: 5px;
+    background: var(--naranja-marca);
+  }
+
+  .rola__avance::-webkit-slider-thumb {
+    width: 14px;
+    height: 14px;
+    margin-top: -4.5px;
+    border: 2px solid var(--azul-noche);
+    border-radius: 50%;
+    background: var(--crema);
+    appearance: none;
+  }
+
+  .rola__avance::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--azul-noche);
+    border-radius: 50%;
+    background: var(--crema);
+  }
+
+  .rola__cerrar {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--crema);
+    cursor: pointer;
+  }
+
+  .rola__cerrar:hover {
+    background: rgb(255 244 232 / 0.12);
+  }
+
+  /* ecualizador: tres barritas que bailan solo mientras suena */
+  .rola-panel__eq {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 14px;
+    flex: none;
+  }
+
+  .rola-panel__eq i {
+    width: 3px;
+    height: 100%;
+    border-radius: 2px;
+    background: var(--naranja-marca);
+    transform-origin: bottom;
+    transform: scaleY(0.35);
+  }
+
+  .rola-panel[data-sonando='si'] .rola-panel__eq i {
+    animation: rola-eq 0.9s ease-in-out infinite alternate;
+  }
+
+  .rola-panel[data-sonando='si'] .rola-panel__eq i:nth-child(2) {
+    animation-delay: -0.3s;
+  }
+
+  .rola-panel[data-sonando='si'] .rola-panel__eq i:nth-child(3) {
+    animation-delay: -0.6s;
+  }
+
+  @keyframes rola-eq {
+    from {
+      transform: scaleY(0.3);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rola-panel[data-sonando='si'] .rola-panel__eq i {
+      animation: none;
+      transform: scaleY(0.8);
+    }
+  }
+</style>

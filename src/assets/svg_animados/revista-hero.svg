@@ -1,0 +1,203 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 560 560" role="img" aria-labelledby="titulo">
+  <title id="titulo">Revista abierta de la que sale una combi por una carretera</title>
+  <style>
+    /* velocidad: cambia solo este valor, ciclo completo */
+    svg { --ciclo: 7s; }
+
+    .anim { transform-box: fill-box; }
+
+    /* pagina que se voltea: gira desde el lomo (borde izquierdo de la hoja derecha) */
+    #pagina-frente, #pagina-reverso { transform-origin: 0% 50%; }
+    #pagina-frente  { animation: hoja-frente var(--ciclo) linear infinite both; }
+    #pagina-reverso { animation: hoja-reverso var(--ciclo) linear infinite both; }
+
+    /* carretera pop-up: se despliega desde su base, en el pliegue */
+    #carretera { transform-origin: 50% 100%; animation: carretera var(--ciclo) linear infinite both; }
+
+    /* combi: la carroceria rebota sobre las llantas (8 rebotes por ciclo) */
+    #combi-carroceria { animation: rebote calc(var(--ciclo) / 8) ease-in-out infinite; }
+
+    /* globos de dialogo: pop escalonado desde la colita */
+    #globo-crema   { transform-origin: 75% 100%; animation: globo var(--ciclo) linear infinite both; }
+    #globo-naranja { transform-origin: 20% 100%; animation: globo var(--ciclo) linear calc(var(--ciclo) * .06) infinite both; }
+    #globo-azul    { transform-origin: 20% 100%; animation: globo var(--ciclo) linear calc(var(--ciclo) * .12) infinite both; }
+
+    @keyframes hoja-frente {
+      0%, 4%  { transform: scaleX(1); opacity: 1; animation-timing-function: cubic-bezier(.55, 0, 1, .45); }
+      16%     { transform: scaleX(0); opacity: 1; }
+      17%     { transform: scaleX(0); opacity: 0; }
+      90%     { transform: scaleX(1); opacity: 0; }
+      94%, 100% { transform: scaleX(1); opacity: 1; }
+    }
+    @keyframes hoja-reverso {
+      0%, 15.9% { transform: scaleX(0); opacity: 0; }
+      16%     { transform: scaleX(0); opacity: 1; animation-timing-function: cubic-bezier(0, .55, .45, 1); }
+      28%, 38% { transform: scaleX(-1); opacity: 1; }
+      46%, 100% { transform: scaleX(-1); opacity: 0; }
+    }
+    @keyframes carretera {
+      0%, 24% { transform: scaleY(0); animation-timing-function: cubic-bezier(.2, .7, .4, 1); }
+      33%     { transform: scaleY(1.1); animation-timing-function: ease-in-out; }
+      39%     { transform: scaleY(.95); animation-timing-function: ease-in-out; }
+      44%     { transform: scaleY(1.02); animation-timing-function: ease-in-out; }
+      48%, 88% { transform: scaleY(1); animation-timing-function: cubic-bezier(.5, 0, .9, .5); }
+      96%, 100% { transform: scaleY(0); }
+    }
+    @keyframes rebote {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-3px); }
+    }
+    @keyframes globo {
+      0%, 33.9% { transform: translateY(0) scale(0); opacity: 0; }
+      34%     { transform: translateY(0) scale(0); opacity: 1; animation-timing-function: cubic-bezier(.2, .8, .4, 1); }
+      40%     { transform: translateY(0) scale(1.14); opacity: 1; animation-timing-function: ease-in-out; }
+      44%     { transform: translateY(0) scale(.95); opacity: 1; animation-timing-function: ease-in-out; }
+      48%     { transform: translateY(0) scale(1); opacity: 1; animation-timing-function: ease-in-out; }
+      62%     { transform: translateY(-6px) scale(1); opacity: 1; animation-timing-function: ease-in-out; }
+      76%     { transform: translateY(-2px) scale(1); opacity: 1; animation-timing-function: ease-in; }
+      80%, 100% { transform: translateY(-8px) scale(.9); opacity: 0; }
+    }
+
+    /* movimiento reducido: ilustracion estatica completa */
+    @media (prefers-reduced-motion: reduce) {
+      #pagina-frente, #pagina-reverso, #carretera, #combi-carroceria,
+      #globo-crema, #globo-naranja, #globo-azul { animation: none; }
+      #pagina-reverso { display: none; }
+    }
+  </style>
+
+  <defs>
+    <!-- hoja derecha, se reutiliza en la pagina fija y en la cara frontal de la que se voltea -->
+    <g id="hoja-derecha">
+      <path d="M280 308Q368 286 456 294L462 454Q370 444 280 470Z" fill="#fffbf6" stroke="#0b0f2a" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M280 308Q289 306 298 306V466Q289 467 280 470Z" fill="#f6e3cc"/>
+      <rect x="304" y="318" width="128" height="12" rx="6" fill="#0b0f2a"/>
+      <rect x="360" y="342" width="80" height="56" rx="7" fill="#3f6ea8" stroke="#0b0f2a" stroke-width="3"/>
+      <circle cx="420" cy="358" r="7" fill="#fff4e8"/>
+      <path d="M363 395L384 368L400 384L410 374L437 395Z" fill="#a9c4e8"/>
+      <g stroke="#a9c4e8" stroke-width="4" stroke-linecap="round">
+        <path d="M306 348H348M306 360H348M306 372H342M306 384H348M306 396H332"/>
+        <path d="M306 414H440M306 426H440M306 438H400"/>
+      </g>
+    </g>
+    <!-- silueta de la combi para su borde tipo sticker -->
+    <g id="combi-silueta">
+      <path d="M-48 -20V-72C-48 -96 -30 -106 0 -106C30 -106 48 -96 48 -72V-20Q48 -12 40 -12H-40Q-48 -12 -48 -20Z"/>
+      <rect x="-42" y="-16" width="20" height="18" rx="6"/>
+      <rect x="22" y="-16" width="20" height="18" rx="6"/>
+      <rect x="-52" y="-23" width="104" height="10" rx="5"/>
+      <rect x="-40" y="-114" width="80" height="10" rx="3"/>
+      <rect x="-32" y="-132" width="36" height="22" rx="5"/>
+      <rect x="8" y="-127" width="26" height="17" rx="8"/>
+      <circle cx="-55" cy="-70" r="5"/>
+      <circle cx="55" cy="-70" r="5"/>
+    </g>
+  </defs>
+
+  <!-- halo de fondo para separar la ilustracion del azul noche -->
+  <g id="halo">
+    <circle cx="280" cy="280" r="250" fill="#632e62"/>
+    <circle cx="280" cy="280" r="234" fill="none" stroke="#d95f0e" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="1 15"/>
+    <g fill="#fff4e8">
+      <path d="M118 112l3.5 8.5 8.5 3.5-8.5 3.5-3.5 8.5-3.5-8.5-8.5-3.5 8.5-3.5z"/>
+      <path d="M470 380l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/>
+      <circle cx="78" cy="250" r="3.5"/>
+      <circle cx="210" cy="78" r="3"/>
+    </g>
+  </g>
+
+  <!-- revista abierta -->
+  <g id="revista">
+    <ellipse cx="280" cy="500" rx="190" ry="13" fill="#0b0f2a" opacity=".45"/>
+    <!-- portada / tapa -->
+    <path d="M280 322Q186 298 88 308L78 470Q182 460 280 488Q378 460 482 470L472 308Q374 298 280 322Z" fill="#3f6ea8" stroke="#fff4e8" stroke-width="4" stroke-linejoin="round"/>
+    <!-- grosor de paginas -->
+    <path d="M280 316Q190 294 98 302L90 462Q188 452 280 478Q372 452 470 462L462 302Q370 294 280 316Z" fill="#f6e3cc" stroke="#0b0f2a" stroke-width="3" stroke-linejoin="round"/>
+    <!-- hoja izquierda -->
+    <g id="hoja-izquierda">
+      <path d="M280 308Q192 286 104 294L98 454Q190 444 280 470Z" fill="#fffbf6" stroke="#0b0f2a" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M280 308Q271 306 262 306V466Q271 467 280 470Z" fill="#f6e3cc"/>
+      <rect x="120" y="316" width="122" height="13" rx="6.5" fill="#0b0f2a"/>
+      <rect x="120" y="335" width="78" height="13" rx="6.5" fill="#0b0f2a"/>
+      <rect x="120" y="360" width="64" height="50" rx="7" fill="#d95f0e" stroke="#0b0f2a" stroke-width="3"/>
+      <circle cx="138" cy="377" r="7" fill="#fff4e8"/>
+      <path d="M123 407L146 384L160 397L168 389L181 407Z" fill="#9a3412"/>
+      <g stroke="#a9c4e8" stroke-width="4" stroke-linecap="round">
+        <path d="M196 364H254M196 376H254M196 388H248M196 400H254"/>
+        <path d="M122 424H254M122 436H230"/>
+      </g>
+    </g>
+    <!-- hoja derecha fija, identica a la frontal - asi el reinicio no se nota -->
+    <use href="#hoja-derecha" xlink:href="#hoja-derecha"/>
+
+    <!-- pagina que se voltea de derecha a izquierda -->
+    <g id="pagina-volteo">
+      <g id="pagina-reverso" class="anim">
+        <path d="M280 308Q368 286 456 294L462 454Q370 444 280 470Z" fill="#f6e3cc" stroke="#0b0f2a" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M306 330H436M306 346H410M306 414H436M306 430H396" stroke="#fffbf6" stroke-width="4" stroke-linecap="round"/>
+      </g>
+      <g id="pagina-frente" class="anim">
+        <use href="#hoja-derecha" xlink:href="#hoja-derecha"/>
+      </g>
+    </g>
+    <!-- lomo -->
+    <path d="M280 308V470" stroke="#0b0f2a" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <!-- carretera pop-up que brota del pliegue, con la combi encima -->
+  <g id="carretera" class="anim">
+    <ellipse cx="280" cy="402" rx="74" ry="9" fill="#f6e3cc"/>
+    <path id="carretera-asfalto" d="M215 400C225 320 285 262 262 200C246 157 232 120 284 90H316C292 116 300 150 338 200C375 258 345 320 345 400Z" fill="#0b0f2a" stroke="#fff4e8" stroke-width="5" stroke-linejoin="round"/>
+    <path id="carretera-linea" d="M280 398C285 320 330 260 300 200C278 156 262 122 300 92" fill="none" stroke="#d95f0e" stroke-width="5" stroke-linecap="round" stroke-dasharray="12 11"/>
+
+    <g id="combi" transform="translate(303 306)">
+      <use href="#combi-silueta" xlink:href="#combi-silueta" fill="#fff4e8" stroke="#fff4e8" stroke-width="10" stroke-linejoin="round"/>
+      <!-- llantas -->
+      <rect x="-42" y="-16" width="20" height="18" rx="6" fill="#0b0f2a"/>
+      <rect x="22" y="-16" width="20" height="18" rx="6" fill="#0b0f2a"/>
+      <g id="combi-carroceria">
+        <!-- equipaje en la parrilla -->
+        <rect x="-40" y="-114" width="80" height="10" rx="3" fill="#0b0f2a"/>
+        <rect x="-32" y="-132" width="36" height="22" rx="5" fill="#d95f0e" stroke="#0b0f2a" stroke-width="3"/>
+        <path d="M-22 -132V-110M-6 -132V-110" stroke="#9a3412" stroke-width="3"/>
+        <rect x="8" y="-127" width="26" height="17" rx="8" fill="#f1dcef" stroke="#0b0f2a" stroke-width="3"/>
+        <path d="M21 -127V-110" stroke="#632e62" stroke-width="3"/>
+        <!-- espejos -->
+        <circle cx="-55" cy="-70" r="5" fill="#3f6ea8" stroke="#0b0f2a" stroke-width="3"/>
+        <circle cx="55" cy="-70" r="5" fill="#3f6ea8" stroke="#0b0f2a" stroke-width="3"/>
+        <!-- carroceria -->
+        <path d="M-48 -20V-72C-48 -96 -30 -106 0 -106C30 -106 48 -96 48 -72V-20Q48 -12 40 -12H-40Q-48 -12 -48 -20Z" fill="#3f6ea8"/>
+        <path d="M-48 -60V-72C-48 -96 -30 -106 0 -106C30 -106 48 -96 48 -72V-60H11L0 -47L-11 -60Z" fill="#fff4e8"/>
+        <path d="M-48 -20V-72C-48 -96 -30 -106 0 -106C30 -106 48 -96 48 -72V-20Q48 -12 40 -12H-40Q-48 -12 -48 -20Z" fill="none" stroke="#0b0f2a" stroke-width="3.5" stroke-linejoin="round"/>
+        <!-- parabrisas dividido -->
+        <rect x="-38" y="-95" width="34" height="25" rx="7" fill="#a9c4e8" stroke="#0b0f2a" stroke-width="3"/>
+        <rect x="4" y="-95" width="34" height="25" rx="7" fill="#a9c4e8" stroke="#0b0f2a" stroke-width="3"/>
+        <path d="M-30 -88L-22 -88M12 -88L20 -88" stroke="#fffbf6" stroke-width="3" stroke-linecap="round"/>
+        <!-- faros y direccionales -->
+        <circle cx="-31" cy="-38" r="8.5" fill="#fff4e8" stroke="#0b0f2a" stroke-width="3"/>
+        <circle cx="31" cy="-38" r="8.5" fill="#fff4e8" stroke="#0b0f2a" stroke-width="3"/>
+        <circle cx="-31" cy="-54" r="3.5" fill="#d95f0e"/>
+        <circle cx="31" cy="-54" r="3.5" fill="#d95f0e"/>
+        <path d="M-10 -32H10" stroke="#0b0f2a" stroke-width="3" stroke-linecap="round"/>
+        <!-- defensa -->
+        <rect x="-52" y="-23" width="104" height="10" rx="5" fill="#fff4e8" stroke="#0b0f2a" stroke-width="3"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- globos de dialogo -->
+  <g id="globos" stroke-linejoin="round">
+    <g id="globo-crema" class="anim">
+      <path d="M123 150H157A31 31 0 0 1 157 212H154L170 230L138 212H123A31 31 0 0 1 123 150Z" fill="#fff4e8" stroke="#0b0f2a" stroke-width="3.5"/>
+      <g fill="#0b0f2a"><circle cx="124" cy="181" r="5"/><circle cx="140" cy="181" r="5"/><circle cx="156" cy="181" r="5"/></g>
+    </g>
+    <g id="globo-naranja" class="anim">
+      <path d="M388 102H418A28 28 0 0 1 418 158H398L376 174L384 158A28 28 0 0 1 388 102Z" fill="#d95f0e" stroke="#fff4e8" stroke-width="4"/>
+      <g fill="#fff4e8"><circle cx="388" cy="130" r="4.5"/><circle cx="403" cy="130" r="4.5"/><circle cx="418" cy="130" r="4.5"/></g>
+    </g>
+    <g id="globo-azul" class="anim">
+      <path d="M408 196H434A25 25 0 0 1 434 246H416L396 262L402 245A25 25 0 0 1 408 196Z" fill="#a9c4e8" stroke="#0b0f2a" stroke-width="3.5"/>
+      <g fill="#0b0f2a"><circle cx="407" cy="221" r="4.5"/><circle cx="421" cy="221" r="4.5"/><circle cx="435" cy="221" r="4.5"/></g>
+    </g>
+  </g>
+</svg>

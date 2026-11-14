@@ -1,0 +1,251 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/logo-guaguareando.png';
+import isotipoSiteccy from '../assets/aliados/siteccy-isotipo.png';
+import Icon from './Icon.astro';
+import { nav, site, socials, siteccy, whatsappLink, mailtoLink } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="pie oscuro">
+  <div class="wrap pie__wrap">
+    <div class="pie__marca">
+      <Image src={logo} alt="Guaguareando Ando" width={180} height={180} densities={[1, 2]} class="pie__logo" />
+      <p class="pie__lema">
+        <span class="pie__lema-a">{site.lema}</span>
+        <span class="pie__lema-b">{site.lemaCola}</span>
+      </p>
+    </div>
+
+    <div class="pie__col pie__col--ruta">
+      <h2 class="pie__titulo">La ruta</h2>
+      <ul role="list" class="pie__lista">
+        {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+    </div>
+
+    <div class="pie__col">
+      <h2 class="pie__titulo">Vamos a guaguarear</h2>
+      <ul role="list" class="pie__lista">
+        <li>
+          <a href={mailtoLink()} class="pie__contacto">
+            <Icon name="mail" size={20} />
+            {site.email}
+          </a>
+        </li>
+        <li>
+          <a href={whatsappLink()} class="pie__contacto" target="_blank" rel="noopener noreferrer">
+            <Icon name="brand-whatsapp" size={20} />
+            WhatsApp {site.whatsapp.display}
+            <span class="sr-only">(se abre en una pestaña nueva)</span>
+          </a>
+        </li>
+        <li class="pie__contacto pie__contacto--texto">
+          <Icon name="map-pin" size={20} />
+          {site.location}
+        </li>
+      </ul>
+
+      <ul role="list" class="pie__redes">
+        {
+          socials.map((red) => (
+            <li>
+              <a href={red.url} target="_blank" rel="noopener noreferrer" class="pie__red">
+                <Icon name={`brand-${red.id}` as const} size={22} label={`${red.label} (se abre en una pestaña nueva)`} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+
+  <div class="wrap pie__base">
+    <p>© {year} {site.name}. Guaguarones y Guaguaronas, gracias por subirse.</p>
+    <p class="pie__aliado">
+      {siteccy.role}:
+      <a href={siteccy.url} target="_blank" rel="noopener noreferrer">
+        <Image src={isotipoSiteccy} alt="" width={22} densities={[1, 2]} class="pie__isotipo" />
+        {siteccy.name}<span class="sr-only"> (se abre en una pestaña nueva)</span>
+      </a>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .pie {
+    background: var(--azul-noche);
+    padding-block: var(--space-2xl) var(--space-l);
+  }
+
+  .pie__wrap {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  /* en movil: logo y lema lado a lado para no gastar media pantalla en la marca */
+  .pie__marca {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-s);
+    align-items: center;
+    padding-bottom: var(--space-l);
+    border-bottom: 1px solid var(--linea-oscura);
+  }
+
+  .pie__marca :global(.pie__logo) {
+    width: 96px;
+    height: auto;
+  }
+
+  .pie__lema {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    font-family: var(--font-display);
+    line-height: 1.05;
+  }
+
+  .pie__lema-a {
+    color: var(--naranja-marca);
+    font-size: var(--step-2);
+    font-weight: 700;
+  }
+
+  .pie__lema-b {
+    font-size: var(--step-0);
+    font-weight: 600;
+  }
+
+  .pie__titulo {
+    margin-bottom: var(--space-s);
+    color: var(--azul-claro);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .pie__lista {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  /* los 7 enlaces de la ruta en dos columnas en movil */
+  .pie__col--ruta .pie__lista {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2xs) var(--space-m);
+  }
+
+  .pie__lista a {
+    color: var(--crema) !important;
+    text-decoration: none;
+  }
+
+  .pie__lista a:hover {
+    text-decoration: underline;
+  }
+
+  .pie__contacto {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    overflow-wrap: anywhere;
+  }
+
+  .pie__redes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    margin-top: var(--space-m);
+  }
+
+  .pie__red {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 2px solid var(--linea-oscura);
+    border-radius: 50%;
+    color: var(--crema);
+    transition: background-color var(--dur) var(--ease-out);
+  }
+
+  .pie__red:hover {
+    background: var(--naranja-accion);
+    border-color: var(--naranja-accion);
+  }
+
+  .pie__aliado a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    vertical-align: middle;
+  }
+
+  .pie__aliado :global(.pie__isotipo) {
+    width: 22px;
+    height: 22px;
+  }
+
+  .pie__base {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-2xs) var(--space-m);
+    margin-top: var(--space-xl);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--linea-oscura);
+    color: var(--azul-claro);
+    font-size: var(--step--1);
+  }
+
+  /* tableta: marca arriba a todo lo ancho, ruta y contacto lado a lado */
+  @media (min-width: 36rem) {
+    .pie__wrap {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .pie__marca {
+      grid-column: 1 / -1;
+    }
+
+    .pie__marca :global(.pie__logo) {
+      width: 120px;
+    }
+
+    .pie__lema-a {
+      font-size: var(--step-3);
+    }
+
+    .pie__lema-b {
+      font-size: var(--step-1);
+    }
+  }
+
+  /* escritorio: tres columnas, logo sobre el lema */
+  @media (min-width: 48rem) {
+    .pie__wrap {
+      grid-template-columns: 1.4fr 1fr 1.3fr;
+    }
+
+    .pie__marca {
+      grid-column: auto;
+      grid-template-columns: none;
+      justify-items: start;
+      align-content: start;
+      gap: var(--space-m);
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .pie__marca :global(.pie__logo) {
+      width: 160px;
+    }
+
+    .pie__lema-b {
+      font-size: var(--step-2);
+    }
+  }
+</style>

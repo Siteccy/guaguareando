@@ -1,0 +1,472 @@
+---
+import { Picture } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Button from '../../components/Button.astro';
+import Icon from '../../components/Icon.astro';
+import Stamp from '../../components/Stamp.astro';
+import StopSign from '../../components/StopSign.astro';
+import { programs, coverStyle, type Program } from '../../data/programs';
+import { spotify, youtube } from '../../data/site';
+
+export function getStaticPaths() {
+  return programs.map((program, i) => ({
+    params: { slug: program.slug },
+    props: { program, anterior: programs[i - 1], siguiente: programs[i + 1] },
+  }));
+}
+
+interface Props {
+  program: Program;
+  anterior?: Program;
+  siguiente?: Program;
+}
+
+const { program, anterior, siguiente } = Astro.props;
+const musica = program.kind === 'musica';
+const escuchar = musica
+  ? { href: youtube.channelUrl, icon: 'brand-youtube' as const, label: 'Míranos en YouTube' }
+  : { href: spotify.showUrl, icon: 'brand-spotify' as const, label: 'Escúchanos en Spotify' };
+---
+
+<BaseLayout title={program.name} description={program.short} ogType="article">
+  <!-- portada del programa: azul = podcast, morado = musica -->
+  <section class:list={['ficha', musica ? 'ficha--morado' : 'ficha--azul', 'oscuro']} aria-labelledby="programa-titulo">
+    <div class="wrap ficha__wrap">
+      <div class="ficha__texto">
+        <StopSign text={`Destino: ${program.tema}`} sinMarcador />
+        <h1 id="programa-titulo" class="ficha__titulo">{program.name}</h1>
+        {program.live && <p class="ficha__host">con {program.live.host}</p>}
+        <p class="ficha__lead">{program.lead}</p>
+        {
+          program.live && (
+            <p class="ficha__horario">
+              <Icon name="broadcast" size={22} />
+              En vivo los {program.live.day} a las {program.live.time} por {program.live.where}
+            </p>
+          )
+        }
+        <div class="ficha__acciones">
+          <Button href={escuchar.href} variant="claro" icon={escuchar.icon} external>{escuchar.label}</Button>
+        </div>
+      </div>
+      <div class="ficha__marco">
+        <Picture
+          src={program.cover}
+          alt={program.coverAlt}
+          formats={['avif', 'webp']}
+          widths={[320, 480, 640, 900]}
+          sizes="(min-width: 64rem) 28rem, 86vw"
+          loading="eager"
+          fetchpriority="high"
+          class="ficha__img"
+          style={coverStyle(program)}
+        />
+        {
+          program.live && (
+            <Stamp
+              ring="En vivo por YouTube · En vivo por YouTube ·"
+              big={program.live.day.charAt(0).toUpperCase() + program.live.day.slice(1)}
+              small={program.live.time.toUpperCase()}
+              class="ficha__sello"
+            />
+          )
+        }
+      </div>
+    </div>
+    <div class="ficha__carril" aria-hidden="true"></div>
+  </section>
+
+  <!-- sobre el programa + destacados -->
+  <section class:list={['sobre', { 'sobre--musica': musica }]} aria-label={`Sobre ${program.name}`}>
+    <div class="wrap sobre__wrap">
+      <div class="sobre__texto">
+        {
+          program.about.map((bloque) => (
+            <div class="sobre__bloque">
+              <h2 class="sobre__titulo">{bloque.title}</h2>
+              {bloque.paragraphs.map((p) => (
+                <p>{p}</p>
+              ))}
+            </div>
+          ))
+        }
+      </div>
+      <ul role="list" class="destacados" aria-label="En este programa">
+        {
+          program.highlights.map((h) => (
+            <li class="destacado">
+              <h3 class="destacado__titulo">{h.title}</h3>
+              <p>{h.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  {
+    program.extra && (
+      <section class="extra" aria-labelledby="extra-titulo">
+        <div class="wrap extra__wrap">
+          <h2 id="extra-titulo" class="extra__titulo">
+            {program.extra.title}
+          </h2>
+          <div class="extra__texto">
+            {program.extra.paragraphs.map((p) => (
+              <p>{p}</p>
+            ))}
+            {program.extra.link && (
+              <div>
+                <Button href={program.extra.link.href} variant="contorno" external>
+                  {program.extra.link.label}
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- llamado final -->
+  <section class="cierre" aria-labelledby="cierre-titulo">
+    <div class="wrap cierre__wrap">
+      <h2 id="cierre-titulo" class="cierre__titulo">{program.cta.title}</h2>
+      <p class="cierre__texto">{program.cta.text}</p>
+      <div class="cierre__acciones">
+        {
+          program.cta.action === 'contacto' ? (
+            <Button href="/contacto" icon="mail">
+              Escríbenos
+            </Button>
+          ) : (
+            <Button href="/programas" icon="arrow-right">
+              Explorar programas
+            </Button>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- paradas vecinas -->
+  <nav class="vecinos" aria-label="Otros programas">
+    <div class="wrap vecinos__wrap">
+      <a href={anterior ? `/programas/${anterior.slug}` : '/programas'} class="vecino vecino--anterior">
+        <span class="vecino__label">
+          <Icon name="arrow-left" size={18} />
+          {anterior ? 'Parada anterior' : 'Volver'}
+        </span>
+        <span class="vecino__nombre">{anterior ? anterior.name : 'Todos los programas'}</span>
+      </a>
+      <a href={siguiente ? `/programas/${siguiente.slug}` : '/programas'} class="vecino vecino--siguiente">
+        <span class="vecino__label">
+          {siguiente ? 'Siguiente parada' : 'Fin de la ruta'}
+          <Icon name="arrow-right" size={18} />
+        </span>
+        <span class="vecino__nombre">{siguiente ? siguiente.name : 'Todos los programas'}</span>
+      </a>
+    </div>
+  </nav>
+</BaseLayout>
+
+<style>
+  /* ---------- portada del programa ---------- */
+  .ficha {
+    position: relative;
+  }
+
+  .ficha--azul {
+    background: var(--azul-combi);
+  }
+
+  .ficha--morado {
+    background: var(--morado);
+  }
+
+  .ficha__wrap {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+    padding-block: var(--space-2xl) calc(var(--space-2xl) + var(--space-l));
+  }
+
+  .ficha__texto {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-s);
+  }
+
+  .ficha__titulo {
+    font-size: var(--step-5);
+    font-weight: 700;
+    line-height: 0.98;
+  }
+
+  .ficha__host {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 600;
+  }
+
+  .ficha__lead {
+    max-width: 38rem;
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+
+  .ficha__horario {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.45em 0.9em;
+    border: 2px solid var(--crema);
+    border-radius: var(--radius-pill);
+    font-weight: 700;
+  }
+
+  .ficha__acciones {
+    margin-top: var(--space-xs);
+  }
+
+  .ficha__marco {
+    position: relative;
+    justify-self: center;
+    width: min(100%, 28rem);
+    padding: var(--space-m);
+    border-radius: var(--radius-l);
+    background: var(--crema-hondo);
+    rotate: 2deg;
+  }
+
+  /* mismo cuadro 1:1 para todas las portadas (la proporcion va en la imagen misma),
+     el ajuste por portada viene de `coverStyle()` */
+  .ficha__marco :global(.ficha__img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: var(--radius-m);
+  }
+
+  /* el sello lleva fondo morado propio para leerse sobre la portada */
+  .ficha__marco :global(.ficha__sello) {
+    position: absolute;
+    right: 0.25rem;
+    bottom: -2rem;
+    width: 7.5rem;
+    padding: 0.35rem;
+    border-radius: 50%;
+    background: var(--morado);
+    color: var(--crema);
+    box-shadow: 0 8px 18px -6px rgb(0 0 0 / 0.5);
+  }
+
+  .ficha__carril {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: var(--space-l);
+    height: var(--ruta-grosor);
+    background: repeating-linear-gradient(
+      to right,
+      var(--crema) 0 calc(var(--ruta-raya) * 2),
+      transparent calc(var(--ruta-raya) * 2) calc(var(--ruta-raya) * 2 + var(--ruta-hueco) * 1.5)
+    );
+  }
+
+  @media (min-width: 64rem) {
+    .ficha__wrap {
+      grid-template-columns: 1.15fr 0.85fr;
+    }
+
+    .ficha__marco :global(.ficha__sello) {
+      right: -1rem;
+      width: 8.5rem;
+    }
+  }
+
+  /* ---------- sobre el programa ---------- */
+  .sobre {
+    --acento: var(--azul-combi);
+    padding-block: var(--space-2xl);
+  }
+
+  .sobre--musica {
+    --acento: var(--morado);
+  }
+
+  .sobre__wrap {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .sobre__texto {
+    display: grid;
+    gap: var(--space-xl);
+    max-width: 40rem;
+  }
+
+  .sobre__bloque {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .sobre__titulo {
+    color: var(--acento);
+    font-size: var(--step-3);
+    font-weight: 700;
+  }
+
+  .destacados {
+    display: grid;
+    gap: var(--space-s);
+    align-content: start;
+  }
+
+  .destacado {
+    display: grid;
+    gap: var(--space-3xs);
+    padding: var(--space-m);
+    border-left: 6px solid var(--acento);
+    border-radius: 0 var(--radius-m) var(--radius-m) 0;
+    background: var(--papel);
+    box-shadow: var(--sombra);
+  }
+
+  .destacado__titulo {
+    color: var(--acento);
+    font-size: var(--step-1);
+    font-weight: 700;
+  }
+
+  .destacado p {
+    color: var(--tinta-suave);
+  }
+
+  @media (min-width: 64rem) {
+    .sobre__wrap {
+      grid-template-columns: 1.3fr 1fr;
+      align-items: start;
+    }
+  }
+
+  /* ---------- seccion extra ---------- */
+  .extra {
+    padding-block: var(--space-2xl);
+    background: var(--crema-hondo);
+  }
+
+  .extra__wrap {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .extra__titulo {
+    max-width: 20ch;
+    font-size: var(--step-4);
+    font-weight: 700;
+  }
+
+  .extra__texto {
+    display: grid;
+    gap: var(--space-s);
+    max-width: 40rem;
+    font-size: var(--step-1);
+    line-height: 1.55;
+  }
+
+  @media (min-width: 64rem) {
+    .extra__wrap {
+      grid-template-columns: 1fr 1.2fr;
+      gap: var(--space-xl);
+      align-items: start;
+    }
+  }
+
+  /* ---------- cierre ---------- */
+  .cierre {
+    padding-block: var(--space-2xl);
+  }
+
+  .cierre__wrap {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-s);
+    text-align: center;
+  }
+
+  .cierre__titulo {
+    font-size: var(--step-4);
+    font-weight: 700;
+  }
+
+  .cierre__texto {
+    max-width: 38rem;
+    font-size: var(--step-1);
+  }
+
+  .cierre__acciones {
+    margin-top: var(--space-s);
+  }
+
+  /* ---------- paradas vecinas ---------- */
+  .vecinos {
+    padding-bottom: var(--space-2xl);
+  }
+
+  .vecinos__wrap {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .vecino {
+    display: grid;
+    gap: var(--space-3xs);
+    padding: var(--space-m);
+    border: 2px dashed var(--linea);
+    border-radius: var(--radius-m);
+    color: var(--tinta);
+    text-decoration: none;
+    transition:
+      border-color var(--dur) var(--ease-out),
+      background-color var(--dur) var(--ease-out);
+  }
+
+  .vecino:hover {
+    border-color: var(--naranja-accion);
+    background: var(--papel);
+  }
+
+  .vecino--siguiente {
+    text-align: right;
+  }
+
+  .vecino--siguiente .vecino__label {
+    justify-content: flex-end;
+  }
+
+  .vecino__label {
+    display: flex;
+    align-items: center;
+    gap: 0.35em;
+    color: var(--naranja-accion);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .vecino__nombre {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 600;
+  }
+
+  @media (min-width: 48rem) {
+    .vecinos__wrap {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

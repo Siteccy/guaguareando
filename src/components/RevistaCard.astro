@@ -1,0 +1,128 @@
+---
+// tarjeta de una edicion de la revista: portada, numero, titulo y bajada, enlaza a /revista/<slug>
+import { Picture } from 'astro:assets';
+import { numeroRevista, type Revista } from '../data/revistas';
+
+interface Props {
+  revista: Revista;
+  as?: 'h2' | 'h3';
+  /** marca la tarjeta como la edicion mas reciente */
+  nueva?: boolean;
+}
+
+const { revista, as: Heading = 'h3', nueva = false } = Astro.props;
+---
+
+<article class="edicion">
+  <div class="edicion__portada">
+    <Picture
+      src={revista.portada}
+      alt={revista.portadaAlt}
+      formats={['avif', 'webp']}
+      widths={[260, 400, 550]}
+      sizes="(min-width: 56rem) 16rem, 45vw"
+      class="edicion__img"
+    />
+    {nueva && <span class="edicion__nueva">Nueva</span>}
+  </div>
+  <p class="edicion__numero">{numeroRevista(revista)}</p>
+  <Heading class="edicion__titulo">
+    <a href={`/revista/${revista.slug}`} class="edicion__link">{revista.titulo}</a>
+  </Heading>
+  <p class="edicion__bajada">{revista.bajada}</p>
+</article>
+
+<style>
+  .edicion {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: var(--space-2xs);
+  }
+
+  .edicion__portada {
+    position: relative;
+    margin-bottom: var(--space-xs);
+    transition: rotate 400ms var(--ease-out);
+  }
+
+  .edicion:hover .edicion__portada {
+    rotate: -2deg;
+  }
+
+  .edicion__portada :global(.edicion__img) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 550 / 778;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: var(--sombra-alta);
+  }
+
+  .edicion__nueva {
+    position: absolute;
+    top: var(--space-s);
+    left: calc(var(--space-2xs) * -1);
+    padding: 0.3em 0.8em;
+    border-radius: var(--radius-s);
+    background: var(--naranja-accion);
+    color: var(--blanco);
+    font-family: var(--font-display);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    rotate: -4deg;
+  }
+
+  .edicion__numero {
+    color: var(--naranja-accion);
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 700;
+  }
+
+  .edicion__titulo {
+    font-size: var(--step-1);
+    font-weight: 600;
+    line-height: 1.1;
+  }
+
+  @media (min-width: 56rem) {
+    .edicion__titulo {
+      font-size: var(--step-2);
+    }
+  }
+
+  .edicion__link {
+    color: var(--tinta);
+    text-decoration: none;
+  }
+
+  .edicion__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .edicion:focus-within {
+    outline: 3px solid var(--naranja-accion);
+    outline-offset: 6px;
+    border-radius: var(--radius-s);
+  }
+
+  .edicion__link:focus-visible {
+    outline: none;
+  }
+
+  .edicion__bajada {
+    color: var(--tinta-suave);
+    font-size: var(--step--1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .edicion:hover .edicion__portada {
+      rotate: none;
+    }
+  }
+</style>

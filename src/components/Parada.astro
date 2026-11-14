@@ -1,0 +1,108 @@
+---
+// una seccion de pagina que forma parte de la ruta, dibuja su tramo de linea punteada en la
+// columna izquierda y define el color dominante de la seccion (un solo color fuerte por seccion)
+interface Props {
+  id?: string;
+  tono?: 'crema' | 'crema-hondo' | 'noche' | 'morado' | 'naranja' | 'azul';
+  /** id del titulo que nombra la seccion (aria-labelledby) */
+  labelledby?: string;
+  /** primera: la linea empieza en el letrero; ultima: termina en el letrero */
+  tramo?: 'completo' | 'inicio' | 'final';
+  class?: string;
+}
+
+const { id, tono = 'crema', labelledby, tramo = 'completo', class: className } = Astro.props;
+const oscuro = tono === 'noche' || tono === 'morado' || tono === 'azul';
+---
+
+<section
+  id={id}
+  aria-labelledby={labelledby}
+  class:list={['parada', `parada--${tono}`, `parada--${tramo}`, { oscuro }, className]}
+>
+  <div class="wrap parada__wrap">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .parada {
+    --ruta-color: var(--naranja-marca);
+    position: relative;
+  }
+
+  .parada--crema {
+    background: var(--crema);
+  }
+
+  .parada--crema-hondo {
+    background: var(--crema-hondo);
+  }
+
+  .parada--noche {
+    --ruta-color: var(--crema);
+    background: var(--azul-noche);
+  }
+
+  .parada--morado {
+    --ruta-color: var(--crema);
+    background: var(--morado);
+  }
+
+  .parada--azul {
+    --ruta-color: var(--crema);
+    background: var(--azul-combi);
+  }
+
+  .parada--naranja {
+    --ruta-color: var(--azul-noche);
+    background: var(--naranja-marca);
+  }
+
+  .parada__wrap {
+    position: relative;
+    padding-block: var(--space-2xl);
+    padding-left: calc(var(--gutter) + var(--ruta-gutter));
+  }
+
+  /* el tramo de ruta: rayas tipo carril, del color que contrasta con la seccion */
+  .parada__wrap::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--gutter) + var(--ruta-gutter) / 2 - var(--ruta-grosor) / 2);
+    width: var(--ruta-grosor);
+    background: repeating-linear-gradient(
+      to bottom,
+      var(--ruta-color) 0 var(--ruta-raya),
+      transparent var(--ruta-raya) calc(var(--ruta-raya) + var(--ruta-hueco))
+    );
+    border-radius: var(--ruta-grosor);
+    pointer-events: none;
+  }
+
+  /* la linea arranca a la altura del primer letrero (≈ padding superior + mitad del letrero) */
+  .parada--inicio .parada__wrap::before {
+    top: calc(var(--space-2xl) + 1rem);
+  }
+
+  /* fin de la ruta: la linea termina en una terminal, donde se estaciona la combi */
+  .parada--final .parada__wrap::before {
+    bottom: var(--space-2xl);
+  }
+
+  .parada--final .parada__wrap::after {
+    content: '';
+    position: absolute;
+    bottom: calc(var(--space-2xl) - 13px);
+    left: calc(var(--gutter) + var(--ruta-gutter) / 2 - 13px);
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--ruta-color);
+    box-shadow:
+      0 0 0 4px var(--crema),
+      0 0 0 7px var(--ruta-color);
+  }
+</style>

@@ -1,0 +1,174 @@
+@import './tokens.css';
+
+/* ---------- reset minimo ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: 5.5rem;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--crema);
+  color: var(--tinta);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg,
+video,
+iframe {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+ul[role='list'],
+ol[role='list'] {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: var(--azul-combi);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  text-decoration-thickness: 3px;
+}
+
+button {
+  font: inherit;
+}
+
+/* ---------- foco visible ---------- */
+:focus-visible {
+  outline: 3px solid var(--naranja-accion);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.oscuro :focus-visible,
+.oscuro:focus-visible {
+  outline-color: var(--crema);
+}
+
+/* el destino del enlace "Ir al contenido" recibe foco por programa, sin anillo */
+main:focus {
+  outline: none;
+}
+
+/* ---------- utilidades ---------- */
+.wrap {
+  width: 100%;
+  max-width: calc(var(--ancho) + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: var(--space-s);
+  left: var(--space-s);
+  z-index: 100;
+  padding: var(--space-xs) var(--space-s);
+  border-radius: var(--radius-s);
+  background: var(--crema);
+  color: var(--tinta);
+  font-weight: 700;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+/* secciones oscuras: texto crema, los enlaces de texto (sin clase propia) en azul claro
+   los enlaces con clase (botones, tarjetas, fachadas) definen su propio color */
+.oscuro {
+  color: var(--crema);
+}
+
+.oscuro a:not([class]) {
+  color: var(--azul-claro);
+}
+
+/* titulos de seccion */
+.titulo {
+  font-size: var(--step-4);
+  font-weight: 700;
+}
+
+.lead {
+  font-size: var(--step-1);
+  line-height: 1.5;
+  max-width: 38rem;
+}
+
+.prosa > * + * {
+  margin-top: var(--space-s);
+}
+
+.prosa {
+  max-width: 40rem;
+}
+
+/* ---------- movimiento reducido ----------
+   las transiciones entre paginas las maneja <ClientRouter /> (BaseLayout), que ya se
+   desactiva solo con prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

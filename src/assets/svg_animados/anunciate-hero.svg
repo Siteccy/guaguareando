@@ -1,0 +1,218 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 560" role="img" aria-labelledby="titulo">
+  <title id="titulo">Combi con un letrero publicitario y un megáfono</title>
+
+  <style>
+    /* velocidad: cambia solo este valor, lo demas se calcula solo */
+    :root { --ciclo: 7s; }
+
+    /* cada pieza animada gira o se escala desde su propio centro */
+    .llanta, .simbolo, .onda, .burbuja { transform-box: fill-box; transform-origin: center; }
+
+    /* estado base = ilustracion estatica (letrero con la estrella) */
+    #sim-circulo, #sim-corazon { opacity: 0; }
+
+    /* carretera, llantas y carroceria */
+    #linea      { animation: avanza calc(var(--ciclo) / 20) linear infinite; }
+    .llanta     { animation: gira   calc(var(--ciclo) / 5)  linear infinite; }
+    #carroceria { animation: rebota calc(var(--ciclo) / 7)  ease-in-out infinite; }
+
+    /* lineas de velocidad */
+    #velocidad path              { animation: rafaga calc(var(--ciclo) / 4) ease-out infinite; }
+    #velocidad path:nth-child(2) { animation-delay: calc(var(--ciclo) / -12); }
+    #velocidad path:nth-child(3) { animation-delay: calc(var(--ciclo) / -6); }
+
+    /* ondas del megafono, escalonadas de adentro hacia afuera */
+    .onda              { animation: onda calc(var(--ciclo) / 3) ease-out infinite; }
+    .onda:nth-child(2) { animation-delay: calc(var(--ciclo) * -2 / 9); }
+    .onda:nth-child(3) { animation-delay: calc(var(--ciclo) / -9); }
+
+    /* simbolo del letrero: un tercio del ciclo cada uno */
+    .simbolo     { animation: pop var(--ciclo) ease-in-out infinite; }
+    #sim-estrella { animation-delay: calc(var(--ciclo) * -2 / 3); }
+    #sim-corazon  { animation-delay: calc(var(--ciclo) / -3); }
+
+    /* burbujas: cada una a su ritmo */
+    #b-podcast { animation: flota-a calc(var(--ciclo) / 2) ease-in-out infinite; }
+    #b-revista { animation: flota-b var(--ciclo) ease-in-out infinite; }
+    #b-redes   { animation: flota-c calc(var(--ciclo) / 3) ease-in-out infinite; animation-delay: calc(var(--ciclo) / -8); }
+
+    @keyframes avanza  { to { stroke-dashoffset: 47.12; } }
+    @keyframes gira    { to { transform: rotate(360deg); } }
+    @keyframes rebota  { 50% { transform: translateY(-2.5px); } }
+    @keyframes rafaga  {
+      0%       { opacity: 0; transform: translateX(16px); }
+      35%, 60% { opacity: 1; }
+      100%     { opacity: 0; transform: translateX(-20px); }
+    }
+    @keyframes onda {
+      0%   { opacity: 0; transform: scale(.55); }
+      25%  { opacity: 1; }
+      100% { opacity: 0; transform: scale(1.3); }
+    }
+    @keyframes pop {
+      0%           { opacity: 1; transform: scale(0); }
+      4%           { opacity: 1; transform: scale(1.2); }
+      7%, 30%      { opacity: 1; transform: scale(1); }
+      33.33%, 100% { opacity: 1; transform: scale(0); }
+    }
+    @keyframes flota-a { 50% { transform: translateY(-7px); } }
+    @keyframes flota-b {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50%      { transform: translateY(-10px) rotate(2deg); }
+    }
+    @keyframes flota-c { 50% { transform: translateY(-5px); } }
+
+    /* sin movimiento: queda la ilustracion estatica */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; }
+    }
+  </style>
+
+  <defs>
+    <path id="silueta" d="M128 408V322Q128 290 160 290H368Q404 290 416 330L427 370Q430 382 430 396V408Q430 418 420 418H138Q128 418 128 408Z"/>
+    <clipPath id="recorte-combi"><use href="#silueta"/></clipPath>
+    <clipPath id="recorte-linea"><rect x="48" y="458.5" width="464" height="5" rx="2.5"/></clipPath>
+  </defs>
+
+  <g id="escena" transform="translate(0 20)" stroke-linecap="round" stroke-linejoin="round">
+
+    <!-- halo / sol -->
+    <circle id="halo" cx="280" cy="275" r="215" fill="#632e62"/>
+
+    <!-- ruta punteada que une las tres paradas, lo primero que se quita si estorba -->
+    <path id="ruta" d="M87.4 204.9A205 205 0 0 1 483 303.5" fill="none" stroke="#fff4e8" stroke-width="2.5" stroke-dasharray="2 9"/>
+
+    <!-- carretera -->
+    <g id="carretera">
+      <rect x="28" y="438" width="504" height="46" rx="23" fill="#0b0f2a"/>
+      <g clip-path="url(#recorte-linea)">
+        <path id="linea" d="M0 461H560" fill="none" stroke="#fff4e8" stroke-width="5" stroke-linecap="butt" stroke-dasharray="27 20.12"/>
+      </g>
+    </g>
+
+    <!-- lineas de velocidad -->
+    <g id="velocidad" fill="none" stroke="#fff4e8" stroke-width="5">
+      <path d="M60 326H104"/>
+      <path d="M36 352H98"/>
+      <path d="M66 378H104"/>
+    </g>
+
+    <!-- combi -->
+    <g id="combi" stroke="#0b0f2a" stroke-width="4">
+
+      <g id="carroceria">
+
+        <!-- parrilla del techo -->
+        <path id="parrilla" d="M152 280H388M164 280V290M236 280V290M308 280V290M376 280V291" fill="none"/>
+
+        <!-- letrero "tu marca aqui" -->
+        <g id="letrero">
+          <path d="M186 280V262M254 280V262" fill="none"/>
+          <rect x="150" y="170" width="140" height="94" rx="12" fill="#f6e3cc"/>
+          <rect x="161" y="181" width="118" height="72" rx="6" fill="#fffbf6" stroke-width="3"/>
+          <g id="simbolos" transform="translate(220 217)" stroke-width="3.5">
+            <circle id="sim-circulo" class="simbolo" r="23" fill="#3f6ea8"/>
+            <path id="sim-estrella" class="simbolo" fill="#632e62" d="M0-26 6.8-9.3 24.7-8 10.9 3.6 15.3 21 0 11.5-15.3 21-10.9 3.6-24.7-8-6.8-9.3Z"/>
+            <path id="sim-corazon" class="simbolo" fill="#9a3412" d="M0 21C-9 13-25 3-25-9-25-18-18-24-11-24-6-24-2-21 0-16 2-21 6-24 11-24 18-24 25-18 25-9 25 3 9 13 0 21Z"/>
+          </g>
+        </g>
+
+        <!-- megafono -->
+        <g id="megafono">
+          <path d="M360 280V262" fill="none"/>
+          <g transform="translate(338 258) rotate(-28)">
+            <rect x="-13" y="-6.5" width="16" height="13" rx="4" fill="#3f6ea8"/>
+            <path d="M0-9 46-25V25L0 9Z" fill="#a9c4e8"/>
+            <rect x="43" y="-29" width="10" height="58" rx="5" fill="#fff4e8"/>
+          </g>
+        </g>
+
+        <!-- ondas de alcance, circulos completos de los que solo se dibuja un arco - asi escalan desde la boca del megafono -->
+        <g id="ondas" transform="translate(338 258) rotate(-28)" fill="none" stroke="#fff4e8" stroke-width="5">
+          <path class="onda" pathLength="360" stroke-dasharray="70 290" stroke-dashoffset="35" d="M80 0A30 30 0 1 1 20 0A30 30 0 1 1 80 0Z"/>
+          <path class="onda" pathLength="360" stroke-dasharray="70 290" stroke-dashoffset="35" d="M98 0A48 48 0 1 1 2 0A48 48 0 1 1 98 0Z"/>
+          <path class="onda" pathLength="360" stroke-dasharray="70 290" stroke-dashoffset="35" d="M116 0A66 66 0 1 1-16 0A66 66 0 1 1 116 0Z"/>
+        </g>
+
+        <!-- carroceria: azul con techo crema -->
+        <g clip-path="url(#recorte-combi)" stroke="none">
+          <rect x="120" y="280" width="320" height="145" fill="#3f6ea8"/>
+          <rect x="120" y="280" width="320" height="35" fill="#fff4e8"/>
+          <circle cx="188" cy="410" r="37" fill="#0b0f2a"/>
+          <circle cx="378" cy="410" r="37" fill="#0b0f2a"/>
+        </g>
+        <path d="M128 315H410M328 317V416M337 382H348" fill="none" stroke-width="3.5"/>
+        <use href="#silueta" fill="none"/>
+
+        <!-- ventanas -->
+        <g id="ventanas" fill="#a9c4e8" stroke-width="3.5">
+          <rect x="146" y="325" width="50" height="38" rx="7"/>
+          <rect x="206" y="325" width="50" height="38" rx="7"/>
+          <rect x="266" y="325" width="50" height="38" rx="7"/>
+          <path d="M343 325H393Q400 325 402 332L409 356Q411 363 404 363H343Q337 363 337 357V331Q337 325 343 325Z"/>
+          <path d="M156 352 167 336M347 352 358 336" fill="none" stroke="#fffbf6"/>
+        </g>
+
+        <!-- faro, defensas y calavera -->
+        <ellipse cx="425" cy="386" rx="6.5" ry="9" fill="#fffbf6" stroke-width="3.5"/>
+        <rect x="420" y="402" width="20" height="12" rx="6" fill="#f6e3cc" stroke-width="3.5"/>
+        <rect x="118" y="402" width="20" height="12" rx="6" fill="#f6e3cc" stroke-width="3.5"/>
+        <rect x="124" y="376" width="8" height="16" rx="4" fill="#9a3412" stroke-width="3"/>
+      </g>
+
+      <!-- llantas, no rebotan - se quedan pegadas al asfalto -->
+      <g id="llantas" stroke-width="3.5">
+        <g class="llanta">
+          <circle cx="188" cy="410" r="30" fill="#0b0f2a" stroke="none"/>
+          <circle cx="188" cy="410" r="20" fill="#fff4e8" stroke="none"/>
+          <circle cx="188" cy="410" r="12.5" fill="#a9c4e8"/>
+          <path d="M188 410V401M188 410 180.2 414.5M188 410 195.8 414.5" fill="none" stroke-width="3"/>
+        </g>
+        <g class="llanta">
+          <circle cx="378" cy="410" r="30" fill="#0b0f2a" stroke="none"/>
+          <circle cx="378" cy="410" r="20" fill="#fff4e8" stroke="none"/>
+          <circle cx="378" cy="410" r="12.5" fill="#a9c4e8"/>
+          <path d="M378 410V401M378 410 370.2 414.5M378 410 385.8 414.5" fill="none" stroke-width="3"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- burbujas de formatos -->
+    <g id="formatos" stroke="#0b0f2a" stroke-width="3.5">
+
+      <!-- podcast: microfono -->
+      <g transform="translate(87 205)">
+        <g id="b-podcast" class="burbuja">
+          <circle cy="5" r="34" fill="#0b0f2a" stroke="none"/>
+          <circle r="34" fill="#fff4e8" stroke-width="4"/>
+          <rect x="-8" y="-21" width="16" height="27" rx="8" fill="#3f6ea8"/>
+          <path d="M-14-3V0A14 14 0 0 0 14 0V-3M0 14V22M-8 22H8" fill="none"/>
+        </g>
+      </g>
+
+      <!-- revista abierta -->
+      <g transform="translate(262 71)">
+        <g id="b-revista" class="burbuja">
+          <circle cy="5" r="34" fill="#0b0f2a" stroke="none"/>
+          <circle r="34" fill="#fff4e8" stroke-width="4"/>
+          <path d="M0-11C-6-16-15-17-22-14V13C-15 10-6 11 0 16Z" fill="#f1dcef"/>
+          <path d="M0-11C6-16 15-17 22-14V13C15 10 6 11 0 16Z" fill="#fffbf6"/>
+          <path d="M-15-6Q-10-7-6-4.5M-15 2Q-10 1-6 3.5" fill="none" stroke-width="2.5"/>
+          <rect x="6.5" y="-8" width="10" height="10" rx="2.5" fill="#632e62" stroke="none"/>
+        </g>
+      </g>
+
+      <!-- redes: celular -->
+      <g transform="translate(483 303.5)">
+        <g id="b-redes" class="burbuja">
+          <circle cy="5" r="34" fill="#0b0f2a" stroke="none"/>
+          <circle r="34" fill="#fff4e8" stroke-width="4"/>
+          <rect x="-12" y="-21" width="24" height="42" rx="6" fill="#a9c4e8"/>
+          <path d="M-4 14H4" fill="none"/>
+          <circle cx="11" cy="-18" r="5.5" fill="#9a3412" stroke-width="3"/>
+        </g>
+      </g>
+    </g>
+
+  </g>
+</svg>

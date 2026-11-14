@@ -1,0 +1,90 @@
+---
+// boleto con talon perforado, el cuerpo lleva el mensaje; el talon, una etiqueta corta
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+  /** texto del talon */
+  stub: string;
+  stubIcon?: IconName;
+  class?: string;
+}
+
+const { stub, stubIcon = 'speakerphone', class: className } = Astro.props;
+---
+
+<div class:list={['boleto', className]}>
+  <div class="boleto__cuerpo">
+    <slot />
+  </div>
+  <div class="boleto__talon" aria-hidden="true">
+    <Icon name={stubIcon} size={34} />
+    <span>{stub}</span>
+  </div>
+</div>
+
+<style>
+  .boleto {
+    --muesca: 16px;
+    --fondo: var(--papel);
+    display: grid;
+    grid-template-columns: 1fr;
+    filter: drop-shadow(0 18px 24px rgb(11 15 42 / 0.28));
+  }
+
+  .boleto__cuerpo,
+  .boleto__talon {
+    background: var(--fondo);
+  }
+
+  .boleto__cuerpo {
+    padding: var(--space-l) var(--space-m);
+    border-radius: var(--radius-m) var(--radius-m) 0 0;
+    /* muescas semicirculares donde se perfora el boleto */
+    mask:
+      radial-gradient(circle var(--muesca) at 0 100%, #0000 98%, #000) left / 51% 100% no-repeat,
+      radial-gradient(circle var(--muesca) at 100% 100%, #0000 98%, #000) right / 51% 100% no-repeat;
+  }
+
+  .boleto__talon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    padding: var(--space-s);
+    border-top: 3px dashed var(--linea);
+    border-radius: 0 0 var(--radius-m) var(--radius-m);
+    color: var(--naranja-accion);
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    mask:
+      radial-gradient(circle var(--muesca) at 0 0, #0000 98%, #000) left / 51% 100% no-repeat,
+      radial-gradient(circle var(--muesca) at 100% 0, #0000 98%, #000) right / 51% 100% no-repeat;
+  }
+
+  @media (min-width: 48rem) {
+    .boleto {
+      grid-template-columns: 1fr 13rem;
+    }
+
+    .boleto__cuerpo {
+      padding: var(--space-xl);
+      border-radius: var(--radius-m) 0 0 var(--radius-m);
+      mask:
+        radial-gradient(circle var(--muesca) at 100% 0, #0000 98%, #000) top / 100% 51% no-repeat,
+        radial-gradient(circle var(--muesca) at 100% 100%, #0000 98%, #000) bottom / 100% 51% no-repeat;
+    }
+
+    .boleto__talon {
+      border-top: 0;
+      border-left: 3px dashed var(--linea);
+      border-radius: 0 var(--radius-m) var(--radius-m) 0;
+      writing-mode: vertical-rl;
+      mask:
+        radial-gradient(circle var(--muesca) at 0 0, #0000 98%, #000) top / 100% 51% no-repeat,
+        radial-gradient(circle var(--muesca) at 0 100%, #0000 98%, #000) bottom / 100% 51% no-repeat;
+    }
+  }
+</style>

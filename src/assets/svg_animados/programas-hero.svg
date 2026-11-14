@@ -1,0 +1,274 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 340" role="img" aria-labelledby="titulo">
+  <title id="titulo">Combi recorriendo una ruta con paradas de distintos programas</title>
+
+  <style>
+    /* tiempos: todo va en % del ciclo, asi escala con --ciclo
+
+       parada   llega   sale
+         1        3%      7%    (la combi aparece aqui)
+         2       18%     23%
+         3       34%     39%
+         4       50%     55%
+         5       66%     71%
+         6       82%     89%    (se desvanece hasta el 93%)
+       94-97% se apagan todas las paradas, 97-100% pausa
+
+       duracion total: cambia --ciclo
+       tiempo detenida en cada parada: en @keyframes recorrido,
+       cada parada es un par "llega, sale", mueve solo "sale" */
+    svg { --ciclo: 12s; }
+
+    /* carretera */
+    #ruta-linea { animation: avanzar 1.8s linear infinite; }
+    @keyframes avanzar { to { stroke-dashoffset: -18; } }
+
+    /* combi: el offset-path es el mismo trazado de #ruta-base, de la parada 1
+       a la 6, los 5 tramos miden lo mismo, cada parada cae en 0, 20, 40... % */
+    #combi {
+      offset-path: path("M46 153C80 153 92 217 126 217S172 153 206 153S252 217 286 217S332 153 366 153S412 217 446 217");
+      offset-rotate: 0deg;
+      offset-distance: 40%;            /* estado base: detenida en la parada 3 */
+      animation:
+        recorrido var(--ciclo) cubic-bezier(.45, 0, .35, 1) infinite,
+        aparecer  var(--ciclo) linear infinite;
+    }
+    /* rebote de suspension: un mini-trazado vertical de 3 baches por tramo
+       que avanza con el mismo keyframe, asi solo rebota cuando la combi se mueve */
+    #combi-rebote {
+      offset-path: path("M0 0V-1.4V0V-1.4V0V-1.4V0V-1.4V0V-1.4V0V-1.4V0V-1.4V0V-1.4V0V-1.4V0V-1.4V0V-1.4V0V-1.4V0V-1.4V0V-1.4V0V-1.4V0");
+      offset-rotate: 0deg;
+      offset-distance: 40%;
+      animation: recorrido var(--ciclo) cubic-bezier(.45, 0, .35, 1) infinite;
+    }
+    @keyframes recorrido {
+      /*  llega, sale  */
+         0%,  7%  { offset-distance:   0%; }   /* parada 1 */
+        18%, 23%  { offset-distance:  20%; }   /* parada 2 */
+        34%, 39%  { offset-distance:  40%; }   /* parada 3 */
+        50%, 55%  { offset-distance:  60%; }   /* parada 4 */
+        66%, 71%  { offset-distance:  80%; }   /* parada 5 */
+        82%, 100% { offset-distance: 100%; }   /* parada 6 */
+    }
+    @keyframes aparecer {
+      0%        { opacity: 0; }
+      3%, 89%   { opacity: 1; }
+      93%, 100% { opacity: 0; }
+    }
+
+    /* paradas: se encienden al llegar y se apagan juntas */
+    .luz { opacity: 0; }
+    #parada-1 .luz, #parada-2 .luz, #parada-3 .luz { opacity: 1; }   /* estado base */
+    #parada-1 .luz { animation: luz-1 var(--ciclo) linear infinite; }
+    #parada-2 .luz { animation: luz-2 var(--ciclo) linear infinite; }
+    #parada-3 .luz { animation: luz-3 var(--ciclo) linear infinite; }
+    #parada-4 .luz { animation: luz-4 var(--ciclo) linear infinite; }
+    #parada-5 .luz { animation: luz-5 var(--ciclo) linear infinite; }
+    #parada-6 .luz { animation: luz-6 var(--ciclo) linear infinite; }
+    @keyframes luz-1 { 0%,  2% { opacity: 0; }  4%, 94% { opacity: 1; } 97%, 100% { opacity: 0; } }
+    @keyframes luz-2 { 0%, 17% { opacity: 0; } 19%, 94% { opacity: 1; } 97%, 100% { opacity: 0; } }
+    @keyframes luz-3 { 0%, 33% { opacity: 0; } 35%, 94% { opacity: 1; } 97%, 100% { opacity: 0; } }
+    @keyframes luz-4 { 0%, 49% { opacity: 0; } 51%, 94% { opacity: 1; } 97%, 100% { opacity: 0; } }
+    @keyframes luz-5 { 0%, 65% { opacity: 0; } 67%, 94% { opacity: 1; } 97%, 100% { opacity: 0; } }
+    @keyframes luz-6 { 0%, 81% { opacity: 0; } 83%, 94% { opacity: 1; } 97%, 100% { opacity: 0; } }
+
+    /* burbujas: "pop" al llegar la combi */
+    .burbuja { transform-box: fill-box; transform-origin: 50% 50%; }
+    #icono-1 .burbuja { animation: pop-1 var(--ciclo) ease-out infinite; }
+    #icono-2 .burbuja { animation: pop-2 var(--ciclo) ease-out infinite; }
+    #icono-3 .burbuja { animation: pop-3 var(--ciclo) ease-out infinite; }
+    #icono-4 .burbuja { animation: pop-4 var(--ciclo) ease-out infinite; }
+    #icono-5 .burbuja { animation: pop-5 var(--ciclo) ease-out infinite; }
+    #icono-6 .burbuja { animation: pop-6 var(--ciclo) ease-out infinite; }
+    #meta { transform-box: fill-box; transform-origin: 0% 100%; animation: pop-6 var(--ciclo) ease-out infinite; }
+    @keyframes pop-1 { 0%,  3% { transform: scale(1); }  5% { transform: scale(1.15); }  8%, 100% { transform: scale(1); } }
+    @keyframes pop-2 { 0%, 18% { transform: scale(1); } 20% { transform: scale(1.15); } 23%, 100% { transform: scale(1); } }
+    @keyframes pop-3 { 0%, 34% { transform: scale(1); } 36% { transform: scale(1.15); } 39%, 100% { transform: scale(1); } }
+    @keyframes pop-4 { 0%, 50% { transform: scale(1); } 52% { transform: scale(1.15); } 55%, 100% { transform: scale(1); } }
+    @keyframes pop-5 { 0%, 66% { transform: scale(1); } 68% { transform: scale(1.15); } 71%, 100% { transform: scale(1); } }
+    @keyframes pop-6 { 0%, 82% { transform: scale(1); } 84% { transform: scale(1.15); } 87%, 100% { transform: scale(1); } }
+
+    /* sin movimiento: queda el estado base
+       (combi en la parada 3, paradas 1-3 encendidas) */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; }
+    }
+    /* navegadores sin offset-path: misma ilustracion estatica */
+    @supports not (offset-path: path("M0 0")) {
+      * { animation: none !important; }
+      #combi { transform: translate(206px, 153px); }
+    }
+  </style>
+
+  <defs>
+    <path id="combi-silueta" d="M-22 -11V-27Q-22 -33.5 -15.5 -33.5H9C18 -33.5 24 -27 24 -19.5V-13.5Q24 -11 21.5 -11Z"/>
+    <clipPath id="combi-recorte"><use href="#combi-silueta"/></clipPath>
+  </defs>
+
+  <!-- carretera -->
+  <g id="ruta" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path id="ruta-base" stroke="#3f6ea8" stroke-width="17"
+          d="M14 153H46C80 153 92 217 126 217S172 153 206 153S252 217 286 217S332 153 366 153S412 217 446 217H484"/>
+    <path id="ruta-asfalto" stroke="#0b0f2a" stroke-width="9"
+          d="M14 153H46C80 153 92 217 126 217S172 153 206 153S252 217 286 217S332 153 366 153S412 217 446 217H484"/>
+    <path id="ruta-linea" stroke="#d95f0e" stroke-width="3.5" stroke-dasharray="7 11"
+          d="M14 153H46C80 153 92 217 126 217S172 153 206 153S252 217 286 217S332 153 366 153S412 217 446 217H484"/>
+  </g>
+
+  <!-- paradas -->
+  <g id="paradas">
+    <g id="parada-1">
+      <path class="conector" d="M46 140V91" fill="none" stroke="#a9c4e8" stroke-width="3" stroke-linecap="round" stroke-dasharray="0.1 7"/>
+      <circle class="estacion" cx="46" cy="153" r="8.5" fill="#fff4e8" stroke="#a9c4e8" stroke-width="4"/>
+      <circle class="luz" cx="46" cy="153" r="8.5" fill="#d95f0e" stroke="#fff4e8" stroke-width="4"/>
+    </g>
+    <g id="parada-2">
+      <path class="conector" d="M126 230V246" fill="none" stroke="#a9c4e8" stroke-width="3" stroke-linecap="round" stroke-dasharray="0.1 7"/>
+      <circle class="estacion" cx="126" cy="217" r="8.5" fill="#fff4e8" stroke="#a9c4e8" stroke-width="4"/>
+      <circle class="luz" cx="126" cy="217" r="8.5" fill="#d95f0e" stroke="#fff4e8" stroke-width="4"/>
+    </g>
+    <g id="parada-3">
+      <path class="conector" d="M206 140V91" fill="none" stroke="#a9c4e8" stroke-width="3" stroke-linecap="round" stroke-dasharray="0.1 7"/>
+      <circle class="estacion" cx="206" cy="153" r="8.5" fill="#fff4e8" stroke="#a9c4e8" stroke-width="4"/>
+      <circle class="luz" cx="206" cy="153" r="8.5" fill="#d95f0e" stroke="#fff4e8" stroke-width="4"/>
+    </g>
+    <g id="parada-4">
+      <path class="conector" d="M286 230V246" fill="none" stroke="#a9c4e8" stroke-width="3" stroke-linecap="round" stroke-dasharray="0.1 7"/>
+      <circle class="estacion" cx="286" cy="217" r="8.5" fill="#fff4e8" stroke="#a9c4e8" stroke-width="4"/>
+      <circle class="luz" cx="286" cy="217" r="8.5" fill="#d95f0e" stroke="#fff4e8" stroke-width="4"/>
+    </g>
+    <g id="parada-5">
+      <path class="conector" d="M366 140V91" fill="none" stroke="#a9c4e8" stroke-width="3" stroke-linecap="round" stroke-dasharray="0.1 7"/>
+      <circle class="estacion" cx="366" cy="153" r="8.5" fill="#fff4e8" stroke="#a9c4e8" stroke-width="4"/>
+      <circle class="luz" cx="366" cy="153" r="8.5" fill="#d95f0e" stroke="#fff4e8" stroke-width="4"/>
+    </g>
+    <g id="parada-6">
+      <path class="conector" d="M446 230V246" fill="none" stroke="#a9c4e8" stroke-width="3" stroke-linecap="round" stroke-dasharray="0.1 7"/>
+      <circle class="estacion" cx="446" cy="217" r="8.5" fill="#fff4e8" stroke="#a9c4e8" stroke-width="4"/>
+      <circle class="luz" cx="446" cy="217" r="8.5" fill="#d95f0e" stroke="#fff4e8" stroke-width="4"/>
+    </g>
+  </g>
+
+  <!-- iconos: cada <g id="icono-N"> coloca la burbuja, el <g class="burbuja"> interior
+       es el que hace el "pop" (no le pongas transform como atributo) -->
+  <g id="iconos" stroke-linecap="round" stroke-linejoin="round">
+
+    <!-- 1 - musica: guitarra electrica -->
+    <g id="icono-1" transform="translate(46 60)">
+      <g class="burbuja">
+        <circle r="26" fill="#fff4e8" stroke="#d95f0e" stroke-width="4.5"/>
+        <g transform="rotate(40) translate(0 3)" stroke="#0b0f2a">
+          <path d="M-2.2 -3.5C-3 -6.5 -6 -9.5 -8.5 -8.5C-10 -6.5 -8 -3 -8 -0.5C-8 1.5 -9.5 3 -9.8 6C-10.2 11.5 -5.5 15 0 15C5.5 15 10.2 11.5 9.8 6C9.5 2.5 7.5 1.5 7.5 -1C7.5 -3 8.5 -5 7 -6.5C5.5 -7.5 3 -6 2.2 -3.5Z" fill="#d95f0e" stroke-width="2.4"/>
+          <path d="M0 2V-16" fill="none" stroke-width="3.2"/>
+          <path d="M0 -16.5V-20.5" fill="none" stroke-width="6.2"/>
+          <path d="M-3.4 4.5H3.4M-3.4 9H3.4" fill="none" stroke-width="2.2"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- 2 - bienestar: mancuerna -->
+    <g id="icono-2" transform="translate(126 274)">
+      <g class="burbuja">
+        <circle r="26" fill="#fff4e8" stroke="#3f6ea8" stroke-width="4.5"/>
+        <g transform="rotate(-35)" stroke="#0b0f2a" stroke-width="2.4">
+          <path d="M-7 0H7" fill="none" stroke-width="3.4"/>
+          <rect x="-12" y="-8" width="5.5" height="16" rx="2" fill="#a9c4e8"/>
+          <rect x="6.5" y="-8" width="5.5" height="16" rx="2" fill="#a9c4e8"/>
+          <rect x="-16.5" y="-5" width="4.5" height="10" rx="2" fill="#a9c4e8"/>
+          <rect x="12" y="-5" width="4.5" height="10" rx="2" fill="#a9c4e8"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- 3 - viajes: maleta -->
+    <g id="icono-3" transform="translate(206 60)">
+      <g class="burbuja">
+        <circle r="26" fill="#fff4e8" stroke="#632e62" stroke-width="4.5"/>
+        <g transform="translate(0 1.5)" stroke="#0b0f2a" stroke-width="2.4">
+          <path d="M-5 -7V-10.5Q-5 -13 -2.5 -13H2.5Q5 -13 5 -10.5V-7" fill="none"/>
+          <rect x="-13.5" y="-7" width="27" height="18" rx="4" fill="#d95f0e"/>
+          <path d="M-6.5 -7V11M6.5 -7V11" fill="none" stroke-width="2"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- 4 - tecnologia: laptop -->
+    <g id="icono-4" transform="translate(286 274)">
+      <g class="burbuja">
+        <circle r="26" fill="#fff4e8" stroke="#d95f0e" stroke-width="4.5"/>
+        <g transform="translate(0 1)" stroke="#0b0f2a" stroke-width="2.4">
+          <rect x="-11.5" y="-11.5" width="23" height="16" rx="2.5" fill="#a9c4e8"/>
+          <path d="M-6.5 -6H1M-6.5 -1.5H5" fill="none" stroke-width="2"/>
+          <path d="M-16 4.5H16V6.5Q16 9 13.5 9H-13.5Q-16 9 -16 6.5Z" fill="#f6e3cc"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- 5 - educacion: libro abierto -->
+    <g id="icono-5" transform="translate(366 60)">
+      <g class="burbuja">
+        <circle r="26" fill="#fff4e8" stroke="#3f6ea8" stroke-width="4.5"/>
+        <g stroke="#0b0f2a" stroke-width="2.4">
+          <path d="M0 -6.5C-4 -9.5 -10 -10 -15.5 -8V8C-10 6 -4 6.5 0 9.5C4 6.5 10 6 15.5 8V-8C10 -10 4 -9.5 0 -6.5Z" fill="#f1dcef"/>
+          <path d="M0 -6.5V9.5" fill="none"/>
+          <path d="M-11 -3.5C-8.5 -4.2 -6 -4 -4 -3M-11 1.5C-8.5 0.8 -6 1 -4 2M11 -3.5C8.5 -4.2 6 -4 4 -3M11 1.5C8.5 0.8 6 1 4 2" fill="none" stroke-width="1.8"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- 6 - deporte: balon de futbol -->
+    <g id="icono-6" transform="translate(446 274)">
+      <g class="burbuja">
+        <circle r="26" fill="#fff4e8" stroke="#632e62" stroke-width="4.5"/>
+        <circle r="14" fill="#fffbf6"/>
+        <path d="M0 -5.2L4.9 -1.6L3.1 4.2L-3.1 4.2L-4.9 -1.6ZM0 -9.6L-4.4 -12.9L4.4 -12.9ZM9.1 -3L10.9 -8.2L13.6 0.2ZM5.6 7.8L11.1 7.8L4 13ZM-5.6 7.8L-4 13L-11.1 7.8ZM-9.1 -3L-13.6 0.2L-10.9 -8.2Z" fill="#0b0f2a" stroke="#0b0f2a" stroke-width="1"/>
+        <path d="M0 -5.2L0 -9.6M4.9 -1.6L9.1 -3M3.1 4.2L5.6 7.8M-3.1 4.2L-5.6 7.8M-4.9 -1.6L-9.1 -3" fill="none" stroke="#0b0f2a" stroke-width="2"/>
+        <circle r="14" fill="none" stroke="#0b0f2a" stroke-width="2.4"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- fin de la ruta: banderita a cuadros -->
+  <g id="meta">
+    <path d="M487 217V173" fill="none" stroke="#f6e3cc" stroke-width="3" stroke-linecap="round"/>
+    <rect x="489" y="173" width="20" height="15" rx="1.5" fill="#fff4e8" stroke="#fff4e8" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M489 173h5v5h-5zM499 173h5v5h-5zM494 178h5v5h-5zM504 178h5v5h-5zM489 183h5v5h-5zM499 183h5v5h-5z" fill="#0b0f2a"/>
+  </g>
+
+  <!-- combi: dibujada alrededor de (0,0), que es el punto que viaja sobre la ruta -->
+  <g id="combi">
+    <g id="combi-rebote" stroke-linecap="round" stroke-linejoin="round">
+      <!-- tamano de la combi: cambia este scale -->
+      <g id="combi-dibujo" transform="scale(1.2)">
+      <!-- equipaje en la parrilla -->
+      <g id="combi-equipaje">
+        <rect x="-15" y="-43.5" width="10.5" height="7" rx="2" fill="#d95f0e"/>
+        <rect x="-3" y="-41.5" width="7.5" height="5" rx="2" fill="#f1dcef"/>
+        <rect x="6" y="-42.5" width="6.5" height="6" rx="2" fill="#a9c4e8"/>
+        <path d="M-18 -36H14" fill="none" stroke="#f6e3cc" stroke-width="2"/>
+      </g>
+      <!-- carroceria: techo crema + parte baja azul -->
+      <use href="#combi-silueta" fill="#fff4e8"/>
+      <rect x="-24" y="-22.5" width="50" height="13" fill="#3f6ea8" clip-path="url(#combi-recorte)"/>
+      <use href="#combi-silueta" fill="none" stroke="#fff4e8" stroke-width="3"/>
+      <!-- ventanas -->
+      <g fill="#a9c4e8" stroke="#0b0f2a" stroke-width="1.8">
+        <rect x="-18.5" y="-30.5" width="10" height="6.5" rx="1.8"/>
+        <rect x="-6.5" y="-30.5" width="10" height="6.5" rx="1.8"/>
+        <path d="M5.5 -30.5H10.5C15 -30.5 18.3 -28 19.6 -24H5.5Z"/>
+      </g>
+      <!-- detalles -->
+      <path d="M-1.5 -21V-13M1.5 -19H4.5" fill="none" stroke="#0b0f2a" stroke-width="1.5"/>
+      <circle cx="20" cy="-17.5" r="2.1" fill="#fff4e8" stroke="#0b0f2a" stroke-width="1.4"/>
+      <rect x="22" y="-14.5" width="5" height="3.2" rx="1.6" fill="#f6e3cc"/>
+      <rect x="-25" y="-14.5" width="5" height="3.2" rx="1.6" fill="#f6e3cc"/>
+      <!-- llantas -->
+      <g fill="#0b0f2a" stroke="#f6e3cc" stroke-width="2.2">
+        <circle cx="-12.5" cy="-11" r="5"/>
+        <circle cx="13" cy="-11" r="5"/>
+      </g>
+      <circle cx="-12.5" cy="-11" r="1.7" fill="#f6e3cc"/>
+      <circle cx="13" cy="-11" r="1.7" fill="#f6e3cc"/>
+      </g>
+    </g>
+  </g>
+</svg>

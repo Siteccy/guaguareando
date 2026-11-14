@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+import Combi from '../components/Combi.astro';
+import StopSign from '../components/StopSign.astro';
+---
+
+<BaseLayout title="Esta parada no existe" description="La página que buscas no está en la ruta de Guaguareando Ando.">
+  <section class="perdido oscuro" aria-labelledby="perdido-titulo">
+    <div class="wrap perdido__wrap">
+      <StopSign text="Error 404" sinMarcador />
+      <h1 id="perdido-titulo" class="perdido__titulo">Esta parada no existe</h1>
+      <p class="perdido__texto">
+        La página que buscas no está en la ruta. Bájate aquí y súbete de nuevo desde el inicio o desde los programas.
+      </p>
+      <div class="perdido__acciones">
+        <Button href="/" icon="arrow-left">Volver al inicio</Button>
+        <Button href="/programas" variant="contorno-claro">Ver los programas</Button>
+      </div>
+    </div>
+    <div class="perdido__carril" aria-hidden="true">
+      <Combi size={48} class="perdido__combi" />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .perdido {
+    position: relative;
+    min-height: 70vh;
+    background: var(--azul-noche);
+    overflow: hidden;
+  }
+
+  .perdido__wrap {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-m);
+    padding-block: var(--space-3xl) calc(var(--space-3xl) + var(--space-l));
+  }
+
+  .perdido__titulo {
+    max-width: 14ch;
+    font-size: var(--step-5);
+    font-weight: 700;
+    line-height: 0.98;
+  }
+
+  .perdido__texto {
+    max-width: 34rem;
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+
+  .perdido__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+  }
+
+  /* la combi, de lado sobre el carril, sin saber a donde ir */
+  .perdido__carril {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: var(--space-l);
+    height: var(--ruta-grosor);
+    background: repeating-linear-gradient(
+      to right,
+      var(--naranja-marca) 0 calc(var(--ruta-raya) * 2),
+      transparent calc(var(--ruta-raya) * 2) calc(var(--ruta-raya) * 2 + var(--ruta-hueco) * 1.5)
+    );
+  }
+
+  /* la caja mide 48×80, girada queda de 80×48 - bottom = mitad de la raya - mitad de la caja (2.5 - 40) */
+  .perdido__carril :global(.perdido__combi) {
+    position: absolute;
+    right: 18%;
+    bottom: -37.5px;
+    rotate: -90deg;
+    filter: drop-shadow(0 6px 6px rgb(0 0 0 / 0.4));
+  }
+</style>

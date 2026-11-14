@@ -1,0 +1,127 @@
+---
+// encabezado de paginas internas: banda de color con letrero de parada, titulo y bajada,
+// cerrada por la misma raya de carril del hero de inicio
+// slot por defecto: contenido extra bajo la bajada (botones, texto)
+// slot "aside": columna lateral en escritorio (p. ej. el logo)
+import StopSign from './StopSign.astro';
+
+interface Props {
+  /** texto del letrero de parada */
+  letrero: string;
+  title: string;
+  lead?: string;
+  /** color dominante: noche (general), azul (podcast), morado (musica), naranja (accion) */
+  tono?: 'noche' | 'azul' | 'morado' | 'naranja';
+}
+
+const { letrero, title, lead, tono = 'noche' } = Astro.props;
+// sobre naranja el texto va en tinta: el crema no alcanza contraste AA (3.46:1)
+const oscuro = tono !== 'naranja';
+const conAside = Astro.slots.has('aside');
+---
+
+<header class:list={['encabezado', `encabezado--${tono}`, { oscuro, 'encabezado--aside': conAside }]}>
+  <div class="wrap encabezado__wrap">
+    <div class="encabezado__texto">
+      <StopSign text={letrero} sinMarcador />
+      <h1 class="encabezado__titulo">{title}</h1>
+      {lead && <p class="encabezado__lead">{lead}</p>}
+      <slot />
+    </div>
+    {
+      conAside && (
+        <div class="encabezado__aside">
+          <slot name="aside" />
+        </div>
+      )
+    }
+  </div>
+  <div class="encabezado__carril" aria-hidden="true"></div>
+</header>
+
+<style>
+  .encabezado {
+    --carril: var(--naranja-marca);
+    position: relative;
+    background: var(--azul-noche);
+  }
+
+  .encabezado--azul {
+    --carril: var(--crema);
+    background: var(--azul-combi);
+  }
+
+  /* sobre morado la raya va en crema (el naranja no contrasta con morado) */
+  .encabezado--morado {
+    --carril: var(--crema);
+    background: var(--morado);
+  }
+
+  .encabezado--naranja {
+    --carril: var(--azul-noche);
+    background: var(--naranja-marca);
+    color: var(--tinta);
+  }
+
+  .encabezado__wrap {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+    padding-block: var(--space-2xl) calc(var(--space-2xl) + var(--space-l));
+  }
+
+  .encabezado__texto {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-s);
+  }
+
+  .encabezado__titulo {
+    max-width: 18ch;
+    font-size: var(--step-5);
+    font-weight: 700;
+    line-height: 0.98;
+  }
+
+  .encabezado__lead {
+    max-width: 40rem;
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+
+  .encabezado__aside {
+    justify-self: center;
+    width: min(76vw, 22rem);
+  }
+
+  /* lo que llegue al slot lateral (logo, ilustracion SVG animada) ocupa todo su ancho */
+  .encabezado__aside :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  @media (min-width: 64rem) {
+    .encabezado--aside .encabezado__wrap {
+      grid-template-columns: 1.2fr 0.8fr;
+    }
+
+    .encabezado__aside {
+      width: 100%;
+      max-width: 26rem;
+    }
+  }
+
+  .encabezado__carril {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: var(--space-l);
+    height: var(--ruta-grosor);
+    background: repeating-linear-gradient(
+      to right,
+      var(--carril) 0 calc(var(--ruta-raya) * 2),
+      transparent calc(var(--ruta-raya) * 2) calc(var(--ruta-raya) * 2 + var(--ruta-hueco) * 1.5)
+    );
+  }
+</style>

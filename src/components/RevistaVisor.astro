@@ -1,0 +1,119 @@
+---
+// visor de fliphtml5 con fachada: portada propia + boton "Leer revista"
+// el visor solo se carga al hacer clic; tambien hay enlace para abrirla en pantalla completa
+import { Picture } from 'astro:assets';
+import EmbedFacade from './EmbedFacade.astro';
+import Icon from './Icon.astro';
+import { numeroRevista, revistaUrl, type Revista } from '../data/revistas';
+
+interface Props {
+  revista: Revista;
+}
+
+const { revista } = Astro.props;
+const url = revistaUrl(revista);
+---
+
+<div class="visor">
+  <EmbedFacade
+    src={url}
+    title={`Revista Guaguareando Ando ${numeroRevista(revista)}: ${revista.titulo}`}
+    href={url}
+    label="Leer revista"
+    formato="revista"
+  >
+    <div class="visor__portada">
+      <Picture
+        src={revista.portada}
+        alt=""
+        formats={['avif', 'webp']}
+        widths={[260, 400, 550]}
+        sizes="(min-width: 48rem) 18rem, 52vw"
+        class="visor__img"
+      />
+      <div class="visor__texto">
+        <p class="visor__eyebrow">Revista Guaguareando Ando · {numeroRevista(revista)}</p>
+        <p class="visor__titulo">{revista.titulo}</p>
+        <p class="visor__nota">Pasa las páginas aquí mismo: el visor se carga cuando le das clic.</p>
+      </div>
+    </div>
+  </EmbedFacade>
+  <p class="visor__completa">
+    <a href={url} target="_blank" rel="noopener noreferrer">
+      <Icon name="external-link" size={18} />
+      Abrir en pantalla completa<span class="sr-only"> (se abre en una pestaña nueva)</span>
+    </a>
+  </p>
+</div>
+
+<style>
+  .visor {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .visor__portada {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-m);
+    padding: var(--space-l) var(--space-m) 7rem;
+    text-align: center;
+  }
+
+  .visor__portada :global(.visor__img) {
+    width: min(52vw, 15rem);
+    height: auto;
+    border-radius: 6px;
+    rotate: -3deg;
+    box-shadow: 0 18px 30px -12px rgb(0 0 0 / 0.6);
+  }
+
+  .visor__eyebrow {
+    color: var(--azul-claro);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .visor__titulo {
+    margin-top: var(--space-2xs);
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 700;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+
+  .visor__nota {
+    margin-top: var(--space-2xs);
+    color: var(--azul-claro);
+    font-size: var(--step--1);
+  }
+
+  .visor__completa a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-weight: 600;
+  }
+
+  @media (min-width: 48rem) {
+    .visor__portada {
+      flex-direction: row;
+      justify-content: center;
+      gap: var(--space-xl);
+      padding: var(--space-xl) var(--space-xl) 7rem;
+      text-align: left;
+    }
+
+    .visor__portada :global(.visor__img) {
+      width: 17rem;
+    }
+
+    .visor__texto {
+      max-width: 24rem;
+    }
+  }
+</style>

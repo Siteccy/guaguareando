@@ -1,0 +1,673 @@
+---
+import { Image, Picture } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+import EmbedFacade from '../components/EmbedFacade.astro';
+import HeroCombi from '../components/HeroCombi.astro';
+import RolaTarjeta from '../components/RolaTarjeta.astro';
+import Icon from '../components/Icon.astro';
+import Parada from '../components/Parada.astro';
+import ProgramTag from '../components/ProgramTag.astro';
+import Ruta from '../components/Ruta.astro';
+import Stamp from '../components/Stamp.astro';
+import StopSign from '../components/StopSign.astro';
+import Ticket from '../components/Ticket.astro';
+import YouTubeCanal from '../components/YouTubeCanal.astro';
+
+import logo from '../assets/brand/logo-guaguareando.png';
+import logoSiteccy from '../assets/aliados/siteccy-isotipo.png';
+
+import { site, spotify, youtube, rockSobreRuedas, siteccy, socials } from '../data/site';
+import { programs, featuredSlugs, getProgram } from '../data/programs';
+import { revistas, revistaActual, numeroRevista } from '../data/revistas';
+
+const destacados = featuredSlugs.map((slug) => getProgram(slug)).filter((p) => p !== undefined);
+const rock = getProgram('rock-sobre-ruedas');
+
+// datos estructurados para buscadores, solo datos reales del sitio
+const organizacion = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: site.name,
+  url: site.url,
+  logo: `${site.url}/apple-touch-icon.png`,
+  slogan: `${site.lema} ${site.lemaCola}`,
+  email: site.email,
+  address: { '@type': 'PostalAddress', addressLocality: 'Ciudad de México', addressCountry: 'MX' },
+  sameAs: socials.map((red) => red.url),
+};
+---
+
+<BaseLayout description={site.description}>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(organizacion)} />
+  <!-- hero: la combi y el lema -->
+  <section class="hero oscuro" aria-labelledby="hero-titulo">
+    <div class="wrap hero__wrap">
+      <div class="hero__texto">
+        <p class="hero__kicker">Podcast · Videos · Revista · Música — desde la Ciudad de México</p>
+        <h1 id="hero-titulo" class="hero__titulo">
+          <span class="hero__marca">Guaguareando… ando!</span>
+          <span class="hero__lema">porque todos tenemos algo que decir</span>
+        </h1>
+        <p class="hero__bajada">
+          En México, guaguarear es charlar, platicar sabroso y compartir historias de manera amena. Eso es
+          exactamente lo que somos. Súbete a la combi.
+        </p>
+        <div class="hero__acciones">
+          <Button href={spotify.showUrl} icon="brand-spotify" external>Escúchanos en Spotify</Button>
+          <Button href={youtube.channelUrl} variant="contorno-claro" icon="brand-youtube" external>
+            Míranos en YouTube
+          </Button>
+        </div>
+        <!-- aviso: le da play a la rola desde el hero, el reproductor aparece abajo y acompana toda la visita -->
+        <button type="button" class="hero__rola" data-rola-control>
+          <span class="hero__rola-icono" aria-hidden="true"><Icon name="music" size={18} /></span>
+          <span data-rola-texto data-reproducir="Ponle música al recorrido: dale play a la rola" data-pausar="Sonando la rola · toca para pausar">
+            Ponle música al recorrido: dale play a la rola
+          </span>
+        </button>
+      </div>
+      <div class="hero__combi">
+        <HeroCombi class="hero__combi-svg" />
+      </div>
+    </div>
+    <div class="hero__carril" aria-hidden="true"></div>
+  </section>
+
+  <Ruta>
+    <!-- 1. ultimos episodios (azul = podcast) -->
+    <Parada id="episodios" labelledby="episodios-titulo">
+      <StopSign text="Últimos episodios" />
+      <div class="dos-col">
+        <div class="dos-col__texto">
+          <h2 id="episodios-titulo" class="titulo titulo--azul">Dale play a las historias</h2>
+          <p class="lead">
+            Conversaciones que conectan personas, exploran ideas y nos invitan a mirar el mundo desde diferentes
+            perspectivas.
+          </p>
+          <Button href={spotify.showUrl} variant="azul" icon="brand-spotify" external>Escúchanos en Spotify</Button>
+        </div>
+        <EmbedFacade
+          src={spotify.embedUrl}
+          title="Reproductor de Spotify con los episodios de Guaguareando Ando"
+          href={spotify.showUrl}
+          label="Escuchar episodios"
+          formato="spotify"
+        >
+          <div class="portada portada--spotify">
+            <Image src={logo} alt="" width={150} height={150} densities={[1, 2]} class="portada__logo" />
+            <div>
+              <p class="portada__eyebrow"><Icon name="brand-spotify" size={20} /> Podcast en Spotify</p>
+              <p class="portada__titulo">Guaguareando Ando</p>
+              <p class="portada__nota">El reproductor se carga cuando le das play.</p>
+            </div>
+          </div>
+        </EmbedFacade>
+      </div>
+      <!-- la rola de la marca: sigue sonando al cambiar de pagina (ver RolaPlayer) -->
+      <RolaTarjeta />
+    </Parada>
+
+    <!-- 2. programas = paradas -->
+    <Parada id="programas" tono="crema-hondo" labelledby="programas-titulo">
+      <StopSign text="Programas" />
+      <div class="cabeza-seccion">
+        <h2 id="programas-titulo" class="titulo">Cada programa, una parada</h2>
+        <p class="lead">
+          Conversaciones, historias y contenidos para descubrir diferentes formas de mirar el mundo.
+        </p>
+      </div>
+      <ul role="list" class="parrilla" aria-label="Programas principales">
+        {
+          destacados.map((program) => (
+            <li class="parrilla__item">
+              <ProgramTag program={program} />
+            </li>
+          ))
+        }
+      </ul>
+      <div class="acciones">
+        <Button href="/programas" variant="contorno" icon="arrow-right">
+          Ver los {programs.length} programas
+        </Button>
+      </div>
+    </Parada>
+
+    <!-- 3. rock sobre ruedas (morado = musica) -->
+    <Parada id="rock-sobre-ruedas" tono="morado" labelledby="rock-titulo">
+      <StopSign text="En vivo" />
+      <div class="dos-col dos-col--rock">
+        <div class="dos-col__texto">
+          <Stamp ring="En vivo por YouTube · En vivo por YouTube ·" big="Martes" small="8:00 PM" class="rock__sello" />
+          <h2 id="rock-titulo" class="titulo">{rockSobreRuedas.name}</h2>
+          <p class="rock__host">con {rockSobreRuedas.host}</p>
+          <p class="rock__horario">
+            <Icon name="broadcast" size={22} />
+            En vivo los {rockSobreRuedas.day} a las {rockSobreRuedas.time} por YouTube
+          </p>
+          {rock && <p class="lead rock__lead">{rock.lead}</p>}
+          <div class="acciones acciones--izq">
+            <Button href={youtube.channelUrl} variant="claro" icon="brand-youtube" external>Míranos en YouTube</Button>
+            <Button href="/programas/rock-sobre-ruedas" variant="contorno-claro">Conoce el programa</Button>
+          </div>
+        </div>
+        {
+          rock && (
+            <div class="rock__marco">
+              <Picture
+                src={rock.cover}
+                alt={rock.coverAlt}
+                formats={['avif', 'webp']}
+                widths={[320, 480, 720]}
+                sizes="(min-width: 64rem) 26rem, 80vw"
+                class="rock__img"
+              />
+            </div>
+          )
+        }
+      </div>
+    </Parada>
+
+    <!-- 4. en video (azul noche) -->
+    <Parada id="video" tono="noche" labelledby="video-titulo">
+      <StopSign text="En video" />
+      <div class="cabeza-seccion">
+        <h2 id="video-titulo" class="titulo">Lo último del canal</h2>
+        <p class="lead">
+          Los videos más recientes del canal de Guaguareando Ando, incluidas las transmisiones en vivo de Rock sobre
+          Ruedas.
+        </p>
+      </div>
+      <YouTubeCanal class="video__fachada" />
+      <div class="acciones acciones--izq">
+        <Button href={youtube.channelUrl} variant="claro" icon="brand-youtube" external>Ir al canal</Button>
+      </div>
+    </Parada>
+
+    <!-- 5. revista actual -->
+    <Parada id="revista" labelledby="revista-titulo">
+      <StopSign text="Revista" />
+      <div class="dos-col dos-col--revista">
+        <a href={`/revista/${revistaActual.slug}`} class="revista__portada" tabindex="-1" aria-hidden="true">
+          <Picture
+            src={revistaActual.portada}
+            alt=""
+            formats={['avif', 'webp']}
+            widths={[300, 450, 550]}
+            sizes="(min-width: 64rem) 22rem, 70vw"
+            class="revista__img"
+          />
+        </a>
+        <div class="dos-col__texto">
+          <p class="revista__edicion">
+            Nueva edición · {numeroRevista(revistaActual)} · {revistaActual.titulo}
+          </p>
+          <h2 id="revista-titulo" class="titulo">Historias que merecen ser leídas</h2>
+          <p class="lead">
+            Un espacio para descubrir ideas, experiencias, cultura y temas que nos invitan a conversar y mirar el
+            mundo desde otras perspectivas.
+          </p>
+          <div class="acciones acciones--izq">
+            <Button href={`/revista/${revistaActual.slug}`} icon="book">
+              Leer la edición {numeroRevista(revistaActual)}
+            </Button>
+            <Button href="/revista" variant="contorno">Ver las {revistas.length} ediciones</Button>
+          </div>
+        </div>
+      </div>
+    </Parada>
+
+    <!-- 6. anunciate (naranja = accion) -->
+    <Parada id="anunciate" tono="naranja" labelledby="anunciate-titulo">
+      <StopSign text="Anúnciate" />
+      <Ticket stub="Anúnciate">
+        <h2 id="anunciate-titulo" class="titulo boleto-titulo">Hagamos que tu marca llegue más lejos</h2>
+        <p class="lead">
+          Conectamos marcas, proyectos y organizaciones con una comunidad interesada en descubrir, aprender y
+          compartir nuevas experiencias.
+        </p>
+        <div class="acciones acciones--izq">
+          <Button href="/anunciate" icon="arrow-right">Conoce los formatos</Button>
+        </div>
+      </Ticket>
+    </Parada>
+
+    <!-- 7. aliados: ultima parada -->
+    <Parada id="aliados" tramo="final" labelledby="aliados-titulo">
+      <StopSign text="Aliados" />
+      <div class="aliado">
+        <a href={siteccy.url} target="_blank" rel="noopener noreferrer" class="aliado__logo">
+          <Image src={logoSiteccy} alt="" width={88} densities={[1, 2]} class="aliado__isotipo" />
+          <span class="aliado__marca">{siteccy.name}</span>
+          <span class="sr-only">(se abre en una pestaña nueva)</span>
+        </a>
+        <div class="aliado__texto">
+          <h2 id="aliados-titulo" class="titulo titulo--chico">Nuestro aliado tecnológico</h2>
+          <p>
+            Guaguareando Ando cuenta con el acompañamiento tecnológico de Siteccy, compañía dedicada al desarrollo de
+            soluciones digitales a la medida, tecnología moderna y segura, automatización, integración de APIs y
+            consultoría tecnológica.
+          </p>
+        </div>
+      </div>
+    </Parada>
+  </Ruta>
+</BaseLayout>
+
+<style>
+  /* ---------- hero ---------- */
+  .hero {
+    position: relative;
+    background: var(--azul-noche);
+    overflow: hidden;
+  }
+
+  .hero__wrap {
+    display: grid;
+    gap: var(--space-l);
+    padding-block: var(--space-l) var(--space-3xl);
+  }
+
+  /* la combi animada va al final del hero (en movil debajo del texto, en escritorio a la
+     derecha y pegada abajo), para que su raya baje en linea recta hasta el carril */
+  .hero__combi {
+    justify-self: center;
+    width: min(88vw, 26rem);
+  }
+
+  /* la raya del SVG sigue de largo bajo su caja, aqui se deja ver justo hasta el centro del
+     carril: padding inferior del hero - distancia del carril al borde - medio grosor */
+  .hero__combi :global(.hero__combi-svg) {
+    overflow: visible;
+    clip-path: inset(0 0 calc((var(--space-3xl) - var(--space-l) - var(--ruta-grosor) / 2) * -1) 0);
+  }
+
+  .hero__kicker {
+    margin-bottom: var(--space-s);
+    color: var(--azul-claro);
+    font-size: var(--step--1);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .hero__titulo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .hero__marca {
+    color: var(--naranja-marca);
+    font-size: var(--step-3);
+    font-weight: 700;
+  }
+
+  .hero__lema {
+    color: var(--crema);
+    font-size: var(--step-5);
+    font-weight: 600;
+    line-height: 0.98;
+  }
+
+  .hero__bajada {
+    margin-top: var(--space-m);
+    max-width: 34rem;
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+
+  .hero__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    margin-top: var(--space-l);
+  }
+
+  /* aviso de la rola: boton discreto bajo los CTA, el icono late mientras no suena */
+  .hero__rola {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    margin-top: var(--space-m);
+    padding: 0.35em 0.9em 0.35em 0.35em;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: rgb(255 244 232 / 0.1);
+    color: var(--crema);
+    font: inherit;
+    font-size: var(--step--1);
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color var(--dur) var(--ease-out);
+  }
+
+  .hero__rola:hover {
+    background: rgb(255 244 232 / 0.18);
+  }
+
+  .hero__rola-icono {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--naranja-accion);
+    color: var(--blanco);
+  }
+
+  .hero__rola:not([data-sonando='si']) .hero__rola-icono {
+    animation: hero-rola-late 2.4s ease-in-out infinite;
+  }
+
+  @keyframes hero-rola-late {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.12);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__rola:not([data-sonando='si']) .hero__rola-icono {
+      animation: none;
+    }
+  }
+
+  /* el carril: la raya punteada sobre la que arranca la ruta */
+  .hero__carril {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: var(--space-l);
+    height: var(--ruta-grosor);
+    background: repeating-linear-gradient(
+      to right,
+      var(--naranja-marca) 0 calc(var(--ruta-raya) * 2),
+      transparent calc(var(--ruta-raya) * 2) calc(var(--ruta-raya) * 2 + var(--ruta-hueco) * 1.5)
+    );
+  }
+
+  @media (min-width: 64rem) {
+    .hero__wrap {
+      grid-template-columns: 1.15fr 0.85fr;
+      align-items: center;
+      padding-block: var(--space-2xl) var(--space-3xl);
+    }
+
+    .hero__combi {
+      align-self: end;
+      width: 100%;
+      max-width: 32rem;
+    }
+  }
+
+  /* ---------- piezas comunes de las paradas ---------- */
+  .titulo--azul {
+    color: var(--azul-combi);
+  }
+
+  .titulo--chico {
+    font-size: var(--step-3);
+  }
+
+  .cabeza-seccion {
+    display: grid;
+    gap: var(--space-s);
+    margin-bottom: var(--space-xl);
+  }
+
+  .dos-col {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  .dos-col__texto {
+    display: grid;
+    gap: var(--space-m);
+    justify-items: start;
+  }
+
+  .acciones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-s);
+    margin-top: var(--space-xl);
+  }
+
+  .acciones--izq {
+    justify-content: flex-start;
+    margin-top: var(--space-s);
+  }
+
+  @media (min-width: 64rem) {
+    .dos-col {
+      grid-template-columns: 1fr 1.1fr;
+    }
+  }
+
+  /* ---------- portadas de las fachadas ---------- */
+  .portada {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: var(--space-m);
+    padding: var(--space-l) var(--space-m) 6.5rem;
+  }
+
+  .portada :global(.portada__logo) {
+    width: 96px;
+    height: auto;
+  }
+
+  .portada__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    color: var(--azul-claro);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .portada__titulo {
+    margin-top: var(--space-3xs);
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .portada__nota {
+    margin-top: var(--space-2xs);
+    color: var(--azul-claro);
+    font-size: var(--step--1);
+  }
+
+
+  @media (min-width: 40rem) {
+    .portada {
+      flex-direction: row;
+      align-items: center;
+      padding: var(--space-xl) var(--space-l) 6.5rem;
+    }
+
+    .portada :global(.portada__logo) {
+      width: 140px;
+    }
+  }
+
+  /* ---------- programas: parrilla de maletas ---------- */
+  .parrilla {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(16rem, 78%);
+    gap: var(--space-m);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    padding: var(--space-2xs) var(--space-2xs) var(--space-m);
+    margin-inline: calc(var(--space-2xs) * -1);
+    scrollbar-color: var(--azul-combi) transparent;
+  }
+
+  .parrilla__item {
+    scroll-snap-align: start;
+  }
+
+  /* tres programas principales: carrusel en movil, tres columnas cuando caben */
+  @media (min-width: 60rem) {
+    .parrilla {
+      grid-auto-flow: row;
+      grid-template-columns: repeat(3, 1fr);
+      overflow: visible;
+    }
+  }
+
+  /* ---------- rock sobre ruedas ---------- */
+  .dos-col--rock .dos-col__texto {
+    position: relative;
+  }
+
+  .dos-col--rock :global(.rock__sello) {
+    justify-self: end;
+    margin-bottom: calc(var(--space-xl) * -1);
+  }
+
+  .rock__host {
+    margin-top: calc(var(--space-s) * -1);
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 600;
+    color: var(--morado-claro);
+  }
+
+  .rock__horario {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.45em 0.9em;
+    border: 2px solid var(--crema);
+    border-radius: var(--radius-pill);
+    font-weight: 700;
+  }
+
+  .rock__lead {
+    color: var(--morado-claro);
+  }
+
+  .rock__marco {
+    justify-self: center;
+    width: min(100%, 26rem);
+    padding: var(--space-m);
+    border-radius: var(--radius-l);
+    background: rgb(255 244 232 / 0.1);
+    rotate: 2deg;
+  }
+
+  .rock__marco :global(.rock__img) {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-m);
+  }
+
+  /* ---------- video ---------- */
+  :global(.video__fachada) {
+    margin-bottom: var(--space-m);
+  }
+
+  /* ---------- revista ---------- */
+  .revista__portada {
+    justify-self: center;
+    width: min(70vw, 22rem);
+    rotate: -3deg;
+    transition: rotate 400ms var(--ease-out);
+  }
+
+  .revista__portada:hover {
+    rotate: 0deg;
+  }
+
+  .revista__portada :global(.revista__img) {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: var(--sombra-alta);
+  }
+
+  .revista__edicion {
+    color: var(--tinta-suave);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  @media (min-width: 64rem) {
+    .dos-col--revista {
+      grid-template-columns: 0.8fr 1.2fr;
+    }
+  }
+
+  /* ---------- anunciate ---------- */
+  .boleto-titulo {
+    margin-bottom: var(--space-s);
+    color: var(--naranja-accion);
+  }
+
+  /* ---------- aliados ---------- */
+  .aliado {
+    display: grid;
+    gap: var(--space-l);
+    align-items: center;
+  }
+
+  /* isotipo de Siteccy (sin texto) + su nombre, para que se sepa de quien es */
+  .aliado__logo {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding: var(--space-xs) var(--space-l) var(--space-xs) var(--space-xs);
+    border-radius: var(--radius-m);
+    background: var(--blanco);
+    box-shadow: var(--sombra);
+    color: var(--tinta);
+    text-decoration: none;
+    transition: transform var(--dur) var(--ease-out);
+  }
+
+  .aliado__logo:hover {
+    transform: translateY(-2px);
+  }
+
+  .aliado__logo :global(.aliado__isotipo) {
+    width: 88px;
+    height: auto;
+  }
+
+  .aliado__marca {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 700;
+  }
+
+  .aliado__texto {
+    display: grid;
+    gap: var(--space-s);
+    max-width: 40rem;
+  }
+
+  @media (min-width: 48rem) {
+    .aliado {
+      grid-template-columns: auto 1fr;
+      gap: var(--space-xl);
+    }
+  }
+</style>

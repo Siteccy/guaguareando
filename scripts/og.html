@@ -1,0 +1,73 @@
+<!doctype html>
+<!--
+  plantilla de la imagen Open Graph (1200×630) → public/og-guaguareando.png
+  requiere haber corrido `npm run build` (usa las fuentes de dist/_astro/fonts)
+  como regenerarla: ver README.md › "imagen para redes (Open Graph)"
+-->
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: 'Fredoka';
+        src: url('../dist/_astro/fonts/8673e2b1ec573c64.woff2') format('woff2');
+        font-weight: 600 700;
+      }
+      @font-face {
+        font-family: 'Figtree';
+        src: url('../dist/_astro/fonts/2b18b17155d067e4.woff2') format('woff2');
+        font-weight: 400 700;
+      }
+      * { box-sizing: border-box; margin: 0; }
+      html, body { width: 1200px; height: 630px; overflow: hidden; }
+      body {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr 470px;
+        align-items: center;
+        gap: 24px;
+        padding: 56px 56px 96px 72px;
+        background: #0b0f2a;
+        color: #fff4e8;
+        font-family: 'Figtree', sans-serif;
+      }
+      .marca {
+        color: #d95f0e;
+        font-family: 'Fredoka', sans-serif;
+        font-size: 50px;
+        font-weight: 700;
+        line-height: 1;
+      }
+      .lema {
+        margin-top: 14px;
+        font-family: 'Fredoka', sans-serif;
+        font-size: 74px;
+        font-weight: 600;
+        line-height: 0.98;
+        letter-spacing: -0.01em;
+      }
+      .bajada {
+        margin-top: 26px;
+        color: #a9c4e8;
+        font-size: 26px;
+        font-weight: 600;
+      }
+      img { width: 470px; height: auto; display: block; }
+      .carril {
+        position: absolute;
+        left: 0; right: 0; bottom: 40px;
+        height: 10px;
+        background: repeating-linear-gradient(to right, #d95f0e 0 44px, transparent 44px 74px);
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <p class="marca">Guaguareando… ando!</p>
+      <p class="lema">porque todos tenemos algo que decir</p>
+      <p class="bajada">Podcast · YouTube · Revista · Música<br />desde la Ciudad de México</p>
+    </div>
+    <img src="../src/assets/brand/logo-guaguareando.png" alt="" />
+    <div class="carril"></div>
+  </body>
+</html>

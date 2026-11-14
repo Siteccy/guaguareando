@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHead from '../../components/PageHead.astro';
+import ProgramTag from '../../components/ProgramTag.astro';
+import Button from '../../components/Button.astro';
+import { programs } from '../../data/programs';
+import { spotify, youtube } from '../../data/site';
+// ilustracion animada del encabezado, va como <img> para que su CSS y sus id queden aislados de la pagina
+import ilustracion from '../../assets/svg_animados/programas-hero.svg?url';
+---
+
+<BaseLayout
+  title="Programas"
+  description={`Los ${programs.length} programas de Guaguareando Ando: deporte, cultura, música, tecnología, educación, inclusión, viajes y más conversaciones desde la Ciudad de México.`}
+>
+  <PageHead
+    letrero="Todas las paradas"
+    title="Programas"
+    lead="Conversaciones, historias y contenidos para descubrir diferentes formas de mirar el mundo."
+  >
+    <img
+      slot="aside"
+      src={ilustracion}
+      alt="Combi recorriendo una ruta con paradas de distintos programas"
+      width="520"
+      height="340"
+    />
+  </PageHead>
+
+  <section class="programas" aria-label={`Los ${programs.length} programas`}>
+    <div class="wrap">
+      <ul role="list" class="programas__grilla">
+        {
+          programs.map((program, i) => (
+            <li>
+              <ProgramTag program={program} as="h2" loading={i < 3 ? 'eager' : 'lazy'} />
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="programas__cierre">
+        <p class="programas__cierre-texto">Escucha los episodios o míralos en video.</p>
+        <div class="programas__acciones">
+          <Button href={spotify.showUrl} variant="azul" icon="brand-spotify" external>Escúchanos en Spotify</Button>
+          <Button href={youtube.channelUrl} variant="contorno" icon="brand-youtube" external>Míranos en YouTube</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .programas {
+    padding-block: var(--space-2xl);
+  }
+
+  .programas__grilla {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-l) var(--space-m);
+  }
+
+  @media (min-width: 40rem) {
+    .programas__grilla {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .programas__grilla {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .programas__cierre {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-m);
+    margin-top: var(--space-2xl);
+    text-align: center;
+  }
+
+  .programas__cierre-texto {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 600;
+  }
+
+  .programas__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-s);
+  }
+</style>
