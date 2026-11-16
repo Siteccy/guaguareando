@@ -11,7 +11,7 @@ import Stamp from '../components/Stamp.astro';
 import StopSign from '../components/StopSign.astro';
 import YouTubeCanal from '../components/YouTubeCanal.astro';
 import { getProgram } from '../data/programs';
-import { rockSobreRuedas, spotify, youtube } from '../data/site';
+import { rockSobreRuedas, youtube } from '../data/site';
 // ilustracion animada del encabezado, va como <img> para que su CSS y sus id queden aislados de la pagina
 import ilustracion from '../assets/svg_animados/musica-hero.svg?url';
 
@@ -57,6 +57,7 @@ const dia = rockSobreRuedas.day.charAt(0).toUpperCase() + rockSobreRuedas.day.sl
           src={rock.cover}
           alt={rock.coverAlt}
           formats={['avif', 'webp']}
+          fallbackFormat="jpg"
           widths={[320, 480, 720]}
           sizes="(min-width: 64rem) 26rem, 80vw"
           loading="eager"
@@ -97,7 +98,7 @@ const dia = rockSobreRuedas.day.charAt(0).toUpperCase() + rockSobreRuedas.day.sl
           }
         </ul>
         <div class="acciones">
-          <Button href={spotify.showUrl} variant="morado" icon="brand-spotify" external>Escúchanos en Spotify</Button>
+          <Button href={guitarras.spotifyUrl} variant="morado" icon="brand-spotify" external>Escúchanos en Spotify</Button>
           <Button href={`/programas/${guitarras.slug}`} variant="contorno">Conoce el programa</Button>
         </div>
       </div>
@@ -106,6 +107,7 @@ const dia = rockSobreRuedas.day.charAt(0).toUpperCase() + rockSobreRuedas.day.sl
           src={guitarras.cover}
           alt={guitarras.coverAlt}
           formats={['avif', 'webp']}
+          fallbackFormat="jpg"
           widths={[320, 480, 720]}
           sizes="(min-width: 64rem) 26rem, 80vw"
           class="marco__img"

@@ -3,23 +3,23 @@
 // el que antes era "Rock and Roll en Ruedas" ahora se llama "Rock sobre Ruedas"
 //
 // para agregar un programa:
-// 1) guarda la portada en src/assets/programas/<slug>.jpg (minimo 1000 px de ancho, sin espacios ni acentos)
+// 1) guarda la portada en src/assets/programas/<slug>.webp (lado largo de 1200 px, sin espacios ni acentos)
 // 2) agrega un objeto a `programs` con el mismo slug, el orden del arreglo es el orden en el sitio
 
 import type { ImageMetadata } from 'astro';
 
-import lordCinturitas from '../assets/programas/lord-cinturitas.jpg';
-import letreandoAndo from '../assets/programas/letreando-ando.jpg';
-import entreGuitarras from '../assets/programas/entre-guitarras-y-guitarristas.jpg';
-import bomboneandoAndo from '../assets/programas/bomboneando-ando.jpg';
-import unAtisbo from '../assets/programas/un-atisbo-a-traves-del-muro.jpg';
-import subelePisale from '../assets/programas/subele-pisale-y-a-ver-que-pasa.jpg';
+import lordCinturitas from '../assets/programas/lord-cinturitas.webp';
+import letreandoAndo from '../assets/programas/letreando-ando.webp';
+import entreGuitarras from '../assets/programas/entre-guitarras-y-guitarristas.webp';
+import bomboneandoAndo from '../assets/programas/bomboneando-ando.webp';
+import unAtisbo from '../assets/programas/un-atisbo-a-traves-del-muro.webp';
+import subelePisale from '../assets/programas/subele-pisale-y-a-ver-que-pasa.webp';
 import aventureandoAndo from '../assets/programas/aventureando-ando.jpg';
-import ecosInclusion from '../assets/programas/ecos-de-la-inclusion.jpg';
+import ecosInclusion from '../assets/programas/ecos-de-la-inclusion.webp';
 import tecnologeandoAndo from '../assets/programas/tecnologeando-ando.jpg';
-import loQueCallamos from '../assets/programas/lo-que-callamos-los-maestros.jpg';
-import deporteandoAndo from '../assets/programas/deporteando-ando.jpg';
-import sobreElArcoiris from '../assets/programas/sobre-el-arcoiris.jpg';
+import loQueCallamos from '../assets/programas/lo-que-callamos-los-maestros.webp';
+import deporteandoAndo from '../assets/programas/deporteando-ando.webp';
+import sobreElArcoiris from '../assets/programas/sobre-el-arcoiris.webp';
 import rockSobreRuedas from '../assets/programas/rock-sobre-ruedas.jpg';
 
 export interface Highlight {
@@ -43,6 +43,8 @@ export interface Program {
    * - `fondo`: muestra el arte completo y rellena lo que sobra con el color del fondo del propio arte
    */
   coverAjuste?: { modo: 'recorte'; posicion: string } | { modo: 'fondo'; color: string };
+  /** playlist del programa en spotify (sin el `?si=` de compartir) */
+  spotifyUrl: string;
   /** descripcion corta de la grilla de programas */
   short: string;
   /** entrada de la pagina del programa */
@@ -62,7 +64,8 @@ export const programs: Program[] = [
     tema: 'Bienestar',
     kind: 'podcast',
     cover: lordCinturitas,
-    coverAlt: 'Portada de Lord Cinturitas: personaje con bolsa de papel en la cabeza, rodeado de frutas y verduras, con el lema "Vida saludable, llévala bien".',
+    coverAlt: 'Portada de Lord Cinturitas: doctor con bolsa de papel en la cabeza y lentes oscuros, con una zanahoria, una manzana y una cinta métrica, y el lema "Vida saludable, llévala bien".',
+    spotifyUrl: 'https://open.spotify.com/playlist/54GLySjBf0Ht3JS6DH6KFf',
     short:
       'Ejercicio, alimentación balanceada, bienestar y consejos para llevar una vida más activa y saludable.',
     lead: 'Un espacio dedicado al ejercicio, la alimentación balanceada, el bienestar y el cuidado de la salud.',
@@ -94,7 +97,8 @@ export const programs: Program[] = [
     tema: 'Cultura',
     kind: 'podcast',
     cover: letreandoAndo,
-    coverAlt: 'Portada de Letreando Ando: ilustración de una mujer cargando una pila de libros.',
+    coverAlt: 'Portada de Letreando Ando: una lectora vestida de Alicia leyendo un libro sobre un hongo gigante, rodeada de gatos, un conejo con reloj y tazas de té.',
+    spotifyUrl: 'https://open.spotify.com/playlist/0AVwkKQjib4e2zKaZPye1L',
     short:
       'Cultura, tradiciones, arte, cine, música, exposiciones y todo aquello que forma parte de nuestra riqueza cultural.',
     lead: 'Un espacio para descubrir, conversar y disfrutar la cultura, las artes, las tradiciones y las historias que dan vida a nuestras comunidades.',
@@ -128,7 +132,8 @@ export const programs: Program[] = [
     kind: 'musica',
     cover: entreGuitarras,
     coverAjuste: { modo: 'fondo', color: '#000000' },
-    coverAlt: 'Portada de Entre Guitarras y Guitarristas: guitarras eléctricas, un amplificador y unos tenis sobre fondo negro.',
+    coverAlt: 'Portada de Entre Guitarras y Guitarristas: una guitarra eléctrica, un amplificador y unos tenis entre chispas naranjas sobre fondo negro.',
+    spotifyUrl: 'https://open.spotify.com/playlist/3MepZd8DT4o71xL00Ptyf4',
     short:
       'Un recorrido por diferentes géneros musicales y las historias de quienes han hecho de la música una forma de vida.',
     lead: 'Un espacio para recorrer la música a través de sus géneros, sus historias y los guitarristas y músicos que han dejado huella.',
@@ -162,7 +167,8 @@ export const programs: Program[] = [
     kind: 'podcast',
     cover: bomboneandoAndo,
     coverAjuste: { modo: 'fondo', color: '#ffffff' },
-    coverAlt: 'Portada de Bomboneando Ando: ilustración de una mujer saludando con el texto "¡Holiii! Bomboneando ando en las curiosidades del idioma inglés".',
+    coverAlt: 'Portada de Bomboneando Ando: una chica sonriente con los brazos abiertos frente al Big Ben y la bandera británica, con el texto "¡Hello!!! Bomboneando ando en las curiosidades del idioma inglés".',
+    spotifyUrl: 'https://open.spotify.com/playlist/2nRQi6Qcc6Ss74jhFEbHUn',
     short: 'Curiosidades, expresiones y particularidades de la lengua inglesa de una manera amena y entretenida.',
     lead: 'Un espacio para descubrir las curiosidades del idioma inglés y acercarnos a sus palabras, expresiones y particularidades de una manera amena.',
     about: [
@@ -195,7 +201,8 @@ export const programs: Program[] = [
     kind: 'podcast',
     cover: unAtisbo,
     coverAjuste: { modo: 'recorte', posicion: 'top' },
-    coverAlt: 'Portada de Un Atisbo a Través del Muro: una vela encendida junto a una pluma y un tintero sobre una mesa.',
+    coverAlt: 'Portada de Un Atisbo a Través del Muro: hojas antiguas clavadas en un muro, libros viejos y un jarrón con una espiga sobre una mesa de madera.',
+    spotifyUrl: 'https://open.spotify.com/playlist/63XQ13akcCa1bMmaawtzFk',
     short: 'Historias, situaciones y voces que invitan a mirar más allá de lo evidente.',
     lead: 'Una mirada más allá de lo evidente para descubrir historias, realidades y voces que muchas veces permanecen del otro lado del muro.',
     about: [
@@ -227,7 +234,8 @@ export const programs: Program[] = [
     tema: 'Conversación',
     kind: 'podcast',
     cover: subelePisale,
-    coverAlt: 'Portada de Súbele, Písale y a Ver Qué Pasa: un auto clásico derrapando entre humo, con el título del programa.',
+    coverAlt: 'Portada de Súbele, Písale y a Ver Qué Pasa: un Mustang clásico entre humo y llamas azules, con el conductor saludando con la mano rockera.',
+    spotifyUrl: 'https://open.spotify.com/playlist/2LnrCSwCxwPbRbhMs1nPSh',
     short: 'Curiosidad, conversaciones inesperadas, debates y reflexiones donde nunca sabemos exactamente qué puede pasar.',
     lead: 'Le subimos a la conversación, le pisamos al acelerador de las ideas y dejamos que la curiosidad nos lleve a lugares inesperados.',
     about: [
@@ -261,6 +269,7 @@ export const programs: Program[] = [
     cover: aventureandoAndo,
     coverAjuste: { modo: 'recorte', posicion: 'top' },
     coverAlt: 'Portada de Aventureando Ando: dos personajes con maletas frente a monumentos del mundo, con letreros de destinos.',
+    spotifyUrl: 'https://open.spotify.com/playlist/430h9p4nUTJDGwSJzfRYi7',
     short: 'Viajes, ciudades, pueblos mágicos, gastronomía, cultura y esos pequeños detalles que hacen especial cada lugar.',
     lead: 'Desde una aventura llena de adrenalina hasta una caminata por Chapultepec: cada lugar tiene algo que descubrir y una historia que compartir.',
     about: [
@@ -292,7 +301,8 @@ export const programs: Program[] = [
     tema: 'Inclusión',
     kind: 'podcast',
     cover: ecosInclusion,
-    coverAlt: 'Portada de Ecos de la Inclusión: un hombre sentado en el piso junto a un niño, en un cuarto con corazones y un cuadro.',
+    coverAlt: 'Portada de Ecos de la Inclusión: un hombre sentado en el piso con una gorra de piezas de rompecabezas, junto a un niño que le ofrece un corazón verde.',
+    spotifyUrl: 'https://open.spotify.com/playlist/3C4froZcLjgoHwlxuBSE0D',
     short: 'Historias invisibles, voces visibles. Experiencias reales que merecen ser escuchadas.',
     lead: 'Historias invisibles, voces visibles. Un espacio para escuchar experiencias, reconocer capacidades y descubrir las historias de quienes muchas veces no encuentran un lugar para expresarse.',
     about: [
@@ -325,6 +335,7 @@ export const programs: Program[] = [
     kind: 'podcast',
     cover: tecnologeandoAndo,
     coverAlt: 'Portada de Tecnologeando Ando: una mujer frente a una laptop rodeada de pantallas, celulares y luces de neón.',
+    spotifyUrl: 'https://open.spotify.com/playlist/1bqO3yW2muGXa9Xa471GoJ',
     short: 'Tecnología, innovación, herramientas digitales y las nuevas formas en que la tecnología transforma nuestra vida.',
     lead: 'La tecnología está presente en casi todo lo que hacemos. En este espacio exploramos las ideas, herramientas y novedades que nos ayudan a comprender el mundo digital y sus posibilidades.',
     about: [
@@ -367,7 +378,8 @@ export const programs: Program[] = [
     tema: 'Educación',
     kind: 'podcast',
     cover: loQueCallamos,
-    coverAlt: 'Portada de Lo Que Callamos Los Maestros: un maestro sobre un teclado gigante, con un sol y un globo terráqueo de fondo.',
+    coverAlt: 'Portada de Lo Que Callamos Los Maestros: un maestro agobiado frente a su laptop, con libros de planeación y evaluaciones y un pizarrón que dice "Educar también es un reto".',
+    spotifyUrl: 'https://open.spotify.com/playlist/2xJsprxBSN8h9nDRP4Xszx',
     short: 'Educación desde la voz de quienes la viven todos los días: docentes, experiencias, retos y realidades.',
     lead: 'Detrás de cada aula hay historias, retos, aprendizajes y emociones que pocas veces se cuentan. Este espacio abre la conversación sobre las experiencias de quienes dedican su vida a la educación.',
     about: [
@@ -407,7 +419,8 @@ export const programs: Program[] = [
     tema: 'Deporte',
     kind: 'podcast',
     cover: deporteandoAndo,
-    coverAlt: 'Portada de Deporteando Ando: un personaje con mano de espuma gigante rodeado de balones y rayos.',
+    coverAlt: 'Portada de Deporteando Ando: un personaje con gorra y mano de espuma gigante, rodeado de versiones suyas jugando fútbol, básquetbol y tenis.',
+    spotifyUrl: 'https://open.spotify.com/playlist/1yBoxgwAcLHCfHqWvc4O7y',
     short: 'Resultados, torneos, controversias, análisis y conversación alrededor del mundo deportivo.',
     lead: 'El deporte es mucho más que una competencia: es pasión, disciplina, esfuerzo y trabajo en equipo. En este espacio exploramos historias, protagonistas y acontecimientos que nos conectan a través de la actividad deportiva.',
     about: [
@@ -447,7 +460,8 @@ export const programs: Program[] = [
     tema: 'Diversidad',
     kind: 'podcast',
     cover: sobreElArcoiris,
-    coverAlt: 'Portada de Sobre el Arcoíris: un hombre con los brazos abiertos bajo un reflector, sobre fondo morado.',
+    coverAlt: 'Portada de Sobre el Arcoíris: un hombre con chamarra rosa en un prado, con un arcoíris que sale de su pecho.',
+    spotifyUrl: 'https://open.spotify.com/playlist/6UT278OwP9zxZ88w3HkIlf',
     short: 'Cultura, vida cotidiana, relaciones, sociedad y diversidad desde una perspectiva LGBT+, con humor y conversación abierta.',
     lead: 'Un espacio para escuchar, aprender y conversar sobre la diversidad humana, las identidades, las experiencias y los caminos que nos permiten construir una sociedad más respetuosa e inclusiva.',
     about: [
@@ -489,6 +503,7 @@ export const programs: Program[] = [
     cover: rockSobreRuedas,
     coverAjuste: { modo: 'fondo', color: '#e2e6e9' },
     coverAlt: 'Portada de Rock sobre Ruedas con La Chicka Crüe: ilustración de una rockera con chamarra y medias de red.',
+    spotifyUrl: 'https://open.spotify.com/playlist/0kV3GvgqVJfyFCA17QuP5h',
     short: 'La historia, los mitos y la rebeldía del rock and roll mexicano, desde sus pioneros hasta la escena contemporánea.',
     lead: 'El rock no es solo música: es actitud, historia, identidad y una forma de sentir. Súbete a este recorrido por los sonidos, las bandas y las historias que mantienen viva la pasión por el rock and roll.',
     about: [

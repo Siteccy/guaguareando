@@ -24,3 +24,6 @@ Thumbs.db
 # archivos y carpetas ocultos de la raiz (configuracion local de editores y herramientas)
 /.*
 !/.gitignore
+
+# respaldo local de las portadas originales en jpg
+/_originales-jpg/
