@@ -6,7 +6,7 @@ import Icon from '../../components/Icon.astro';
 import Stamp from '../../components/Stamp.astro';
 import StopSign from '../../components/StopSign.astro';
 import { programs, coverStyle, type Program } from '../../data/programs';
-import { spotify, youtube } from '../../data/site';
+import { youtube } from '../../data/site';
 
 export function getStaticPaths() {
   return programs.map((program, i) => ({
@@ -23,9 +23,10 @@ interface Props {
 
 const { program, anterior, siguiente } = Astro.props;
 const musica = program.kind === 'musica';
+// los de musica abren con youtube y la playlist va como segundo boton
 const escuchar = musica
   ? { href: youtube.channelUrl, icon: 'brand-youtube' as const, label: 'Míranos en YouTube' }
-  : { href: spotify.showUrl, icon: 'brand-spotify' as const, label: 'Escúchanos en Spotify' };
+  : { href: program.spotifyUrl, icon: 'brand-spotify' as const, label: 'Escúchanos en Spotify' };
 ---
 
 <BaseLayout title={program.name} description={program.short} ogType="article">
@@ -47,6 +48,13 @@ const escuchar = musica
         }
         <div class="ficha__acciones">
           <Button href={escuchar.href} variant="claro" icon={escuchar.icon} external>{escuchar.label}</Button>
+          {
+            musica && (
+              <Button href={program.spotifyUrl} variant="contorno-claro" icon="brand-spotify" external>
+                Escucha la playlist
+              </Button>
+            )
+          }
         </div>
       </div>
       <div class="ficha__marco">
@@ -54,6 +62,7 @@ const escuchar = musica
           src={program.cover}
           alt={program.coverAlt}
           formats={['avif', 'webp']}
+          fallbackFormat="jpg"
           widths={[320, 480, 640, 900]}
           sizes="(min-width: 64rem) 28rem, 86vw"
           loading="eager"
@@ -226,6 +235,9 @@ const escuchar = musica
   }
 
   .ficha__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
     margin-top: var(--space-xs);
   }
 

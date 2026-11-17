@@ -14,7 +14,7 @@ import StopSign from '../components/StopSign.astro';
 import Ticket from '../components/Ticket.astro';
 import YouTubeCanal from '../components/YouTubeCanal.astro';
 
-import logo from '../assets/brand/logo-guaguareando.png';
+import logo from '../assets/brand/logo-guaguareando.webp';
 import logoSiteccy from '../assets/aliados/siteccy-isotipo.png';
 
 import { site, spotify, youtube, rockSobreRuedas, siteccy, socials } from '../data/site';
@@ -158,6 +158,7 @@ const organizacion = {
                 src={rock.cover}
                 alt={rock.coverAlt}
                 formats={['avif', 'webp']}
+                fallbackFormat="jpg"
                 widths={[320, 480, 720]}
                 sizes="(min-width: 64rem) 26rem, 80vw"
                 class="rock__img"

@@ -25,6 +25,7 @@ const { program, as: Heading = 'h3', loading = 'lazy' } = Astro.props;
       src={program.cover}
       alt={program.coverAlt}
       formats={['avif', 'webp']}
+      fallbackFormat="jpg"
       widths={[280, 420, 640]}
       sizes="(min-width: 64rem) 20rem, (min-width: 40rem) 40vw, 72vw"
       loading={loading}
