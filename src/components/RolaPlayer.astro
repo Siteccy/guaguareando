@@ -276,9 +276,9 @@ import { rola, site } from '../data/site';
     }
   }
 
-  /* deja espacio al final de la pagina para que el reproductor no tape el pie */
-  :global(body:has(.rola[data-flotante='si'])) {
-    padding-bottom: 6.5rem;
+  /* el espacio extra va dentro del pie para que siga el fondo oscuro y no asome la crema */
+  :global(body:has(.rola[data-flotante='si']) .pie) {
+    padding-bottom: calc(var(--space-l) + 6.5rem);
   }
 
   @media (prefers-reduced-motion: reduce) {
